@@ -11,6 +11,9 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * 太难用了这个类，眼花缭乱，弃用这种方式
+ */
 public class NIOserver {
     public static void main(String[] args) throws IOException {
         Selector serverSelector = Selector.open();
@@ -80,6 +83,7 @@ public class NIOserver {
                             }
 
                         }
+
                     }
                 }
             } catch (IOException ignored) {

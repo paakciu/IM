@@ -1,4 +1,4 @@
-package cn.paakciu.core;
+package cn.paakciu.server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,10 +9,14 @@ import java.net.Socket;
 
 public class tcp_server
 {
-//    public  void main(String[] args) {
-//        new tcp_server.sartListen(4396);
-//    }
-    public static void main(String[] args)
+    public tcp_server() {
+    }
+
+    public static void main(String[] args) {
+        tcp_server.sartListen();
+    }
+
+    public static void sartListen()
     {
         //port为端口号
         int i = 1;int PORT=4396;

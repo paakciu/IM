@@ -1,4 +1,4 @@
-package cn.paakciu.core;
+package cn.paakciu.client;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -6,8 +6,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class tcp_client {
 
+public class tcp_client {
     static public void main(String[] args)
     {
         // 创建一个客户端Socket对象
