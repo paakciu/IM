@@ -32,7 +32,9 @@ public class netty_client {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     //连接初始化
                     @Override
-                    protected void initChannel(SocketChannel socketChannel) throws Exception {
+                    protected void initChannel(SocketChannel socketChannel) {
+                        System.out.println("IO处理逻辑初始化");
+                        //这里是责任链模式，然后加入一个逻辑处理器
                         socketChannel.pipeline().addLast(new clientHandler());
                     }
                 });
