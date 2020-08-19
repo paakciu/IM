@@ -33,8 +33,8 @@ public class netty_server {
                     @Override
                     //每条客户端连接--
                     protected void initChannel(NioSocketChannel nioSocketChannel) {
-                        System.out.println(nioSocketChannel.attr(AttributeKey.valueOf("clientKey")).get());
-                        System.out.println("客户机接入，上面是取回信息操作");
+                        //System.out.println(nioSocketChannel.attr(AttributeKey.valueOf("clientKey")).get());
+                        System.out.println("客户机接入");
                         //添加一个逻辑处理器
                         nioSocketChannel.pipeline().addLast(new serverHandler());
 
@@ -53,14 +53,14 @@ public class netty_server {
                 });
 
         //这个是给客户连接的map中的一个key，测试一下
-        final AttributeKey<Object> clientKey = AttributeKey.newInstance("clientKey");
+        //final AttributeKey<Object> clientKey = AttributeKey.newInstance("clientKey");
 
         //其他配置部分
         serverBootstrap
                 //给Server连接维护一个map
-                .attr(AttributeKey.newInstance("serverName"), "nettyServer")
+                //.attr(AttributeKey.newInstance("serverName"), "nettyServer")
                 //给每条连接连接维护map
-                .childAttr(clientKey, "随便输入点东西看看行不行")
+                //.childAttr(clientKey, "随便输入点东西看看行不行")
                 //存放已经三次握手的请求的队列的最大长度
                 .option(ChannelOption.SO_BACKLOG, 1024)
                 //开启TCP底层心跳机制
