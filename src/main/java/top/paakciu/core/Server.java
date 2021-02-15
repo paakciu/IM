@@ -1,4 +1,4 @@
-package cn.paakciu.core;
+package top.paakciu.core;
 
 public interface Server
 {

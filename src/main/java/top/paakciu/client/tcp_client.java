@@ -1,4 +1,4 @@
-package cn.paakciu.client;
+package top.paakciu.client;
 
 import java.io.InputStream;
 import java.io.OutputStream;

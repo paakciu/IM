@@ -1,6 +1,6 @@
-package cn.paakciu.client;
+package top.paakciu.client;
 
-import cn.paakciu.config.StringTable;
+import top.paakciu.config.StringTable;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

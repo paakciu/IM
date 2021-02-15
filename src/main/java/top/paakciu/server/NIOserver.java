@@ -1,4 +1,4 @@
-package cn.paakciu.server;
+package top.paakciu.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

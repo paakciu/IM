@@ -1,6 +1,6 @@
-package cn.paakciu.client;
+package top.paakciu.client;
 
-import cn.paakciu.config.IMconfig;
+import top.paakciu.config.IMConfig;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -52,7 +52,7 @@ public class netty_client {
                 .option(ChannelOption.TCP_NODELAY, true);
 
         //启动连接
-        connect(bootstrap,IMconfig.host,IMconfig.port,MAX_RETRY);
+        connect(bootstrap, IMConfig.HOST, IMConfig.PORT,MAX_RETRY);
 
     }
     //建立连接
