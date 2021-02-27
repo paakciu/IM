@@ -76,23 +76,13 @@ public class netty_client {
                         int delay = 1 << order;
                         System.err.println(new Date() + ": 连接失败，第" + order + "次重连……");
                         //使用计划任务来实现退避重连算法
-                        bootstrap.config().group().schedule(() -> connect(bootstrap, host, port, retry - 1)
-                                                            , delay
-                                                            , TimeUnit.SECONDS);
-                                                            //上面这句的第一个参数的等效语句是
-                                                            /*
-                                                                new Runnable() {
-                                                                    @Override
-                                                                    public void run() {
-                                                                        connect(bootstrap, host, port, retry - 1);
-                                                                    }
-                                                                }
-                                                            */
-
+                        bootstrap.config().group().schedule(
+                                () -> connect(bootstrap, host, port, retry - 1)
+                                ,delay
+                                ,TimeUnit.SECONDS
+                        );
                     }
                 });
-
-
     }
 
 

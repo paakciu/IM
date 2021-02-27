@@ -1,4 +1,4 @@
-package top.paakciu.server;
+package top.paakciu.deprecated;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

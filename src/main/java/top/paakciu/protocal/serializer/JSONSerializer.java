@@ -1,7 +1,7 @@
-package top.paakciu.protocal;
+package top.paakciu.protocal.serializer;
 
-import top.paakciu.protocal.constant.SerializerAlgorithm;
 import com.alibaba.fastjson.JSON;
+import top.paakciu.protocal.SerializerAlgorithm;
 
 /**
  * JSONSerializer
@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSON;
  * @author paakciu
  * @date 2020/12/21 10:05
  */
-public class JSONSerializer implements Serializer{
+public class JSONSerializer implements Serializer {
     /**
      * 序列化算法，获取具体的序列化算法标识
      *

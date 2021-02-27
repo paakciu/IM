@@ -1,6 +1,7 @@
-package top.paakciu.protocal.constant;
+package top.paakciu.protocal;
 
-import top.paakciu.protocal.Serializer;
+import top.paakciu.protocal.serializer.JSONSerializer;
+import top.paakciu.protocal.serializer.Serializer;
 
 /**
  * 指示用什么序列化方法的常量类（工厂类）
@@ -14,9 +15,16 @@ public final class SerializerAlgorithm {
      */
     public final static byte JSON=1;
 
+    /**
+     * 默认使用JSON序列化
+     */
+    public final static byte DEFAULT=JSON;
+
     public static Serializer getSerializer(byte serializeAlgorithm)
     {
-
+        if(JSON==serializeAlgorithm)
+            return new JSONSerializer();
+        return new JSONSerializer();
     }
 
 }

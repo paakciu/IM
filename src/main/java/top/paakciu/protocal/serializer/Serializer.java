@@ -1,4 +1,4 @@
-package top.paakciu.protocal;
+package top.paakciu.protocal.serializer;
 
 public interface Serializer {
     /**
