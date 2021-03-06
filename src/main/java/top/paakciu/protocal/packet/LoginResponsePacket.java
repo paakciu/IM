@@ -10,6 +10,16 @@ import top.paakciu.protocal.Command;
 public class LoginResponsePacket extends BasePacket {
 
     private String reason;
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     private Boolean success=false;
 
     @Override
@@ -20,16 +30,14 @@ public class LoginResponsePacket extends BasePacket {
     public String getReason() {
         return reason;
     }
-
     public void setReason(String reason) {
         this.reason = reason;
     }
-
     public Boolean getSuccess() {
         return success;
     }
-
     public void setSuccess(Boolean success) {
         this.success = success;
     }
+
 }

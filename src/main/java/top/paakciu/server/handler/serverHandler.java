@@ -1,4 +1,4 @@
-package top.paakciu.server;
+package top.paakciu.server.handler;
 
 import top.paakciu.config.StringTable;
 import io.netty.buffer.ByteBuf;
@@ -7,7 +7,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import top.paakciu.protocal.packet.BasePacket;
 import top.paakciu.protocal.packet.LoginRequestPacket;
 import top.paakciu.protocal.packet.LoginResponsePacket;
-import top.paakciu.protocal.PacketCodec;
+import top.paakciu.protocal.codec.PacketCodec;
+import top.paakciu.protocal.packet.MessagePacket;
 
 import java.nio.charset.Charset;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.Date;
 /**
  * 这个类在netty_server中会被调用
  */
+@Deprecated
 public class serverHandler extends ChannelInboundHandlerAdapter {
     @Override
     //收到消息之后会执行这个函数
@@ -49,6 +51,16 @@ public class serverHandler extends ChannelInboundHandlerAdapter {
 
             ByteBuf buff=PacketCodec.encode(ctx.alloc().buffer(),response);
             ctx.channel().writeAndFlush(buff);
+        }else if(packet instanceof MessagePacket)
+        {
+            // 处理消息
+            MessagePacket messageRequestPacket = ((MessagePacket) packet);
+            System.out.println(new Date() + ": 收到客户端消息: " + messageRequestPacket.getMessage());
+
+            MessagePacket messageResponsePacket = new MessagePacket();
+            messageResponsePacket.setMessage("服务端回复【" + messageRequestPacket.getMessage() + "】");
+            ByteBuf responseByteBuf = PacketCodec.encode(ctx.alloc().buffer(), messageResponsePacket);
+            ctx.channel().writeAndFlush(responseByteBuf);
         }
 
     }

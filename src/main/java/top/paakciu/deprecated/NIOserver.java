@@ -14,6 +14,7 @@ import java.util.Set;
 /**
  * 太难用了这个类，眼花缭乱，弃用这种方式
  */
+@Deprecated
 public class NIOserver {
     public static void main(String[] args) throws IOException {
         Selector serverSelector = Selector.open();

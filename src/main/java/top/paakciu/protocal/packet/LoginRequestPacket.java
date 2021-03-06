@@ -11,18 +11,22 @@ import top.paakciu.protocal.Command;
 public class LoginRequestPacket  extends BasePacket {
     
     //登录的普通信息
-    private String userId;
-    private String username;
-    private String password;
+    //private String userId;//唯一标识编号
+    private String username;//账号
+    private String password;//密码
 
     public LoginRequestPacket() {
     }
-    
-    public LoginRequestPacket(String userId, String username, String password) {
-        this.userId = userId;
+
+    public LoginRequestPacket(String username, String password) {
         this.username = username;
         this.password = password;
     }
+    //    public LoginRequestPacket(String userId, String username, String password) {
+//        this.userId = userId;
+//        this.username = username;
+//        this.password = password;
+//    }
 
 
     @Override
@@ -30,12 +34,12 @@ public class LoginRequestPacket  extends BasePacket {
         return Command.LOGIN_REQUEST;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+//    public String getUserId() {
+//        return userId;
+//    }
+//    public void setUserId(String userId) {
+//        this.userId = userId;
+//    }
     public String getUsername() {
         return username;
     }

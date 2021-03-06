@@ -20,6 +20,11 @@ public final class SerializerAlgorithm {
      */
     public final static byte DEFAULT=JSON;
 
+    /**
+     * 取出序列器
+     * @param serializeAlgorithm
+     * @return
+     */
     public static Serializer getSerializer(byte serializeAlgorithm)
     {
         if(JSON==serializeAlgorithm)

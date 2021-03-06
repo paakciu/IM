@@ -8,9 +8,16 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import top.paakciu.protocal.codec.handler.PacketDecoder;
+import top.paakciu.protocal.codec.handler.PacketEncoder;
+import top.paakciu.protocal.codec.handler.PreFrameDecoder;
+import top.paakciu.server.handler.AuthorityHandler;
+import top.paakciu.server.handler.LifeHandler;
+import top.paakciu.server.handler.LoginRequestHandler;
+import top.paakciu.server.handler.MessageRequestHandler;
 
 
-public class netty_server {
+public class NettyServer {
     public static void main(String[] args)
     {
         //监听欢迎端口-线程组
@@ -34,9 +41,23 @@ public class netty_server {
                     protected void initChannel(NioSocketChannel nioSocketChannel) {
                         //System.out.println(nioSocketChannel.attr(AttributeKey.valueOf("clientKey")).get());
                         System.out.println("客户机接入");
-                        //添加一个逻辑处理器
-                        nioSocketChannel.pipeline().addLast(new serverHandler());
-
+                        //添加逻辑处理器
+                        nioSocketChannel.pipeline()
+                                //.addLast(new serverHandler());
+                                //.addLast(new LifeHandler())
+                                //拆包器
+                                .addLast(new PreFrameDecoder())
+                                //解码器
+                                .addLast(new PacketDecoder())
+                                //登录消息验证
+                                .addLast(new LoginRequestHandler())
+                                //权限认证--是否已经登录
+                                .addLast(new AuthorityHandler())
+                                //消息处理器
+                                .addLast(new MessageRequestHandler())
+                                //回传编码器
+                                .addLast(new PacketEncoder());
+//                                .addLast(new ZhanBaoServerHandler());
                     }
                 });
 
@@ -68,7 +89,6 @@ public class netty_server {
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 ;
 
-
         //绑定端口
         bind(serverBootstrap,4396);
 
@@ -87,21 +107,5 @@ public class netty_server {
                 bind(serverBootstrap, port+1);
             }
         });
-
-        //上面的 等效格式
-//        serverBootstrap.bind(port).addListener(new GenericFutureListener<Future<? super Void>>() {
-//            @Override
-//            public void operationComplete(Future<? super Void> future)  {
-//                if(future.isSuccess()){
-//                    System.out.println("端口["+port+"]监听成功！");
-//                }
-//                else{
-//                    System.out.println("端口["+port+"]监听失败！");
-//                    //重新连接，端口自动增一重试
-//                    bind(serverBootstrap, port+1);
-//                }
-//            }
-//        });
-
     }
 }

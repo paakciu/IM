@@ -1,4 +1,4 @@
-package top.paakciu.client;
+package top.paakciu.deprecated;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -6,8 +6,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
-
-public class tcp_client {
+@Deprecated
+public class TCPClient {
     static public void main(String[] args)
     {
         // 创建一个客户端Socket对象

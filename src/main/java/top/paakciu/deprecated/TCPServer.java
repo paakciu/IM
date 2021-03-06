@@ -1,4 +1,4 @@
-package top.paakciu.server;
+package top.paakciu.deprecated;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,14 +6,14 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-
-public class tcp_server
+@Deprecated
+public class TCPServer
 {
-    public tcp_server() {
+    public TCPServer() {
     }
 
     public static void main(String[] args) {
-        tcp_server.sartListen();
+        TCPServer.sartListen();
     }
 
     public static void sartListen()
@@ -39,7 +39,9 @@ public class tcp_server
 
 
 }
+
 //连接线程
+@Deprecated
 class ConnectionThread extends Thread
 {
     private Socket client; //

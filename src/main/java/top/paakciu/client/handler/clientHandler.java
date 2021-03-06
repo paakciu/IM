@@ -1,12 +1,15 @@
-package top.paakciu.client;
+package top.paakciu.client.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.AttributeKey;
 import top.paakciu.protocal.packet.BasePacket;
 import top.paakciu.protocal.packet.LoginRequestPacket;
 import top.paakciu.protocal.packet.LoginResponsePacket;
-import top.paakciu.protocal.PacketCodec;
+import top.paakciu.protocal.codec.PacketCodec;
+import top.paakciu.protocal.packet.MessagePacket;
+import top.paakciu.utils.AttributesHelper;
 
 import java.util.Date;
 import java.util.UUID;
@@ -14,6 +17,7 @@ import java.util.UUID;
 /**
  * 这个类是在netty_client里面用的，逻辑处理器，用于处理客户端连接后向服务端写数据
  */
+@Deprecated
 public class clientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
@@ -24,7 +28,7 @@ public class clientHandler extends ChannelInboundHandlerAdapter {
         //获取数据
         //ByteBuf buffer=getByteBuf(ctx,"paakciu 测试发送!");
         LoginRequestPacket loginRequestPacket=new LoginRequestPacket(
-                UUID.randomUUID().toString(),
+                //UUID.randomUUID().toString(),
                 "PAAKCIU",
                 "123456"
         );
@@ -50,9 +54,15 @@ public class clientHandler extends ChannelInboundHandlerAdapter {
             LoginResponsePacket loginResponsePacket=(LoginResponsePacket)packet;
             if(loginResponsePacket.getSuccess()) {
                 System.out.println(new Date() + ": 客户端登录成功");
+                //ctx.channel().attr(AttributeKey.exists("login")?AttributeKey.valueOf("login"):AttributeKey.newInstance("login")).set(true);
+                AttributesHelper.asLogin(ctx.channel());
+
             }else{
                 System.out.println(new Date() + ": 客户端登录失败，原因：" + loginResponsePacket.getReason());
             }
+        }else if (packet instanceof MessagePacket) {
+            MessagePacket messageResponsePacket = (MessagePacket) packet;
+            System.out.println(new Date() + ": 收到服务端的消息: " + messageResponsePacket.getMessage());
         }
     }
 
