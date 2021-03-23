@@ -1,12 +1,13 @@
 package top.paakciu.protocal.packet;
 
+import top.paakciu.protocal.PacketsCommandMapping;
 import top.paakciu.protocal.serializer.Serializer;
 import top.paakciu.protocal.SerializerAlgorithm;
 
 /**
  * @author paakciu
  */
-public abstract class BasePacket {
+public class BasePacket {
     /**
      * 协议版本
      */
@@ -15,11 +16,18 @@ public abstract class BasePacket {
      * 序列化算法
      */
     private Byte serializerAlgorithm= SerializerAlgorithm.DEFAULT;
+
+    //使之不能初始化
+    protected BasePacket(){
+
+    }
     /**
      * 获取指令的抽象方法
      * @return
      */
-    public abstract Byte getCommand();
+    public Byte getCommand(){
+        return PacketsCommandMapping.getCommand(this.getClass());
+    }
 
     /**
      * 序列化成字节流

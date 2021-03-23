@@ -2,7 +2,6 @@ package top.paakciu.client;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.util.Attribute;
 import top.paakciu.client.handler.LoginResponseHandler;
 import top.paakciu.client.handler.MessageResponseHandler;
 import top.paakciu.config.IMConfig;
@@ -12,22 +11,47 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.AttributeKey;
-import top.paakciu.protocal.codec.handler.PacketDecoder;
-import top.paakciu.protocal.codec.handler.PacketEncoder;
+import top.paakciu.protocal.codec.handler.B2MPacketCodecHandler;
 import top.paakciu.protocal.codec.handler.PreFrameDecoder;
-import top.paakciu.protocal.packet.MessagePacket;
-import top.paakciu.utils.AttributesHelper;
 
 import java.util.Date;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 
 public class NettyClient {
-    private static final int MAX_RETRY = 5;
+    private static final int MAX_RETRY = IMConfig.ClientConnectionRetry;
+    private ClientEventListener clientEventListener;
+    public boolean channelisOK=false;
+    public Channel channel=null;
 
+    public Bootstrap setBootstrapHandler(Bootstrap bootstrap){
+        bootstrap.handler(new ChannelInitializer<SocketChannel>() {
+            //连接初始化
+            @Override
+            protected void initChannel(SocketChannel socketChannel) {
+                //接口处理初始化
+                if(clientEventListener !=null)
+                    clientEventListener.onInitChannel();
+                //这里是责任链模式，然后加入逻辑处理器
+                socketChannel.pipeline()
+                        //.addLast(new clientHandler())
+                        .addLast(new PreFrameDecoder())
+                        .addLast(new B2MPacketCodecHandler())
+                        .addLast(new LoginResponseHandler())
+                        .addLast(new MessageResponseHandler())
+                ;
+                //.addLast(PacketEncoder.INSTANCE);
+//                                .addLast(new ZhanBaoClientHandler());
+            }
+        });
+        return bootstrap;
+    }
     public static void main(String[] args)
+    {
+
+
+    }
+    public void startConnection(String host,int port)
     {
         //线程组
         NioEventLoopGroup workerGroup =new NioEventLoopGroup();
@@ -40,30 +64,16 @@ public class NettyClient {
                 //指定IO类型为NIO
                 .channel(NioSocketChannel.class)
                 //指定IO的处理逻辑
-                .handler(new ChannelInitializer<SocketChannel>() {
-                    //连接初始化
-                    @Override
-                    protected void initChannel(SocketChannel socketChannel) {
-                        System.out.println("IO处理逻辑初始化");
-                        //这里是责任链模式，然后加入逻辑处理器
-                        socketChannel.pipeline()
-                                //.addLast(new clientHandler())
-                                .addLast(new PreFrameDecoder())
-                                .addLast(new PacketDecoder())
-                                .addLast(new LoginResponseHandler())
-                                .addLast(new MessageResponseHandler())
-                                .addLast(new PacketEncoder());
-//                                .addLast(new ZhanBaoClientHandler());
-                    }
-                });
-        BootstrapExtraConfig(bootstrap);
-
+                ;
+        setBootstrapHandler(bootstrap);
+        setBootstrapExtraConfig(bootstrap);
 
         //启动连接
-        connect(bootstrap, IMConfig.HOST, IMConfig.PORT,MAX_RETRY);
-
+        connect(bootstrap, host, port,MAX_RETRY);
     }
-    public static Bootstrap BootstrapExtraConfig(Bootstrap bootstrap){
+
+    //额外配置
+    public Bootstrap setBootstrapExtraConfig(Bootstrap bootstrap){
         //额外的配置
         bootstrap
                 // 设置TCP底层属性
@@ -76,22 +86,29 @@ public class NettyClient {
         return bootstrap;
     }
 
-
     //建立连接
-    public static void connect (Bootstrap bootstrap,String host,int port,int retry)
+    public void connect (Bootstrap bootstrap,String host,int port,int retry)
     {
         bootstrap
                 .connect(host, port)
                 .addListener(future -> {
                     if (future.isSuccess()) {
-                        System.out.println("连接成功");
-
                         Channel channel = ((ChannelFuture) future).channel();
                         // 连接成功之后，启动控制台线程
-                        startConsoleThread(channel);
+                        channelisOK=true;
+                        this.channel=channel;
+                        //接口处理连接成功
+                        if(clientEventListener !=null)
+                            clientEventListener.onConnectSuccess(channel);
+                        //startConsoleThread(channel);
+
                     }
                     else {
                         //这里应该要有个随机退避算法
+                        //接口处理连接失败
+                        if(clientEventListener !=null)
+                            clientEventListener.onConnectFail(retry);
+
                         if (retry == 0) {
                             System.err.println("重试次数已用完，放弃连接！");
                             return;
@@ -111,25 +128,58 @@ public class NettyClient {
                 });
     }
 
-    private static void startConsoleThread(Channel channel) {
-        new Thread(() -> {
-            while (!Thread.interrupted()) {
+    public ClientEventListener getClientEventListener() {
+        return clientEventListener;
+    }
 
-                //Attribute<Boolean> loginAttr = channel.attr(AttributeKey.exists("login")?AttributeKey.valueOf("login"):AttributeKey.newInstance("login"));
-
-                if (AttributesHelper.hasLogin(channel)) {
-                    System.out.println("输入消息发送至服务端: ");
-                    Scanner sc = new Scanner(System.in);
-                    String line = sc.nextLine();
-
-                    MessagePacket packet = new MessagePacket();
-                    packet.setMessage(line);
-                    //ByteBuf byteBuf = PacketCodec.encode(channel.alloc().buffer(), packet);
-                    channel.writeAndFlush(packet);
-                }
-            }
-        }).start();
+    public void setClientEventListener(ClientEventListener clientEventListener) {
+        this.clientEventListener = clientEventListener;
     }
 
 
 }
+
+
+
+
+
+
+
+//    //连接成功后执行的方法，尽量新建线程去完成
+//    private static void startConsoleThread(Channel channel) {
+//        Scanner sc = new Scanner(System.in);
+//
+//        new Thread(() -> {
+//            while (!Thread.interrupted()) {
+//
+//                //Attribute<Boolean> loginAttr = channel.attr(AttributeKey.exists("login")?AttributeKey.valueOf("login"):AttributeKey.newInstance("login"));
+//                //如果没有登录
+//                if (
+//                        !AttributesHelper.hasLogin(channel)
+//                        &&(AttributesHelper.getLoginState(channel)==null
+//                        ||AttributesHelper.getLoginState(channel)==3
+//                        ||AttributesHelper.getLoginState(channel)!=0)
+//                    ) {
+//                    System.out.println("输入账号: ");
+//                    String username = sc.nextLine();
+//                    System.out.println("输入密码: ");
+//                    String password = sc.nextLine();
+//
+//                    LoginRequestPacket loginRequestPacket = new LoginRequestPacket(username,password);
+//
+//                    AttributesHelper.setLoginState(channel, AttributesHelper.LOGINSTATE.LOGINING.getValue());
+//                    //ByteBuf byteBuf = PacketCodec.encode(channel.alloc().buffer(), packet);
+//                    channel.writeAndFlush(loginRequestPacket);
+//                }else{
+//                    System.out.println("请输入【对方id 消息】");
+//                    String toUserId = sc.next();
+//                    String message = sc.next();
+//
+//                    MessageRequestPacket packet = new MessageRequestPacket();
+//                    packet.setToUserId(toUserId);
+//                    packet.setMessage(message);
+//                    channel.writeAndFlush(packet);
+//                }
+//            }
+//        }).start();
+//    }

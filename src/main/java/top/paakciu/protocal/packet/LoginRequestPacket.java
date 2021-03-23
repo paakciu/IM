@@ -1,7 +1,7 @@
 package top.paakciu.protocal.packet;
 
 
-import top.paakciu.protocal.Command;
+import top.paakciu.protocal.PacketsCommandMapping;
 
 /**
  * LoginRequestPacket
@@ -29,10 +29,10 @@ public class LoginRequestPacket  extends BasePacket {
 //    }
 
 
-    @Override
-    public Byte getCommand() {
-        return Command.LOGIN_REQUEST;
-    }
+//    @Override
+//    public Byte getCommand() {
+//        return PacketsCommandMapping.LOGIN_REQUEST;
+//    }
 
 //    public String getUserId() {
 //        return userId;

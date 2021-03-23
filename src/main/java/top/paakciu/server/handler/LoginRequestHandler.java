@@ -1,15 +1,13 @@
 package top.paakciu.server.handler;
 
-import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import top.paakciu.protocal.codec.PacketCodec;
 import top.paakciu.protocal.packet.LoginRequestPacket;
 import top.paakciu.protocal.packet.LoginResponsePacket;
 import top.paakciu.utils.AttributesHelper;
 import top.paakciu.utils.Session;
 
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
@@ -17,7 +15,11 @@ import java.util.UUID;
  * @ClassName: LoginRequestHandler
  * @date: 2021/3/3 18:08
  */
+@ChannelHandler.Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+    //单例
+    public static final LoginRequestHandler INSTANCE = new LoginRequestHandler();
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) throws Exception {
 
@@ -46,7 +48,9 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         }
 
         //ByteBuf buff= PacketCodec.encode(ctx.alloc().buffer(),response);
-        ctx.channel().writeAndFlush(response);
+        //ctx.channel().writeAndFlush(response);
+        //更改传播路径，更快到达编码器
+        ctx.writeAndFlush(response);
         //不调用父类方法就不会传递到下个节点
     }
 

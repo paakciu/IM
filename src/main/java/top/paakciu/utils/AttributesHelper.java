@@ -13,22 +13,47 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date: 2021/3/5 12:24
  */
 public class AttributesHelper {
-    public static AttributeKey<Boolean> LOGIN=AttributeKey.newInstance("login");
+    public static AttributeKey<Integer> LOGIN=AttributeKey.newInstance("login");
     public static AttributeKey<Session> SESSION=AttributeKey.newInstance("session");
 //                AttributeKey.exists("login")
 //                        ?AttributeKey.valueOf("login")
 //                        :AttributeKey.newInstance("login");
+    public enum LOGINSTATE{
+        LOGINING(0),
+        LOGINOK(1),
+        RELOGIN(2),
+        ERROR(3);
 
+    private Integer value;
+        LOGINSTATE(Integer i){this.value=i;}
+
+    public Integer getValue() {
+        return value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+}
 
     public static void asLogin(Channel ch)
     {
-        ch.attr(LOGIN).set(true);
+        ch.attr(LOGIN).set(LOGINSTATE.LOGINOK.getValue());
         System.out.println("设置登录");
     }
     public static boolean hasLogin(Channel channel) {
-        Attribute<Boolean> loginAttr = channel.attr(LOGIN);
+        Attribute<Integer> loginAttr = channel.attr(LOGIN);
         //System.out.println("判断登录="+loginAttr.get() != null&&loginAttr.get()==true);
-        return (loginAttr.get() != null&&loginAttr.get()==true);
+        return (loginAttr.get() != null&&loginAttr.get()==1);
+    }
+    public static Integer getLoginState(Channel channel){
+        return channel.attr(LOGIN).get();
+    }
+    public static boolean setLoginState(Channel channel,Integer should,Integer state){
+        return channel.attr(LOGIN).compareAndSet(should,state);
+    }
+    public static void setLoginState(Channel channel,Integer state){
+        channel.attr(LOGIN).set(state);
     }
 
 

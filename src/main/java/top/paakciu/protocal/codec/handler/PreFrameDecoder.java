@@ -22,6 +22,7 @@ package top.paakciu.protocal.codec.handler;
  */
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import top.paakciu.protocal.codec.PacketCodec;
@@ -29,6 +30,9 @@ import top.paakciu.protocal.codec.PacketCodec;
 /**
  * 这个类用于解决粘包问题的自动拆包类，也用于快速解码是不是符合相应的自由协议魔数
  * 由于是判断相应的自由协议，所以一定是深度绑定{@link PacketCodec}这个类的
+ *
+ * 这个类十分重要，不能共享，使用的时候一定是一个连接 new一个
+ *
  * @author paakciu
  * @ClassName: PreFrameDecoder
  * @date: 2021/3/3 20:54

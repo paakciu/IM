@@ -1,4 +1,4 @@
-package top.paakciu.server.handler;
+package top.paakciu.server.handler.deprecated;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

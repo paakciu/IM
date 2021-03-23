@@ -1,6 +1,6 @@
 package top.paakciu.protocal.packet;
 
-import top.paakciu.protocal.Command;
+import top.paakciu.protocal.PacketsCommandMapping;
 
 /**
  * @author paakciu
@@ -22,10 +22,10 @@ public class LoginResponsePacket extends BasePacket {
 
     private Boolean success=false;
 
-    @Override
-    public Byte getCommand() {
-        return Command.LOGIN_RESPONSE;
-    }
+//    @Override
+//    public Byte getCommand() {
+//        return PacketsCommandMapping.LOGIN_RESPONSE;
+//    }
 
     public String getReason() {
         return reason;

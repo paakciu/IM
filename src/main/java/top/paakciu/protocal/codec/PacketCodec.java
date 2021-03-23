@@ -2,7 +2,7 @@ package top.paakciu.protocal.codec;
 
 import io.netty.buffer.ByteBuf;
 import top.paakciu.config.IMConfig;
-import top.paakciu.protocal.Command;
+import top.paakciu.protocal.PacketsCommandMapping;
 import top.paakciu.protocal.SerializerAlgorithm;
 import top.paakciu.protocal.packet.BasePacket;
 import top.paakciu.protocal.serializer.Serializer;
@@ -73,7 +73,13 @@ public class PacketCodec {
         byte[] bytes = new byte[length];
         byteBuf.readBytes(bytes);
 
-        Class<? extends BasePacket> requestType = Command.getRequestType(command);
+        /**
+         * 使用{@link PacketsCommandMapping}获取类型
+         */
+        Class<? extends BasePacket> requestType = PacketsCommandMapping.getRequestType(command);
+        /**
+         * 使用{@link SerializerAlgorithm}获取序列化方法
+         */
         Serializer serializer = SerializerAlgorithm.getSerializer(serializeAlgorithm);
 
         if (requestType != null && serializer != null) {

@@ -1,6 +1,7 @@
 package top.paakciu.protocal.codec.handler;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
 import top.paakciu.protocal.codec.PacketCodec;
@@ -10,11 +11,15 @@ import java.util.List;
 
 /**
  * @author paakciu
- * @ClassName: CodecHandler
+ * @ClassName: B2MPacketCodecHandler
  * @date: 2021/3/3 17:50
  */
-@Deprecated
-public class CodecHandler extends ByteToMessageCodec<BasePacket> {
+//@Deprecated
+//@ChannelHandler.Sharable
+public class B2MPacketCodecHandler extends ByteToMessageCodec<BasePacket> {
+    //单例
+    //public static final B2MPacketCodecHandler INSTANCE = new B2MPacketCodecHandler();
+
     @Override
     protected void encode(ChannelHandlerContext ctx, BasePacket msg, ByteBuf out) throws Exception {
         PacketCodec.encode(out,msg);
