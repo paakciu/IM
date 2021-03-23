@@ -35,8 +35,9 @@ public class DefaultClient implements Client{
         {
             new Thread(() -> {
                 RegisterRequestPacket requestPacket = new RegisterRequestPacket(username, passwrod);
+                nettyClient.channel.writeAndFlush(requestPacket).addListeners((future)->{
 
-                nettyClient.channel.writeAndFlush(requestPacket);
+                });
             }).start();
         }
         return this;

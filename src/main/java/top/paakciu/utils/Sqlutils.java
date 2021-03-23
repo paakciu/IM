@@ -47,6 +47,7 @@ public class Sqlutils {
             //这里一定要提交
             sqlSession.commit();
         } catch (IOException e) {
+            System.out.println("服务器中配置数据库的configuration.xml路径错误");
             //e.printStackTrace();
         }catch (PersistenceException e) {
             System.out.println(clazz+"数据库执行"+function+"方法时失败");
