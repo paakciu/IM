@@ -13,7 +13,8 @@ import java.util.function.Supplier;
 public class test04 {
     public static void main(String[] args) {
         // 两个线程的线程池
-        ExecutorService executor = Executors.newFixedThreadPool(2);
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+//        executor.submit(()->{})
         System.out.println("new : " + Thread.currentThread().getName());
         //jdk1.8之前的实现方式
         CompletableFuture<String> future = CompletableFuture.supplyAsync(new Supplier<String>() {

@@ -69,7 +69,6 @@ class ConnectionThread extends Thread
             String str = new String(buf);
             System.out.println("服务器端接收到字符串:"+str);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -81,7 +80,6 @@ class ConnectionThread extends Thread
             out = client.getOutputStream();
             out.write(buf1);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

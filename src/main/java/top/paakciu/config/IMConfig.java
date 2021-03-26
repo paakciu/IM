@@ -17,6 +17,8 @@ public class IMConfig {
     public static final String MYBATISCONFIGURATION="configuration.xml";
     //这是规定某些包的字符串长度如果超过某个值，就会拒绝服务，防止数据包攻击或者注入攻击
     public static final int LENGTH_LIMIT=30;
+    //规定客户端处理事件的线程池大小
+    public static final int CLIENT_THREAD_POOL_NUM=2;
 
 
     //魔数的字节流

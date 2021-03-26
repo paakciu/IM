@@ -13,6 +13,7 @@ import java.util.Date;
  * @date: 2021/3/3 16:53
  */
 public class MessageResponseHandler extends SimpleChannelInboundHandler<MessageResponsePacket> {
+    public final static MessageResponseHandler INSTANCE=new MessageResponseHandler();
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageResponsePacket messageResponsePacket) throws Exception {
         //System.out.println(new Date() + ": 收到服务端的消息: " + messageResponsePacket.getMessage());

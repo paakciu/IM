@@ -13,6 +13,7 @@ import top.paakciu.protocal.codec.handler.B2MPacketCodecHandler;
 import top.paakciu.protocal.codec.handler.PreFrameDecoder;
 import top.paakciu.server.handler.AuthorityHandler;
 import top.paakciu.server.handler.LoginRequestHandler;
+import top.paakciu.server.handler.RegisterRequestHandler;
 import top.paakciu.server.handler.packetshandler.MessageRequestHandler;
 
 
@@ -33,6 +34,8 @@ public class NettyServer implements Server {
                         .addLast(new PreFrameDecoder())
                         //解码器---升级成 解码译码器
                         .addLast(new B2MPacketCodecHandler())
+                        //注册消息
+                        .addLast(RegisterRequestHandler.INSTANCE)
                         //登录消息验证
                         .addLast(LoginRequestHandler.INSTANCE)
                         //权限认证--是否已经登录

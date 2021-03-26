@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 
 public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginResponsePacket> {
-
+    public final static LoginResponseHandler INSTANCE=new LoginResponseHandler();
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         //super.channelActive(ctx);

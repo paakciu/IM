@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import top.paakciu.client.handler.LoginResponseHandler;
 import top.paakciu.client.handler.MessageResponseHandler;
+import top.paakciu.client.handler.RegisterResponseHandler;
 import top.paakciu.config.IMConfig;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -15,11 +16,14 @@ import top.paakciu.protocal.codec.handler.B2MPacketCodecHandler;
 import top.paakciu.protocal.codec.handler.PreFrameDecoder;
 
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
 public class NettyClient {
     private static final int MAX_RETRY = IMConfig.ClientConnectionRetry;
+    private ExecutorService executor = Executors.newFixedThreadPool(IMConfig.CLIENT_THREAD_POOL_NUM);
     private ClientEventListener clientEventListener;
     public boolean channelisOK=false;
     public Channel channel=null;
@@ -30,15 +34,19 @@ public class NettyClient {
             @Override
             protected void initChannel(SocketChannel socketChannel) {
                 //接口处理初始化
-                if(clientEventListener !=null)
-                    clientEventListener.onInitChannel();
+                if(clientEventListener !=null){
+                    //ExecutorService executor = Executors.newFixedThreadPool(1);
+                    executor.submit(()->clientEventListener.onInitChannel());
+                }
+
                 //这里是责任链模式，然后加入逻辑处理器
                 socketChannel.pipeline()
                         //.addLast(new clientHandler())
                         .addLast(new PreFrameDecoder())
                         .addLast(new B2MPacketCodecHandler())
-                        .addLast(new LoginResponseHandler())
-                        .addLast(new MessageResponseHandler())
+                        .addLast(RegisterResponseHandler.INSTANCE)
+                        .addLast(LoginResponseHandler.INSTANCE)
+                        .addLast(MessageResponseHandler.INSTANCE)
                 ;
                 //.addLast(PacketEncoder.INSTANCE);
 //                                .addLast(new ZhanBaoClientHandler());
@@ -46,11 +54,7 @@ public class NettyClient {
         });
         return bootstrap;
     }
-    public static void main(String[] args)
-    {
 
-
-    }
     public void startConnection(String host,int port)
     {
         //线程组
@@ -98,16 +102,20 @@ public class NettyClient {
                         channelisOK=true;
                         this.channel=channel;
                         //接口处理连接成功
-                        if(clientEventListener !=null)
-                            clientEventListener.onConnectSuccess(channel);
+                        if(clientEventListener !=null){
+                            //ExecutorService executor = Executors.newFixedThreadPool(1);
+                            executor.submit(()->clientEventListener.onConnectSuccess(channel));
+                        }
                         //startConsoleThread(channel);
 
                     }
                     else {
                         //这里应该要有个随机退避算法
                         //接口处理连接失败
-                        if(clientEventListener !=null)
-                            clientEventListener.onConnectFail(retry);
+                        if(clientEventListener !=null){
+                            //ExecutorService executor = Executors.newFixedThreadPool(1);
+                            executor.submit(()->clientEventListener.onConnectFail(retry));
+                        }
 
                         if (retry == 0) {
                             System.err.println("重试次数已用完，放弃连接！");

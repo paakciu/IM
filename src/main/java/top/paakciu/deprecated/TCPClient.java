@@ -38,7 +38,6 @@ public class TCPClient {
         }
         catch (Exception  e)
         {
-            // TODO Auto-generated catch block
             //e.printStackTrace();
             System.out.println("服务器没有应答或者失去连接，请重试");
         }
