@@ -53,7 +53,6 @@ public class Sqlutils {
             System.out.println(clazz+"数据库执行"+function+"方法时失败");
             //e.printStackTrace();
         }finally {
-
         }
         return ref;
     }

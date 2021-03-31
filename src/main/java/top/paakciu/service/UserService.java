@@ -39,11 +39,29 @@ public class UserService {
         });
     }
 
-    public static List<User> getUserById(long id) {
+    public static User getUserById(long id) {
         return Sqlutils.startSqlSession(UserMapper.class,mapper -> {
             UserExample userExample=new UserExample();
             userExample.createCriteria().andIdEqualTo(id);
-            return mapper.selectByExample(userExample);
+            List<User> list=mapper.selectByExample(userExample);
+
+            if(list.size()==0)
+                return null;
+            else
+                return list.get(0);
+        });
+    }
+
+    public static User getUserByUserNameAndPassword(String userName,String password){
+        return Sqlutils.startSqlSession(UserMapper.class,mapper -> {
+            UserExample userExample=new UserExample();
+            userExample.createCriteria().andUsernameEqualTo(userName).andPasswordEqualTo(password);
+            List<User> list=mapper.selectByExample(userExample);
+
+            if(list.size()==0)
+                return null;
+            else
+                return list.get(0);
         });
     }
 }

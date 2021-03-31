@@ -1,16 +1,22 @@
-package top.paakciu.client;
+package top.paakciu.client.listener;
 
 import io.netty.channel.ChannelFuture;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 /**
  * @author paakciu
  * @ClassName: PaakciuFuture
  * @date: 2021/3/26 10:46
+ *
+ * private PaakciuFuture future;
+ *
+ *     public PaakciuFuture getFuture() {
+ *         return future;
+ *     }
+ *
+ *     public void setFuture(PaakciuFuture future) {
+ *         this.future = future;
+ *     }
+ *
  */
 public class PaakciuFuture{
     private ChannelFuture future;
@@ -22,9 +28,11 @@ public class PaakciuFuture{
         this.future = future;
         future.addListener((f)->{
             if(f.isSuccess()){
-                listener.onSendSuccess();
+                if(listener!=null)
+                    listener.onSendSuccess();
             }else{
-                listener.onSendFail();
+                if(listener!=null)
+                    listener.onSendFail();
             }
         });
     }

@@ -104,63 +104,63 @@ public class NormalMsgOfflineExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
-        public Criteria andNmoIdIsNull() {
-            addCriterion("NMO_id is null");
+        public Criteria andIdIsNull() {
+            addCriterion("id is null");
             return (Criteria) this;
         }
 
-        public Criteria andNmoIdIsNotNull() {
-            addCriterion("NMO_id is not null");
+        public Criteria andIdIsNotNull() {
+            addCriterion("id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andNmoIdEqualTo(Long value) {
-            addCriterion("NMO_id =", value, "nmoId");
+        public Criteria andIdEqualTo(Long value) {
+            addCriterion("id =", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andNmoIdNotEqualTo(Long value) {
-            addCriterion("NMO_id <>", value, "nmoId");
+        public Criteria andIdNotEqualTo(Long value) {
+            addCriterion("id <>", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andNmoIdGreaterThan(Long value) {
-            addCriterion("NMO_id >", value, "nmoId");
+        public Criteria andIdGreaterThan(Long value) {
+            addCriterion("id >", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andNmoIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("NMO_id >=", value, "nmoId");
+        public Criteria andIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("id >=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andNmoIdLessThan(Long value) {
-            addCriterion("NMO_id <", value, "nmoId");
+        public Criteria andIdLessThan(Long value) {
+            addCriterion("id <", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andNmoIdLessThanOrEqualTo(Long value) {
-            addCriterion("NMO_id <=", value, "nmoId");
+        public Criteria andIdLessThanOrEqualTo(Long value) {
+            addCriterion("id <=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andNmoIdIn(List<Long> values) {
-            addCriterion("NMO_id in", values, "nmoId");
+        public Criteria andIdIn(List<Long> values) {
+            addCriterion("id in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andNmoIdNotIn(List<Long> values) {
-            addCriterion("NMO_id not in", values, "nmoId");
+        public Criteria andIdNotIn(List<Long> values) {
+            addCriterion("id not in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andNmoIdBetween(Long value1, Long value2) {
-            addCriterion("NMO_id between", value1, value2, "nmoId");
+        public Criteria andIdBetween(Long value1, Long value2) {
+            addCriterion("id between", value1, value2, "id");
             return (Criteria) this;
         }
 
-        public Criteria andNmoIdNotBetween(Long value1, Long value2) {
-            addCriterion("NMO_id not between", value1, value2, "nmoId");
+        public Criteria andIdNotBetween(Long value1, Long value2) {
+            addCriterion("id not between", value1, value2, "id");
             return (Criteria) this;
         }
 

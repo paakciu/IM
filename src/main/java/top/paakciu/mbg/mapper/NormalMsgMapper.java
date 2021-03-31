@@ -11,7 +11,7 @@ public interface NormalMsgMapper {
 
     int deleteByExample(NormalMsgExample example);
 
-    int deleteByPrimaryKey(Long nmId);
+    int deleteByPrimaryKey(Long id);
 
     int insert(NormalMsg record);
 
@@ -25,7 +25,7 @@ public interface NormalMsgMapper {
 
     List<NormalMsg> selectByExample(NormalMsgExample example);
 
-    NormalMsg selectByPrimaryKey(Long nmId);
+    NormalMsg selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("record") NormalMsg record, @Param("example") NormalMsgExample example);
 

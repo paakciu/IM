@@ -11,13 +11,15 @@ import top.paakciu.utils.Sqlutils;
 import java.util.Date;
 import java.util.List;
 
+import static top.paakciu.config.IMConfig.SERVER_DB_PAGE_LIMIT;
+
 
 /**
  * @author paakciu
- * @ClassName: NomalMessageService
+ * @ClassName: NormalMessageService
  * @date: 2021/3/18 17:09
  */
-public class NomalMessageService {
+public class NormalMessageService {
 
     public static int addNomalMessage(Long fromid,Long toid,String message){
         return Sqlutils.startSqlSession(NormalMsgMapper.class,(mapper)->{
@@ -27,6 +29,11 @@ public class NomalMessageService {
             msg.setNmMsg(message);
             msg.setNmTime(new Date());
 
+            return mapper.insert(msg);
+        });
+    }
+    public static int addNomalMessage(NormalMsg msg){
+        return Sqlutils.startSqlSession(NormalMsgMapper.class,(mapper)->{
             return mapper.insert(msg);
         });
     }
@@ -51,6 +58,7 @@ public class NomalMessageService {
             return mapper.selectByExampleWithBLOBsWithRowbounds(example,new RowBounds(0,topnums));
         });
     }
+    //TODO 使用Rowbounds的话，是查询全部数据出来，再分页的，所以效率会很低！
     //这个找历史消息的关键咧
     public static List<NormalMsg> getMsgByToid(Long toid,int topnums)
     {
@@ -58,10 +66,10 @@ public class NomalMessageService {
     }
     public static List<NormalMsg> getMsgByToid(Long toid,int offset,int topnums)
     {
-        if(topnums>1000)
+        if(topnums>SERVER_DB_PAGE_LIMIT)
         {
             //要得太过分了，这里要做一个限制的,以防恶意攻击
-            topnums=1000;
+            topnums=SERVER_DB_PAGE_LIMIT;
         }
         int finalTopnums = topnums;
         return Sqlutils.startSqlSession(NormalMsgMapper.class,(mapper)->{

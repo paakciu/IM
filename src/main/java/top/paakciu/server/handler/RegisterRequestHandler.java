@@ -8,6 +8,8 @@ import top.paakciu.protocal.packet.RegisterRequestPacket;
 import top.paakciu.protocal.packet.RegisterResponsePacket;
 import top.paakciu.service.UserService;
 
+import java.util.Date;
+
 import static top.paakciu.config.IMConfig.LENGTH_LIMIT;
 
 /**
@@ -31,14 +33,17 @@ public class RegisterRequestHandler extends SimpleChannelInboundHandler<Register
                 //System.out.println("注册成功");
                 responsePacket.setSuccess(true);
                 responsePacket.setMsg("注册成功");
+                System.out.println(new Date()+msg.getUsername()+"注册成功");
             }else{
                 //System.out.println("注册失败");
                 responsePacket.setSuccess(false);
                 responsePacket.setMsg("注册失败，数据库已有该账号");
+                System.out.println(new Date()+msg.getUsername()+"注册失败，数据库已有该账号");
             }
         }else{
             responsePacket.setSuccess(false);
             responsePacket.setMsg("注册失败，注册账号密码不符合规范");
+            System.out.println(new Date()+msg.getUsername()+"注册失败，注册账号密码不符合规范");
         }
         //更快到达编码器
         ctx.writeAndFlush(responsePacket);

@@ -38,6 +38,8 @@ public class test05 {
         }
 
         System.out.println("-------------------main thread end---------------------");
+
+        
     }
 
 }

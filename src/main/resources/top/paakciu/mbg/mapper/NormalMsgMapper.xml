@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.paakciu.mbg.mapper.NormalMsgMapper">
   <resultMap id="BaseResultMap" type="top.paakciu.mbg.model.NormalMsg">
-    <id column="NM_id" jdbcType="BIGINT" property="nmId" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="NM_fromid" jdbcType="BIGINT" property="nmFromid" />
     <result column="NM_toid" jdbcType="BIGINT" property="nmToid" />
     <result column="NM_time" jdbcType="TIMESTAMP" property="nmTime" />
@@ -71,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    NM_id, NM_fromid, NM_toid, NM_time, NM_state, NM_type
+    id, NM_fromid, NM_toid, NM_time, NM_state, NM_type
   </sql>
   <sql id="Blob_Column_List">
     NM_msg
@@ -112,11 +112,11 @@
     ,
     <include refid="Blob_Column_List" />
     from normal_msg
-    where NM_id = #{nmId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from normal_msg
-    where NM_id = #{nmId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="top.paakciu.mbg.model.NormalMsgExample">
     delete from normal_msg
@@ -125,19 +125,22 @@
     </if>
   </delete>
   <insert id="insert" parameterType="top.paakciu.mbg.model.NormalMsg">
-    insert into normal_msg (NM_id, NM_fromid, NM_toid, 
-      NM_time, NM_state, NM_type, 
-      NM_msg)
-    values (#{nmId,jdbcType=BIGINT}, #{nmFromid,jdbcType=BIGINT}, #{nmToid,jdbcType=BIGINT}, 
-      #{nmTime,jdbcType=TIMESTAMP}, #{nmState,jdbcType=TINYINT}, #{nmType,jdbcType=TINYINT}, 
-      #{nmMsg,jdbcType=LONGVARCHAR})
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into normal_msg (NM_fromid, NM_toid, NM_time, 
+      NM_state, NM_type, NM_msg
+      )
+    values (#{nmFromid,jdbcType=BIGINT}, #{nmToid,jdbcType=BIGINT}, #{nmTime,jdbcType=TIMESTAMP}, 
+      #{nmState,jdbcType=TINYINT}, #{nmType,jdbcType=TINYINT}, #{nmMsg,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="top.paakciu.mbg.model.NormalMsg">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into normal_msg
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="nmId != null">
-        NM_id,
-      </if>
       <if test="nmFromid != null">
         NM_fromid,
       </if>
@@ -158,9 +161,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="nmId != null">
-        #{nmId,jdbcType=BIGINT},
-      </if>
       <if test="nmFromid != null">
         #{nmFromid,jdbcType=BIGINT},
       </if>
@@ -190,8 +190,8 @@
   <update id="updateByExampleSelective" parameterType="map">
     update normal_msg
     <set>
-      <if test="record.nmId != null">
-        NM_id = #{record.nmId,jdbcType=BIGINT},
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.nmFromid != null">
         NM_fromid = #{record.nmFromid,jdbcType=BIGINT},
@@ -218,7 +218,7 @@
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update normal_msg
-    set NM_id = #{record.nmId,jdbcType=BIGINT},
+    set id = #{record.id,jdbcType=BIGINT},
       NM_fromid = #{record.nmFromid,jdbcType=BIGINT},
       NM_toid = #{record.nmToid,jdbcType=BIGINT},
       NM_time = #{record.nmTime,jdbcType=TIMESTAMP},
@@ -231,7 +231,7 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update normal_msg
-    set NM_id = #{record.nmId,jdbcType=BIGINT},
+    set id = #{record.id,jdbcType=BIGINT},
       NM_fromid = #{record.nmFromid,jdbcType=BIGINT},
       NM_toid = #{record.nmToid,jdbcType=BIGINT},
       NM_time = #{record.nmTime,jdbcType=TIMESTAMP},
@@ -263,7 +263,7 @@
         NM_msg = #{nmMsg,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where NM_id = #{nmId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="top.paakciu.mbg.model.NormalMsg">
     update normal_msg
@@ -273,7 +273,7 @@
       NM_state = #{nmState,jdbcType=TINYINT},
       NM_type = #{nmType,jdbcType=TINYINT},
       NM_msg = #{nmMsg,jdbcType=LONGVARCHAR}
-    where NM_id = #{nmId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="top.paakciu.mbg.model.NormalMsg">
     update normal_msg
@@ -282,7 +282,7 @@
       NM_time = #{nmTime,jdbcType=TIMESTAMP},
       NM_state = #{nmState,jdbcType=TINYINT},
       NM_type = #{nmType,jdbcType=TINYINT}
-    where NM_id = #{nmId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithBLOBsWithRowbounds" parameterType="top.paakciu.mbg.model.NormalMsgExample" resultMap="ResultMapWithBLOBs">
     select

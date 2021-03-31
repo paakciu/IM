@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class NormalMsg implements Serializable {
-    private Long nmId;
+    private Long id;
 
     private Long nmFromid;
 
@@ -20,12 +20,12 @@ public class NormalMsg implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Long getNmId() {
-        return nmId;
+    public Long getId() {
+        return id;
     }
 
-    public void setNmId(Long nmId) {
-        this.nmId = nmId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getNmFromid() {
@@ -82,7 +82,7 @@ public class NormalMsg implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", nmId=").append(nmId);
+        sb.append(", id=").append(id);
         sb.append(", nmFromid=").append(nmFromid);
         sb.append(", nmToid=").append(nmToid);
         sb.append(", nmTime=").append(nmTime);

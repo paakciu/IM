@@ -4,15 +4,24 @@ package top.paakciu.protocal.packet;/**
  * @date: 2021/3/18 13:24
  */
 public class MessageResponsePacket extends BasePacket{
-    private String fromUserId;
+//    private Boolean success;
+    private Long fromUserId;
     private String fromUserName;
     private String message;
 
-    public String getFromUserId() {
+//    public Boolean isSuccess() {
+//        return success;
+//    }
+//
+//    public void setSuccess(Boolean success) {
+//        this.success = success;
+//    }
+
+    public Long getFromUserId() {
         return fromUserId;
     }
 
-    public void setFromUserId(String fromUserId) {
+    public void setFromUserId(Long fromUserId) {
         this.fromUserId = fromUserId;
     }
 

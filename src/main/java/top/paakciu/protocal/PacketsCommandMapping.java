@@ -16,6 +16,7 @@ public final class PacketsCommandMapping {
     public final static Byte MESSAGE_RESPONSE=3;
     public final static Byte REGISTER_REQUEST=4;
     public final static Byte REGISTER_RESPONSE=5;
+    public final static Byte ERROR=6;
 
     //双向映射表
     private final static HashMap<Class<? extends BasePacket>,Byte> map=new HashMap<>();
@@ -28,6 +29,7 @@ public final class PacketsCommandMapping {
         list.add(MessageResponsePacket.class);
         list.add(RegisterRequestPacket.class);
         list.add(RegisterResponsePacket.class);
+        list.add(ErrorMessagePacket.class);
 
         map.put(LoginRequestPacket.class,LOGIN_REQUEST);
         map.put(LoginResponsePacket.class,LOGIN_RESPONSE);
@@ -35,6 +37,7 @@ public final class PacketsCommandMapping {
         map.put(MessageResponsePacket.class,MESSAGE_RESPONSE);
         map.put(RegisterRequestPacket.class,REGISTER_REQUEST);
         map.put(RegisterResponsePacket.class,REGISTER_RESPONSE);
+        map.put(ErrorMessagePacket.class,ERROR);
     }
 
     //取出命令对应的类

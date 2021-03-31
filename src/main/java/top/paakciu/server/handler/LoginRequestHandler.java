@@ -3,10 +3,13 @@ package top.paakciu.server.handler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import top.paakciu.mbg.model.User;
 import top.paakciu.protocal.packet.LoginRequestPacket;
 import top.paakciu.protocal.packet.LoginResponsePacket;
+import top.paakciu.service.UserService;
 import top.paakciu.utils.AttributesHelper;
-import top.paakciu.utils.Session;
+import top.paakciu.utils.ChannelUser;
+
 
 import java.util.UUID;
 
@@ -29,17 +32,24 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         //唯一标识符---------这里逻辑需要完善
         //String uuid= UUID.nameUUIDFromBytes(loginRequestPacket.getUserId().getBytes(StandardCharsets.UTF_8)).toString();
         //可以在uuid后面加数据库的自增id
-        String uuid=UUID.randomUUID().toString();
-        response.setUserId(uuid);
-        Session session=new Session(uuid, loginRequestPacket.getUsername());
-        AttributesHelper.bindSession(ctx.channel(),session);
+//        String uuid=UUID.randomUUID().toString();
+//        response.setUserId(uuid);
+//        Session session=new Session(uuid, loginRequestPacket.getUsername());
+//        AttributesHelper.bindSession(ctx.channel(),session);
 
+        // 在这里要获取数据库返回的编号大小，这个一定要返回呀。
+        User user=getUser(loginRequestPacket);
         // 登录校验
-        if (valid(loginRequestPacket)) {
+        if (valid(user)) {
             // 校验成功
-            System.out.println("模拟登录成功！");
+            System.out.println("登录成功！");
+            ChannelUser channelUser=new ChannelUser(user.getId(),user.getUsername());
             AttributesHelper.asLogin(ctx.channel());
+            AttributesHelper.setChannelUser(ctx.channel(),channelUser);
+
+            response.setUserId(user.getId());
             response.setSuccess(true);
+            response.setUserName(user.getUsername());
 
         } else {
             // 校验失败
@@ -58,13 +68,24 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         //取消绑定
-        AttributesHelper.unBindSession(ctx.channel());
+        AttributesHelper.asLogout(ctx.channel());
+        AttributesHelper.removeChannelUser(ctx.channel());
+
         //这个需要父类执行吗，我这里只是额外进行了一步，如果我不写上句，它默认就是会执行父类方法的，故此我判断需要保留父类
         super.channelInactive(ctx);
     }
 
+    private User getUser(LoginRequestPacket loginRequestPacket){
+        User user=UserService.getUserByUserNameAndPassword(loginRequestPacket.getUsername(),loginRequestPacket.getPassword());
+        return user;
+    }
     //这里一般要验证数据库
-    private boolean valid(LoginRequestPacket loginRequestPacket) {
-        return true;
+    private boolean valid(User user) {
+        if(user!=null)
+        {
+            return true;
+        }else{
+            return false;
+        }
     }
 }

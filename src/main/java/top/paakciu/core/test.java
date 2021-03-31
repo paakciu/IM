@@ -1,13 +1,11 @@
 package top.paakciu.core;
 
 import io.netty.channel.Channel;
-import org.apache.ibatis.exceptions.PersistenceException;
-import top.paakciu.client.ClientEventListener;
-import top.paakciu.client.DefaultClient;
-import top.paakciu.client.ResponseListener;
-import top.paakciu.service.UserService;
+import top.paakciu.client.listener.ClientEventListener;
+import top.paakciu.client.listener.ResponseListener;
+import top.paakciu.client.handler.LoginResponseHandler;
 
-import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * @author paakciu
@@ -16,17 +14,9 @@ import java.io.IOException;
  */
 public class test implements ClientEventListener {
 
-
+    static final Client CLIENT=Client.defaultClient;
     public static void main(String[] args) {
-//        Integer ref=UserService.register("nihaxo","haha");
-//        if(ref!=null){
-//            System.out.println("注册成功");
-//        }else{
-//            System.out.println("注册失败");
-//        }
-//        System.out.println();
-//        Client client=DefaultClient.INSTANCE;
-//        client.initClienConnection();
+
         new test().onCreate();
     }
     public void onCreate()
@@ -46,7 +36,13 @@ public class test implements ClientEventListener {
             @Override
             public void onConnectSuccess(Channel channel) {
                 //TODO 连接成功后要做的事情
-
+                //System.out.println("连接成功s");
+                //register();
+                Scanner sc=new Scanner(System.in);
+                System.out.println("请输入登录的账号密码：");
+                String name=sc.nextLine();
+                String psw=sc.nextLine();
+                login(name,psw);
             }
 
             @Override
@@ -60,28 +56,63 @@ public class test implements ClientEventListener {
         /**
          * 要注意连接成功之后，才能调用该方法进行注册
          * 关于注册事件的回调会在Netty的异步线程中进行，不需要建立线程。
+         * 链式调用！
          */
-        Client.defaultClient.register("username","password")
-                .addListener(new ResponseListener() {
-            @Override
-            public void onSendSuccess() {
-                //TODO 发送服务器成功要做的事
-            }
+        Client.defaultClient.register("username1","password1")
+                .setSendFailListener(()-> {
+                    //TODO 发送服务器失败要做的事
+                    System.out.println("发送至服务器失败");
+                })
+                .setSendSuccessListener(()->{
+                    //TODO 发送服务器成功要做的事
+                    System.out.println("发送至服务器成功");
+                })
+                .setFailListener(str -> {
+                    //TODO 服务器返回结果为失败,str为返回失败的消息
+                    System.out.println(str);
+                })
+                .setSuccessListener(str -> {
+                    //TODO 服务器返回结果为成功,str为返回成功的消息
+                    System.out.println(str);
 
-            @Override
-            public void onSendFail() {
-                //TODO 发送服务器失败要做的事
-            }
+                });
 
-            @Override
-            public void onSuccess(String str) {
-                //TODO 服务器返回结果为成功
-            }
 
-            @Override
-            public void onFail(String str) {
-                //TODO 服务器返回结果为失败
-            }
-        });
+    }
+    public void login(String username,String password) {
+        Client.defaultClient.login(username,password)
+                .setSendFailListener(()-> {
+                    //TODO 发送服务器失败要做的事
+                    System.out.println("发送至服务器失败");
+                })
+                .setSendSuccessListener(()->{
+                    //TODO 发送服务器成功要做的事
+                    System.out.println("发送至服务器成功");
+                })
+                .setFailListener(str -> {
+                    //TODO 服务器返回结果为失败,str为返回失败的原因-如“账号密码校验失败”
+                    System.out.println(str);
+                })
+                .setSuccessListener(channelUser -> {
+                    //TODO 服务器返回结果为成功,str为返回成功 channelUser对象，包括惟一标识号id，和账号名
+                    System.out.println(channelUser);
+                    System.out.println("id="+channelUser.getUserId());
+
+                    new Thread(()->{
+                        Scanner sc = new Scanner(System.in);
+                        while (true) {
+                            System.out.println("请输入toid msg：");
+                            Long toid = sc.nextLong();
+                            String msg = sc.next();
+                            Client.defaultClient.send(toid, msg);
+                        }
+                    }).start();
+
+                })
+        ;
+
+    }
+    public void logout(){
+
     }
 }

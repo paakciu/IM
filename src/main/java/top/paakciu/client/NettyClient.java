@@ -5,6 +5,7 @@ import io.netty.channel.ChannelFuture;
 import top.paakciu.client.handler.LoginResponseHandler;
 import top.paakciu.client.handler.MessageResponseHandler;
 import top.paakciu.client.handler.RegisterResponseHandler;
+import top.paakciu.client.listener.ClientEventListener;
 import top.paakciu.config.IMConfig;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -23,10 +24,10 @@ import java.util.concurrent.TimeUnit;
 
 public class NettyClient {
     private static final int MAX_RETRY = IMConfig.ClientConnectionRetry;
-    private ExecutorService executor = Executors.newFixedThreadPool(IMConfig.CLIENT_THREAD_POOL_NUM);
     private ClientEventListener clientEventListener;
     public boolean channelisOK=false;
     public Channel channel=null;
+    public ExecutorService executor = Executors.newFixedThreadPool(IMConfig.CLIENT_THREAD_POOL_NUM);
 
     public Bootstrap setBootstrapHandler(Bootstrap bootstrap){
         bootstrap.handler(new ChannelInitializer<SocketChannel>() {

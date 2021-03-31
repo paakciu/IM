@@ -1,12 +1,11 @@
 package top.paakciu.client;
 
-import io.netty.channel.ChannelFuture;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
+import top.paakciu.client.handler.LoginResponseHandler;
 import top.paakciu.client.handler.RegisterResponseHandler;
+import top.paakciu.client.listener.ClientEventListener;
 import top.paakciu.config.IMConfig;
 import top.paakciu.core.Client;
-import top.paakciu.protocal.packet.RegisterRequestPacket;
+import top.paakciu.protocal.packet.MessageRequestPacket;
 
 /**
  * @author paakciu
@@ -17,7 +16,7 @@ public class DefaultClient implements Client {
 
     public static final DefaultClient INSTANCE=new DefaultClient();
     private NettyClient nettyClient=new NettyClient();
-    private boolean channelIsOK=false;
+    //private boolean channelIsOK=false;
 
 
     //保证单例的话，就声明成private或者protect
@@ -33,42 +32,49 @@ public class DefaultClient implements Client {
     
 
     @Override
-    public PaakciuFuture register(String username,String passwrod) {
-        PaakciuFuture paakciuFuture=null;
+    public RegisterResponseHandler register(String username, String passwrod) {
+        //尝试获取这个对象并且返回;
+        RegisterResponseHandler handler=nettyClient.channel.pipeline().get(RegisterResponseHandler.class);
         if(nettyClient.channelisOK&&nettyClient.channel!=null)
         {
-            RegisterRequestPacket requestPacket = new RegisterRequestPacket(username, passwrod);
-            ChannelFuture future=nettyClient.channel.writeAndFlush(requestPacket);
-            paakciuFuture=new PaakciuFuture(future);
-            RegisterResponseHandler.INSTANCE.setFuture(paakciuFuture);
+            //修复运行时获取
+            if(handler==null)
+                handler=nettyClient.channel.pipeline().get(RegisterResponseHandler.class);
+            handler.regiter(this,nettyClient.channel,username,passwrod);
         }
-
-        return paakciuFuture;
+        return handler;
     }
 
     @Override
-    public PaakciuFuture login(String username,String passwrod) {
-        PaakciuFuture paakciuFuture=null;
+    public LoginResponseHandler login(String username, String passwrod) {
+        //尝试获取这个对象并且返回;
+        LoginResponseHandler handler=nettyClient.channel.pipeline().get(LoginResponseHandler.class);
         if(nettyClient.channelisOK&&nettyClient.channel!=null)
         {
-            RegisterRequestPacket requestPacket = new RegisterRequestPacket(username, passwrod);
-            ChannelFuture future=nettyClient.channel.writeAndFlush(requestPacket);
-            paakciuFuture=new PaakciuFuture(future);
-            RegisterResponseHandler.INSTANCE.setFuture(paakciuFuture);
+            //修复运行时获取
+            if(handler==null)
+                handler=nettyClient.channel.pipeline().get(LoginResponseHandler.class);
+            handler.login(this,nettyClient.channel,username,passwrod);
         }
-
-        return paakciuFuture;
+        return handler;
     }
     
     @Override
-    public Client send() {
-
+    public Client send(Long toId, String msg) {
+        MessageRequestPacket messageRequestPacket=new MessageRequestPacket();
+        messageRequestPacket.setToUserId(toId);
+        messageRequestPacket.setMessage(msg);
+        nettyClient.channel.writeAndFlush(messageRequestPacket);
         return this;
     }
     
     @Override
     public Client setEventListener(ClientEventListener clientEventListener) {
         nettyClient.setClientEventListener(clientEventListener);
+        return this;
+    }
+    public Client logout(){
+        nettyClient.channel.close();
         return this;
     }
 } 

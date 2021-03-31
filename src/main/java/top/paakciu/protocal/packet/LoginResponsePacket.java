@@ -9,18 +9,27 @@ import top.paakciu.protocal.PacketsCommandMapping;
  */
 public class LoginResponsePacket extends BasePacket {
 
+    private Boolean success=false;
     private String reason;
-    private String userId;
+    private Long userId;
+    private String userName;
 
-    public String getUserId() {
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    private Boolean success=false;
 
 //    @Override
 //    public Byte getCommand() {
@@ -33,7 +42,7 @@ public class LoginResponsePacket extends BasePacket {
     public void setReason(String reason) {
         this.reason = reason;
     }
-    public Boolean getSuccess() {
+    public boolean isSuccess() {
         return success;
     }
     public void setSuccess(Boolean success) {

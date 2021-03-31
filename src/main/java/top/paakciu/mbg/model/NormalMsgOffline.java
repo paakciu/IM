@@ -3,7 +3,7 @@ package top.paakciu.mbg.model;
 import java.io.Serializable;
 
 public class NormalMsgOffline implements Serializable {
-    private Long nmoId;
+    private Long id;
 
     private Long msgid;
 
@@ -13,12 +13,12 @@ public class NormalMsgOffline implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Long getNmoId() {
-        return nmoId;
+    public Long getId() {
+        return id;
     }
 
-    public void setNmoId(Long nmoId) {
-        this.nmoId = nmoId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getMsgid() {
@@ -51,7 +51,7 @@ public class NormalMsgOffline implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", nmoId=").append(nmoId);
+        sb.append(", id=").append(id);
         sb.append(", msgid=").append(msgid);
         sb.append(", nmoToid=").append(nmoToid);
         sb.append(", nmoState=").append(nmoState);

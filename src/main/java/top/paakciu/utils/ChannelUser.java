@@ -6,21 +6,21 @@ package top.paakciu.utils;
  * @ClassName: Session
  * @date: 2021/3/5 16:51
  */
-public class Session {
+public class ChannelUser {
     // 用户唯一性标识
-    private String userId;
+    private Long userId;
     private String userName;
 
-    public Session(String userId, String userName) {
+    public ChannelUser(Long userId, String userName) {
         this.userId = userId;
         this.userName = userName;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

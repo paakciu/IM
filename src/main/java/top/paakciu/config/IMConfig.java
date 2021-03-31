@@ -8,18 +8,36 @@ package top.paakciu.config;
  * 以及其他账号密码
  */
 public class IMConfig {
+    /**
+     * 客户端部分配置参数
+     */
     //服务器的地址和端口
     public static final String HOST="localhost";
     public static final int PORT=4396;
     //客户端连接的重试次数
     public static final int ClientConnectionRetry=5;
+    //规定客户端处理事件的线程池大小
+    public static final int CLIENT_THREAD_POOL_NUM=2;
+
+
+    /**
+     * 服务端部分配置参数
+     */
+
     //mybatis的配置文件名
     public static final String MYBATISCONFIGURATION="configuration.xml";
     //这是规定某些包的字符串长度如果超过某个值，就会拒绝服务，防止数据包攻击或者注入攻击
     public static final int LENGTH_LIMIT=30;
-    //规定客户端处理事件的线程池大小
-    public static final int CLIENT_THREAD_POOL_NUM=2;
+    //规定服务端处理事件的线程池大小
+    public static final int SERVER_THREAD_POOL_NUM=4;
+    //数据库分页每页请求的大小限制
+    public static final int SERVER_DB_PAGE_LIMIT=100;
+    //规定服务端最大连接数
 
+
+    /**
+     * 客户端服务端通用的配置
+     */
 
     //魔数的字节流
     public static final byte[] MAGIC=new byte[]{'P','a','a','k'};

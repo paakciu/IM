@@ -4,14 +4,14 @@ package top.paakciu.protocal.packet;/**
  * @date: 2021/3/18 13:23
  */
 public class MessageRequestPacket extends BasePacket{
-    private String toUserId;
+    private Long toUserId;
     private String message;
 
-    public String getToUserId() {
+    public Long getToUserId() {
         return toUserId;
     }
 
-    public void setToUserId(String toUserId) {
+    public void setToUserId(Long toUserId) {
         this.toUserId = toUserId;
     }
 
