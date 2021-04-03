@@ -8,6 +8,7 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import top.paakciu.protocal.packet.CreateGroupRequestPacket;
 import top.paakciu.protocal.packet.CreateGroupResponsePacket;
+import top.paakciu.server.NettyServer;
 import top.paakciu.utils.AttributesHelper;
 
 import javax.management.Attribute;
@@ -24,28 +25,33 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
     public static final CreateGroupRequestHandler INSTANCE = new CreateGroupRequestHandler();
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CreateGroupRequestPacket msg) throws Exception {
-        List<Long> userIdList=msg.getUserIdList();
-        List<String> userNameList=new ArrayList<>();
+        NettyServer.executor.submit(()->{
+            List<Long> userIdList=msg.getUserIdList();
+            List<String> userNameList=new ArrayList<>();
 
-        //分组
-        ChannelGroup channelGroup=new DefaultChannelGroup(ctx.executor());
-        //构建群组
-        for (Long userid : userIdList) {
-            Channel channel= AttributesHelper.getChannel(userid);
-            if(channel!=null){
-                channelGroup.add(channel);
-                userNameList.add(AttributesHelper.getChannelUser(channel).getUserName());
+            //分组
+            ChannelGroup channelGroup=new DefaultChannelGroup(ctx.executor());
+            //构建群组
+            for (Long userid : userIdList) {
+                Channel channel= AttributesHelper.getChannel(userid);
+                if(channel!=null){
+                    channelGroup.add(channel);
+                    userNameList.add(AttributesHelper.getChannelUser(channel).getUserName());
+                }
             }
-        }
 
-        //创建群聊
-        CreateGroupResponsePacket createGroupResponsePacket=new CreateGroupResponsePacket();
-        createGroupResponsePacket.setSuccess(true);
-        createGroupResponsePacket.setUserNameList(userIdList);
+            //创建群聊
+            CreateGroupResponsePacket createGroupResponsePacket=new CreateGroupResponsePacket();
+            createGroupResponsePacket.setSuccess(true);
+            createGroupResponsePacket.setUserNameList(userIdList);
 
-        channelGroup.writeAndFlush(createGroupResponsePacket);
+            //TODO 持久化之后就会有id
 
-        System.out.println("群创建成功，群里面有："+createGroupResponsePacket.getUserNameList());
+
+            channelGroup.writeAndFlush(createGroupResponsePacket);
+
+            System.out.println("群创建成功，群里面有："+createGroupResponsePacket.getUserNameList());
+        });
     }
 
 }
