@@ -2,9 +2,7 @@ package top.paakciu.client;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import top.paakciu.client.handler.LoginResponseHandler;
-import top.paakciu.client.handler.MessageResponseHandler;
-import top.paakciu.client.handler.RegisterResponseHandler;
+import top.paakciu.client.handler.*;
 import top.paakciu.client.listener.ClientEventListener;
 import top.paakciu.config.IMConfig;
 import io.netty.bootstrap.Bootstrap;
@@ -43,11 +41,17 @@ public class NettyClient {
                 //这里是责任链模式，然后加入逻辑处理器
                 socketChannel.pipeline()
                         //.addLast(new clientHandler())
+                        .addLast(new ClientIdleDetectionHandler())
                         .addLast(new PreFrameDecoder())
                         .addLast(new B2MPacketCodecHandler())
                         .addLast(RegisterResponseHandler.INSTANCE)
                         .addLast(LoginResponseHandler.INSTANCE)
+                        //只在登录之后才进行处理
                         .addLast(MessageResponseHandler.INSTANCE)
+                        //错误处理
+                        .addLast(ErrorMessageHandler.INSTANCE)
+                        //心跳包的定期发送
+                        .addLast(new HeartBeatTimerHandler())
                 ;
                 //.addLast(PacketEncoder.INSTANCE);
 //                                .addLast(new ZhanBaoClientHandler());

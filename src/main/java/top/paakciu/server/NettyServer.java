@@ -12,9 +12,7 @@ import top.paakciu.config.IMConfig;
 import top.paakciu.core.Server;
 import top.paakciu.protocal.codec.handler.B2MPacketCodecHandler;
 import top.paakciu.protocal.codec.handler.PreFrameDecoder;
-import top.paakciu.server.handler.AuthorityHandler;
-import top.paakciu.server.handler.LoginRequestHandler;
-import top.paakciu.server.handler.RegisterRequestHandler;
+import top.paakciu.server.handler.*;
 import top.paakciu.server.handler.packetshandler.MessageRequestHandler;
 
 import java.util.concurrent.ExecutorService;
@@ -36,6 +34,7 @@ public class NettyServer implements Server {
                 System.out.println("客户机接入");
                 //添加逻辑处理器
                 nioSocketChannel.pipeline()
+                        .addLast(new ServerIdleDetectionHandler())
                         //拆包器
                         .addLast(new PreFrameDecoder())
                         //解码器---升级成 解码译码器
@@ -46,8 +45,12 @@ public class NettyServer implements Server {
                         .addLast(LoginRequestHandler.INSTANCE)
                         //权限认证--是否已经登录
                         .addLast(AuthorityHandler.INSTANCE)
+                        //心跳包响应
+                        .addLast(HeartBeatRequestHandler.INSTANCE)
                         //消息处理器
-                        .addLast(MessageRequestHandler.INSTANCE)
+                        //.addLast(MessageRequestHandler.INSTANCE)
+                        //综合处理器
+                        .addLast(PacketsHandlerMapping.INSTANCE)
                 ;
             }
         });
@@ -55,7 +58,7 @@ public class NettyServer implements Server {
 
     public static void main(String[] args)
     {
-        INSTANCE.startListening(4396);
+        INSTANCE.startListening(IMConfig.PORT);
 
     }
     //单例模式

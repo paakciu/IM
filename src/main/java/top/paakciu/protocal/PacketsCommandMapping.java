@@ -17,6 +17,9 @@ public final class PacketsCommandMapping {
     public final static Byte REGISTER_REQUEST=4;
     public final static Byte REGISTER_RESPONSE=5;
     public final static Byte ERROR=6;
+    public final static Byte HEARTBEAT=7;
+    public final static Byte CREATE_GROUP_REQUEST=8;
+    public final static Byte CREATE_GROUP_RESPONSE=9;
 
     //双向映射表
     private final static HashMap<Class<? extends BasePacket>,Byte> map=new HashMap<>();
@@ -30,6 +33,9 @@ public final class PacketsCommandMapping {
         list.add(RegisterRequestPacket.class);
         list.add(RegisterResponsePacket.class);
         list.add(ErrorMessagePacket.class);
+        list.add(HeartBeatPacket.class);
+        list.add(CreateGroupRequestPacket.class);
+        list.add(CreateGroupResponsePacket.class);
 
         map.put(LoginRequestPacket.class,LOGIN_REQUEST);
         map.put(LoginResponsePacket.class,LOGIN_RESPONSE);
@@ -38,6 +44,9 @@ public final class PacketsCommandMapping {
         map.put(RegisterRequestPacket.class,REGISTER_REQUEST);
         map.put(RegisterResponsePacket.class,REGISTER_RESPONSE);
         map.put(ErrorMessagePacket.class,ERROR);
+        map.put(HeartBeatPacket.class,HEARTBEAT);
+        map.put(CreateGroupRequestPacket.class,CREATE_GROUP_REQUEST);
+        map.put(CreateGroupResponsePacket.class,CREATE_GROUP_RESPONSE);
     }
 
     //取出命令对应的类

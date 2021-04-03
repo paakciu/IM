@@ -27,6 +27,7 @@ public class AuthorityHandler extends ChannelInboundHandlerAdapter {
         }else{
             //如果没有登录，就不能后续处理，要关闭连接
             //System.out.println("channelRead登录失败");
+            System.out.println("收到消息，但是没有登录，拒绝下一步进行");
             ctx.channel().close();
         }
 

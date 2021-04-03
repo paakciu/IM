@@ -36,8 +36,15 @@ public class AttributesHelper {
         //System.out.println("判断登录="+loginAttr.get() != null&&loginAttr.get()==true);
         return (loginAttr.get() != null&&loginAttr.get()==1);
     }
-    
 
+    /**
+     * 执行关于这个表的退出操作
+     * @param ch
+     */
+    public static void logout(Channel ch){
+        asLogout(ch);
+        removeChannelUser(ch);
+    }
 
 
 

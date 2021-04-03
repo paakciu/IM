@@ -7,6 +7,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 import top.paakciu.mbg.model.NormalMsg;
 import top.paakciu.mbg.model.NormalMsgOffline;
+import top.paakciu.protocal.PacketsCommandMapping;
 import top.paakciu.protocal.packet.ErrorMessagePacket;
 import top.paakciu.protocal.packet.MessageRequestPacket;
 import top.paakciu.protocal.packet.MessageResponsePacket;
@@ -75,6 +76,7 @@ public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRe
             //如果重试大于了2次，就不再尝试持久化了，直接向客户端报告服务器忙或者服务器数据库异常。
             ErrorMessagePacket errorMessagePacket=new ErrorMessagePacket();
             errorMessagePacket.setSuccess(false);
+            errorMessagePacket.setErrorCode(PacketsCommandMapping.MESSAGE_REQUEST);
             errorMessagePacket.setReason("服务器忙或者服务器数据库异常");
             fromChannel.writeAndFlush(errorMessagePacket);
             //executor.shutdown();
@@ -110,6 +112,7 @@ public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRe
             if(ref<=0){
                 ErrorMessagePacket errorMessagePacket=new ErrorMessagePacket();
                 errorMessagePacket.setSuccess(false);
+                errorMessagePacket.setErrorCode(PacketsCommandMapping.MESSAGE_REQUEST);
                 errorMessagePacket.setReason("服务器忙或者服务器数据库异常,对方不在线并且离线消息同步失败");
                 fromChannel.writeAndFlush(errorMessagePacket);
                 System.out.println("离线消息服务器信息添加失败");

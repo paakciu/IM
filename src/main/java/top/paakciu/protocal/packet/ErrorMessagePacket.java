@@ -8,6 +8,15 @@ package top.paakciu.protocal.packet;
 public class ErrorMessagePacket extends BasePacket{
     private boolean success;
     private String reason;
+    private Byte errorCode;
+
+    public Byte getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(Byte errorCode) {
+        this.errorCode = errorCode;
+    }
 
     public boolean isSuccess() {
         return success;
@@ -23,5 +32,14 @@ public class ErrorMessagePacket extends BasePacket{
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    @Override
+    public String toString() {
+        return "ErrorMessagePacket{" +
+                "success=" + success +
+                ", reason='" + reason + '\'' +
+                ", errorCode=" + errorCode +
+                '}';
     }
 }

@@ -1,5 +1,7 @@
 package top.paakciu.config;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 这个类负责全局的一些账号密码配置
  * 例如说
@@ -11,19 +13,20 @@ public class IMConfig {
     /**
      * 客户端部分配置参数
      */
-    //服务器的地址和端口
-    public static final String HOST="localhost";
-    public static final int PORT=4396;
     //客户端连接的重试次数
     public static final int ClientConnectionRetry=5;
     //规定客户端处理事件的线程池大小
     public static final int CLIENT_THREAD_POOL_NUM=2;
-
+    //客户端连接空闲时间,一般定为服务器的3分之一
+    public static final int CLIENT_IDLE_TIME=20;
+    //客户端心跳包的发送间隔
+    public static final int CLIENT_HEARTBEAT_INTERVAL=9;
+    //时间单位
+    public static final TimeUnit CLIENT_TIME_UNIT=TimeUnit.SECONDS;
 
     /**
      * 服务端部分配置参数
      */
-
     //mybatis的配置文件名
     public static final String MYBATISCONFIGURATION="configuration.xml";
     //这是规定某些包的字符串长度如果超过某个值，就会拒绝服务，防止数据包攻击或者注入攻击
@@ -33,12 +36,17 @@ public class IMConfig {
     //数据库分页每页请求的大小限制
     public static final int SERVER_DB_PAGE_LIMIT=100;
     //规定服务端最大连接数
-
+    //服务端端连接空闲时间
+    public static final int SERVER_IDLE_TIME=60;
+    //时间单位
+    public static final TimeUnit SERVER_TIME_UNIT=TimeUnit.SECONDS;
 
     /**
      * 客户端服务端通用的配置
      */
-
+    //服务器的地址和端口
+    public static final String HOST="localhost";
+    public static final int PORT=4396;
     //魔数的字节流
     public static final byte[] MAGIC=new byte[]{'P','a','a','k'};
     //如果是为了读4个字节方便，可以使用魔数对应的int来比较结果，但是跟上者一定是要一一对应的。
