@@ -10,6 +10,7 @@ import top.paakciu.protocal.packet.JoinGroupResponsePacket;
  * @date: 2021/4/3 15:23
  */
 public class JoinGroupResponseHandler extends SimpleChannelInboundHandler<JoinGroupResponsePacket> {
+    public final static JoinGroupResponseHandler INSTANCE=new JoinGroupResponseHandler();
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, JoinGroupResponsePacket msg) throws Exception {
         if (msg.isSuccess()) {

@@ -5,8 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import top.paakciu.protocal.PacketsCommandMapping;
 import top.paakciu.protocal.packet.BasePacket;
-import top.paakciu.server.handler.packetshandler.CreateGroupRequestHandler;
-import top.paakciu.server.handler.packetshandler.MessageRequestHandler;
+import top.paakciu.protocal.packet.JoinGroupRequestPacket;
+import top.paakciu.server.handler.packetshandler.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +30,10 @@ public class PacketsHandlerMapping extends SimpleChannelInboundHandler<BasePacke
 //        handlerMap.put(PacketsCommandMapping.LOGIN_REQUEST, LoginRequestHandler.INSTANCE);
         handlerMap.put(PacketsCommandMapping.MESSAGE_REQUEST, MessageRequestHandler.INSTANCE);
         handlerMap.put(PacketsCommandMapping.CREATE_GROUP_REQUEST, CreateGroupRequestHandler.INSTANCE);
-
+        handlerMap.put(PacketsCommandMapping.JOIN_GROUP_REQUEST, JoinGroupRequestHandler.INSTANCE);
+        handlerMap.put(PacketsCommandMapping.GET_GROUP_MEMBER_REQUEST, GetGroupMembersRequestHandler.INSTANCE);
+        handlerMap.put(PacketsCommandMapping.GROUP_MESSAGE_REQUEST, GroupMessageRequestHandler.INSTANCE);
+        handlerMap.put(PacketsCommandMapping.QUIT_GROUP_REQUEST, QuitGroupRequestHandler.INSTANCE);
     }
 
     @Override

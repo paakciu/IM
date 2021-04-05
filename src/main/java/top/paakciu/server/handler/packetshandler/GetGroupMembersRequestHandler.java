@@ -1,6 +1,7 @@
 package top.paakciu.server.handler.packetshandler;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -19,7 +20,9 @@ import java.util.List;
  * @ClassName: GetGroupMembersRequestHandler
  * @date: 2021/4/3 16:00
  */
+@ChannelHandler.Sharable
 public class GetGroupMembersRequestHandler extends SimpleChannelInboundHandler<GetGroupMembersRequestPacket> {
+    public static final GetGroupMembersRequestHandler INSTANCE = new GetGroupMembersRequestHandler();
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GetGroupMembersRequestPacket msg) throws Exception {
         NettyServer.executor.submit(()->{

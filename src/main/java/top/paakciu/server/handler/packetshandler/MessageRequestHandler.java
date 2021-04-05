@@ -48,6 +48,7 @@ public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRe
             MessageResponsePacket messageResponsePacket = new MessageResponsePacket();
             messageResponsePacket.setFromUserId(channelUser.getUserId());
             messageResponsePacket.setFromUserName(channelUser.getUserName());
+            messageResponsePacket.setDate(new Date());
             messageResponsePacket.setMessage(messageRequestPacket.getMessage());
 
             System.out.println("从客户端"+channelUser.getUserId()+"到客户端"+messageRequestPacket.getToUserId());
@@ -100,7 +101,13 @@ public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRe
         System.out.println("进入send");
         if (toChannel != null && AttributesHelper.hasLogin(toChannel)) {
             System.out.println("发送到在线客户端");
-            toChannel.writeAndFlush(messageResponsePacket);
+            toChannel.writeAndFlush(messageResponsePacket).addListener(future -> {
+                if(future.isSuccess()){
+                    System.out.println("发送成功");
+                }else{
+                    System.out.println("发送失败");
+                }
+            });
         } else {
             System.err.println("[" + normalMsg.getNmToid() + "] 不在线，发送失败!");
             // 加入到离线消息

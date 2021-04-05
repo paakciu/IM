@@ -1,5 +1,6 @@
 package top.paakciu.utils;
 
+import com.alibaba.fastjson.JSON;
 import top.paakciu.protocal.SerializerAlgorithm;
 import top.paakciu.protocal.serializer.Serializer;
 
@@ -17,5 +18,11 @@ public class ExtraPacketHelper {
     }
     public static byte[] ObjectToBytes(Object obj){
         return serializer.serialize(obj);
+    }
+    public static <T> T StringToObject(Class<T> clazz, String str){
+        return JSON.parseObject(str,clazz);
+    }
+    public static String ObjectToString(Object obj){
+        return JSON.toJSONString(obj);
     }
 }

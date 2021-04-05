@@ -4,6 +4,7 @@ import top.paakciu.client.handler.LoginResponseHandler;
 import top.paakciu.client.handler.RegisterResponseHandler;
 import top.paakciu.client.listener.ClientEventListener;
 import top.paakciu.client.DefaultClient;
+import top.paakciu.client.manage.NormalMessageManage;
 //import top.paakciu.client.listener.PaakciuFuture;
 
 public interface Client {
@@ -17,10 +18,13 @@ public interface Client {
     //登录
     LoginResponseHandler login(String username, String passwrod);
     //发送消息
-    Client send(Long toId, String msg);
+    NormalMessageManage getNormalMessageManage();
+    Client logout();
 
     //监听器
-    public Client setEventListener(ClientEventListener clientEventListener);
+    Client setEventListener(ClientEventListener clientEventListener);
+
+
     //token
 
     //。。。

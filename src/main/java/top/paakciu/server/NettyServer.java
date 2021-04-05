@@ -43,10 +43,10 @@ public class NettyServer implements Server {
                         .addLast(RegisterRequestHandler.INSTANCE)
                         //登录消息验证
                         .addLast(LoginRequestHandler.INSTANCE)
-                        //权限认证--是否已经登录
-                        .addLast(AuthorityHandler.INSTANCE)
                         //心跳包响应
                         .addLast(HeartBeatRequestHandler.INSTANCE)
+                        //权限认证--是否已经登录
+                        .addLast(AuthorityHandler.INSTANCE)
                         //消息处理器
                         //.addLast(MessageRequestHandler.INSTANCE)
                         //综合处理器

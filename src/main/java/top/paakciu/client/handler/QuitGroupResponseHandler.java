@@ -10,6 +10,7 @@ import top.paakciu.protocal.packet.QuitGroupResponsePacket;
  * @date: 2021/4/3 16:10
  */
 public class QuitGroupResponseHandler extends SimpleChannelInboundHandler<QuitGroupResponsePacket> {
+    public final static QuitGroupResponseHandler INSTANCE=new QuitGroupResponseHandler();
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, QuitGroupResponsePacket responsePacket) {
         if (responsePacket.isSuccess()) {

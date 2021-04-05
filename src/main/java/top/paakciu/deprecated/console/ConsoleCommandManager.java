@@ -1,4 +1,4 @@
-package top.paakciu.client.console;
+package top.paakciu.deprecated.console;
 
 import java.util.HashMap;
 import java.util.Map;

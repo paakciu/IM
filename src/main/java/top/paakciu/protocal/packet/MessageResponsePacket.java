@@ -1,4 +1,8 @@
-package top.paakciu.protocal.packet;/**
+package top.paakciu.protocal.packet;
+
+import java.util.Date;
+
+/**
  * @ClassName: MessageResponsePacket 
  * @author paakciu
  * @date: 2021/3/18 13:24
@@ -8,8 +12,17 @@ public class MessageResponsePacket extends BasePacket{
     private Long fromUserId;
     private String fromUserName;
     private String message;
+    private Date date=new Date();
 
-//    public Boolean isSuccess() {
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    //    public Boolean isSuccess() {
 //        return success;
 //    }
 //

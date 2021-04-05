@@ -5,6 +5,7 @@ import top.paakciu.client.listener.ClientEventListener;
 import top.paakciu.client.listener.ResponseListener;
 import top.paakciu.client.handler.LoginResponseHandler;
 
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -104,7 +105,7 @@ public class test implements ClientEventListener {
                             System.out.println("请输入toid msg：");
                             Long toid = sc.nextLong();
                             String msg = sc.next();
-                            Client.defaultClient.send(toid, msg);
+                            send(toid,msg);
                         }
                     }).start();
 
@@ -113,6 +114,32 @@ public class test implements ClientEventListener {
 
     }
     public void logout(){
-
+        Client.defaultClient.logout();
+    }
+    public void setSendListener(){
+        Client.defaultClient.getNormalMessageManage()
+                //收到消息的处理器
+                .setHandlerListener(messageResponsePacket->{
+                    //TODO 这里写怎么处理这些数据的，下面是处理样例
+                    System.out.println(messageResponsePacket.getDate()
+                            + ": 收到服务端的消息: "
+                            + messageResponsePacket.getMessage());
+                    Long fromUserId = messageResponsePacket.getFromUserId();
+                    String fromUserName = messageResponsePacket.getFromUserName();
+                    System.out.println(fromUserId + ":"
+                            + fromUserName + " -> "
+                            + messageResponsePacket .getMessage());
+                })
+                //发送到服务器成功
+                .setSendSuccessListener(()->{
+                    System.out.println("发送到服务器成功");
+                })
+                //发送到服务器失败
+                .setSendFailListener(()->{
+                    System.out.println("发送到服务器失败");
+                });
+    }
+    public void send(Long toid,String msg){
+        Client.defaultClient.getNormalMessageManage().send(toid,msg);
     }
 }

@@ -16,7 +16,7 @@ public class IMConfig {
     //客户端连接的重试次数
     public static final int ClientConnectionRetry=5;
     //规定客户端处理事件的线程池大小
-    public static final int CLIENT_THREAD_POOL_NUM=2;
+    public static final int CLIENT_THREAD_POOL_NUM=3;
     //客户端连接空闲时间,一般定为服务器的3分之一
     public static final int CLIENT_IDLE_TIME=20;
     //客户端心跳包的发送间隔

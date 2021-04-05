@@ -44,16 +44,22 @@ public class NettyClient {
                         .addLast(new ClientIdleDetectionHandler())
                         .addLast(new PreFrameDecoder())
                         .addLast(new B2MPacketCodecHandler())
-                        .addLast(RegisterResponseHandler.INSTANCE)
-                        .addLast(LoginResponseHandler.INSTANCE)
+                        .addLast(new RegisterResponseHandler())
+                        .addLast(new LoginResponseHandler())
                         //只在登录之后才进行处理
-                        .addLast(MessageResponseHandler.INSTANCE)
+                        .addLast(new MessageResponseHandler())
                         //错误处理
-                        .addLast(ErrorMessageHandler.INSTANCE)
+                        .addLast(new ErrorMessageHandler())
+                        //群组操作
+                        .addLast(new CreateGroupResponseHandler())
+                        .addLast(new GetGroupMembersResponseHandler())
+                        .addLast(new GroupMessageResponseHandler())
+                        .addLast(new JoinGroupResponseHandler())
+                        .addLast(new QuitGroupResponseHandler())
                         //心跳包的定期发送
                         .addLast(new HeartBeatTimerHandler())
                 ;
-                //.addLast(PacketEncoder.INSTANCE);
+                //.addLast(PacketEncoder());
 //                                .addLast(new ZhanBaoClientHandler());
             }
         });

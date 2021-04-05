@@ -9,7 +9,9 @@ import top.paakciu.protocal.packet.CreateGroupResponsePacket;
  * @ClassName: CreateGroupResponseHandler
  * @date: 2021/4/2 16:58
  */
+
 public class CreateGroupResponseHandler extends SimpleChannelInboundHandler<CreateGroupResponsePacket> {
+    public final static CreateGroupResponseHandler INSTANCE=new CreateGroupResponseHandler();
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CreateGroupResponsePacket createGroupResponsePacket) throws Exception {
         if(createGroupResponsePacket.isSuccess()) {

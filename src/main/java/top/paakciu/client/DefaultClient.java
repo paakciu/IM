@@ -1,8 +1,13 @@
 package top.paakciu.client;
 
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import top.paakciu.client.handler.LoginResponseHandler;
+import top.paakciu.client.handler.MessageResponseHandler;
 import top.paakciu.client.handler.RegisterResponseHandler;
 import top.paakciu.client.listener.ClientEventListener;
+import top.paakciu.client.manage.NormalMessageManage;
 import top.paakciu.config.IMConfig;
 import top.paakciu.core.Client;
 import top.paakciu.protocal.packet.MessageRequestPacket;
@@ -58,14 +63,26 @@ public class DefaultClient implements Client {
         }
         return handler;
     }
-    
+    private volatile NormalMessageManage normalMessageManage=null;
+
     @Override
-    public Client send(Long toId, String msg) {
-        MessageRequestPacket messageRequestPacket=new MessageRequestPacket();
-        messageRequestPacket.setToUserId(toId);
-        messageRequestPacket.setMessage(msg);
-        nettyClient.channel.writeAndFlush(messageRequestPacket);
-        return this;
+    public NormalMessageManage getNormalMessageManage(){
+
+        //尝试获取这个对象并且返回;
+        MessageResponseHandler handler=nettyClient.channel.pipeline().get(MessageResponseHandler.class);
+        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+            if(handler==null)
+                handler=nettyClient.channel.pipeline().get(MessageResponseHandler.class);
+            //双重锁检测
+            if (normalMessageManage == null) {
+                synchronized (this) {
+                    if (normalMessageManage == null) {
+                        normalMessageManage = new NormalMessageManage(nettyClient.channel,handler);
+                    }
+                }
+            }
+        }
+        return normalMessageManage;
     }
     
     @Override
@@ -73,8 +90,10 @@ public class DefaultClient implements Client {
         nettyClient.setClientEventListener(clientEventListener);
         return this;
     }
+    @Override
     public Client logout(){
         nettyClient.channel.close();
         return this;
     }
+
 } 

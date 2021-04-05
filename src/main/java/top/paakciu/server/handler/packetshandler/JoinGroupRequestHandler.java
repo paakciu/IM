@@ -1,5 +1,6 @@
 package top.paakciu.server.handler.packetshandler;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -13,7 +14,9 @@ import top.paakciu.utils.GroupsHelper;
  * @ClassName: JoinGroupRequestHandler
  * @date: 2021/4/3 14:34
  */
+@ChannelHandler.Sharable
 public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGroupRequestPacket> {
+    public static final JoinGroupRequestHandler INSTANCE = new JoinGroupRequestHandler();
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, JoinGroupRequestPacket msg) throws Exception {
         NettyServer.executor.submit(()->{

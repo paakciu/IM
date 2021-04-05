@@ -10,7 +10,9 @@ import top.paakciu.protocal.packet.GetGroupMembersResponsePacket;
  * @ClassName: GetGroupMembersResponseHandler
  * @date: 2021/4/3 16:05
  */
+
 public class GetGroupMembersResponseHandler extends SimpleChannelInboundHandler<GetGroupMembersResponsePacket> {
+    public final static GetGroupMembersResponseHandler INSTANCE=new GetGroupMembersResponseHandler();
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GetGroupMembersResponsePacket msg) throws Exception {
 

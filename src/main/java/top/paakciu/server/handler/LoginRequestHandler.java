@@ -26,6 +26,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) throws Exception {
 
+        System.out.println("收到登录请求");
         //准备响应
         LoginResponsePacket response= new LoginResponsePacket();
 
