@@ -13,7 +13,7 @@ public abstract class BaseManageWithHandlerFunction  <Packet,Handler extends Sim
     private ReturnThis son;
     protected ListenWithHandlerFunction listeners;
 
-    public BaseManageWithHandlerFunction(Channel channel,ChannelHandler handler) {
+    protected BaseManageWithHandlerFunction(Channel channel,ChannelHandler handler) {
         this.handler=(Handler) handler;
         this.channel=channel;
         listeners=this.handler.getListeners();

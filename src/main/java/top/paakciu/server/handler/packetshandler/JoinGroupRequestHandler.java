@@ -14,6 +14,7 @@ import top.paakciu.utils.GroupsHelper;
  * @ClassName: JoinGroupRequestHandler
  * @date: 2021/4/3 14:34
  */
+//TODO 根据ipad图重做该处理
 @ChannelHandler.Sharable
 public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGroupRequestPacket> {
     public static final JoinGroupRequestHandler INSTANCE = new JoinGroupRequestHandler();

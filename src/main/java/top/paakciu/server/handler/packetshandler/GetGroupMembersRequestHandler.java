@@ -20,6 +20,7 @@ import java.util.List;
  * @ClassName: GetGroupMembersRequestHandler
  * @date: 2021/4/3 16:00
  */
+//TODO 根据ipad图重做该处理
 @ChannelHandler.Sharable
 public class GetGroupMembersRequestHandler extends SimpleChannelInboundHandler<GetGroupMembersRequestPacket> {
     public static final GetGroupMembersRequestHandler INSTANCE = new GetGroupMembersRequestHandler();

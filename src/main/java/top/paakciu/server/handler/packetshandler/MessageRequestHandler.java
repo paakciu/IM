@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
  * @ClassName: MessageRequestHandler
  * @date: 2021/3/3 18:09
  */
+//TODO 根据ipad图重做该处理
 @ChannelHandler.Sharable
 public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRequestPacket> {
     //单例

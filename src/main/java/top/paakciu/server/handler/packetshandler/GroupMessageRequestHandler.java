@@ -16,6 +16,7 @@ import top.paakciu.utils.GroupsHelper;
  * @ClassName: GroupMessageRequestHandler
  * @date: 2021/4/3 16:48
  */
+//TODO 根据ipad图重做该处理
 @ChannelHandler.Sharable
 public class GroupMessageRequestHandler extends SimpleChannelInboundHandler<GroupMessageRequestPacket> {
     public static final GroupMessageRequestHandler INSTANCE = new GroupMessageRequestHandler();

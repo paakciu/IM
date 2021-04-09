@@ -10,11 +10,14 @@ import top.paakciu.protocal.packet.GroupMessageResponsePacket;
  * @date: 2021/4/3 17:03
  */
 //TODO
-public class GroupMessageResponseHandler extends SimpleChannelInboundHandler<GroupMessageResponsePacket> {
+public class GroupMessageResponseHandler extends SimpleChannelInboundHandlerWithHandlerFunction<GroupMessageResponsePacket> {
     public final static GroupMessageResponseHandler INSTANCE=new GroupMessageResponseHandler();
+
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GroupMessageResponsePacket msg) throws Exception {
-        System.out.println("收到群"+msg.getToGroupId()+" "+msg.getFromUserId()+"发出的消息："+msg.getMessage());
+        if(listeners!=null&&listeners.handlerListener!=null)
+            listeners.handlerListener.onHandle(msg);
     }
 
 }

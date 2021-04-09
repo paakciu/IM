@@ -2,12 +2,15 @@ package top.paakciu.client;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import top.paakciu.client.handler.*;
 import top.paakciu.client.listener.ClientEventListener;
 import top.paakciu.client.listener.ErrorListener;
+import top.paakciu.client.listener.SendSuccessListener;
+import top.paakciu.client.listener.SimpleListener;
 import top.paakciu.client.manage.*;
 import top.paakciu.config.IMConfig;
 import top.paakciu.core.Client;
@@ -180,8 +183,23 @@ public class DefaultClient implements Client {
         }
         return getGroupMembersManage;
     }
-    
-    
+
+    //TODO GroupMessageManage
+
+
+
+    public <handler extends ChannelHandler> handler getManage(Class<handler> handlerClazz, SendSuccessListener listener){
+        handler handler=nettyClient.channel.pipeline().get(handlerClazz);
+        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+            if (handler == null)
+                handler = nettyClient.channel.pipeline().get(handlerClazz);
+            //双重锁检测
+            if(listener!=null)
+                listener.onSendSuccess();
+        }
+        return handler;
+    }
+
     
 //    private ConcurrentHashMap<Class,Object> manageMap=new ConcurrentHashMap<Class,Object>();
 //    public <manage, hand> manage getManage(Class<manage> manageClazz, Class<? extends ChannelHandler> handlerClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {

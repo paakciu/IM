@@ -193,6 +193,11 @@ public class test implements ClientEventListener {
     public void getgroupmemebers(Long groupid){
         Client.defaultClient.getGetGroupMembersManage().getGroupMembers(groupid);
     }
+    public void sendgroup(){
+//        Client.defaultClient
+
+               //TODO System.out.println("收到群"+msg.getToGroupId()+" "+msg.getFromUserId()+"发出的消息："+msg.getMessage());
+    }
 }
 
 

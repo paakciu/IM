@@ -39,6 +39,7 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
                     userNameList.add(AttributesHelper.getChannelUser(channel).getUserName());
                 }
             }
+            //TODO 根据ipad图重做该处理
 
             //创建群聊
             CreateGroupResponsePacket createGroupResponsePacket=new CreateGroupResponsePacket();

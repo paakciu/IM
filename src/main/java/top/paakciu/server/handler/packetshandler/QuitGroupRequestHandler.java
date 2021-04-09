@@ -15,6 +15,7 @@ import top.paakciu.utils.GroupsHelper;
  * @ClassName: QuitGroupRequestHandler
  * @date: 2021/4/3 15:27
  */
+//TODO 根据ipad图重做该处理
 @ChannelHandler.Sharable
 public class QuitGroupRequestHandler extends SimpleChannelInboundHandler<QuitGroupRequestPacket> {
     public static final QuitGroupRequestHandler INSTANCE = new QuitGroupRequestHandler();
