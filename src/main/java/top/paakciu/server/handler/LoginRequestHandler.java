@@ -6,6 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import top.paakciu.mbg.model.User;
 import top.paakciu.protocal.packet.LoginRequestPacket;
 import top.paakciu.protocal.packet.LoginResponsePacket;
+import top.paakciu.server.NettyServer;
 import top.paakciu.service.UserService;
 import top.paakciu.utils.AttributesHelper;
 import top.paakciu.utils.ChannelUser;
@@ -25,44 +26,45 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) throws Exception {
+        NettyServer.executor.submit(()-> {
+            System.out.println("收到登录请求");
+            //准备响应
+            LoginResponsePacket response= new LoginResponsePacket();
 
-        System.out.println("收到登录请求");
-        //准备响应
-        LoginResponsePacket response= new LoginResponsePacket();
-
-        //唯一标识符---------这里逻辑需要完善
-        //String uuid= UUID.nameUUIDFromBytes(loginRequestPacket.getUserId().getBytes(StandardCharsets.UTF_8)).toString();
-        //可以在uuid后面加数据库的自增id
+            //唯一标识符---------这里逻辑需要完善
+            //String uuid= UUID.nameUUIDFromBytes(loginRequestPacket.getUserId().getBytes(StandardCharsets.UTF_8)).toString();
+            //可以在uuid后面加数据库的自增id
 //        String uuid=UUID.randomUUID().toString();
 //        response.setUserId(uuid);
 //        Session session=new Session(uuid, loginRequestPacket.getUsername());
 //        AttributesHelper.bindSession(ctx.channel(),session);
 
-        // 在这里要获取数据库返回的编号大小，这个一定要返回呀。
-        User user=getUser(loginRequestPacket);
-        // 登录校验
-        if (valid(user)) {
-            // 校验成功
-            System.out.println("登录成功！");
-            ChannelUser channelUser=new ChannelUser(user.getId(),user.getUsername());
-            AttributesHelper.asLogin(ctx.channel());
-            AttributesHelper.setChannelUser(ctx.channel(),channelUser);
+            // 在这里要获取数据库返回的编号大小，这个一定要返回呀。
+            User user=getUser(loginRequestPacket);
+            // 登录校验
+            if (valid(user)) {
+                // 校验成功
+                System.out.println("登录成功！");
+                ChannelUser channelUser=new ChannelUser(user.getId(),user.getUsername());
+                AttributesHelper.asLogin(ctx.channel());
+                AttributesHelper.setChannelUser(ctx.channel(),channelUser);
 
-            response.setUserId(user.getId());
-            response.setSuccess(true);
-            response.setUserName(user.getUsername());
+                response.setUserId(user.getId());
+                response.setSuccess(true);
+                response.setUserName(user.getUsername());
 
-        } else {
-            // 校验失败
-            response.setSuccess(false);
-            response.setReason("账号密码校验失败");
-        }
+            } else {
+                // 校验失败
+                response.setSuccess(false);
+                response.setReason("账号密码校验失败");
+            }
 
-        //ByteBuf buff= PacketCodec.encode(ctx.alloc().buffer(),response);
-        //ctx.channel().writeAndFlush(response);
-        //更改传播路径，更快到达编码器
-        ctx.writeAndFlush(response);
-        //不调用父类方法就不会传递到下个节点
+            //ByteBuf buff= PacketCodec.encode(ctx.alloc().buffer(),response);
+            //ctx.channel().writeAndFlush(response);
+            //更改传播路径，更快到达编码器
+            ctx.writeAndFlush(response);
+            //不调用父类方法就不会传递到下个节点
+        });
     }
 
     //用户断线

@@ -2,6 +2,7 @@ package top.paakciu.client.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import top.paakciu.client.listener.ErrorListener;
 import top.paakciu.protocal.packet.ErrorMessagePacket;
 
 
@@ -14,8 +15,14 @@ import top.paakciu.protocal.packet.ErrorMessagePacket;
 public class ErrorMessageHandler extends SimpleChannelInboundHandler<ErrorMessagePacket> {
     public final static ErrorMessageHandler INSTANCE=new ErrorMessageHandler();
 
+    private ErrorListener<ErrorMessagePacket> listener;
+    public void setListener(ErrorListener<ErrorMessagePacket> listener) {
+        this.listener = listener;
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ErrorMessagePacket msg) throws Exception {
-        System.out.println("收到出问题的消息"+msg.getReason()+msg.getErrorCode());
+        if(listener!=null)
+            listener.onError(msg);
     }
 }

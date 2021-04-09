@@ -9,7 +9,7 @@ import top.paakciu.protocal.packet.GroupMessageResponsePacket;
  * @ClassName: GroupMessageResponseHandler
  * @date: 2021/4/3 17:03
  */
-
+//TODO
 public class GroupMessageResponseHandler extends SimpleChannelInboundHandler<GroupMessageResponsePacket> {
     public final static GroupMessageResponseHandler INSTANCE=new GroupMessageResponseHandler();
     @Override

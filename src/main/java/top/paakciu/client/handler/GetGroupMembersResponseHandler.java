@@ -11,11 +11,13 @@ import top.paakciu.protocal.packet.GetGroupMembersResponsePacket;
  * @date: 2021/4/3 16:05
  */
 
-public class GetGroupMembersResponseHandler extends SimpleChannelInboundHandler<GetGroupMembersResponsePacket> {
+public class GetGroupMembersResponseHandler extends SimpleChannelInboundHandlerWithHandlerFunction<GetGroupMembersResponsePacket> {
     public final static GetGroupMembersResponseHandler INSTANCE=new GetGroupMembersResponseHandler();
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GetGroupMembersResponsePacket msg) throws Exception {
+        if(listeners.handlerListener!=null)
+            listeners.handlerListener.onHandle(msg);
 
-        System.out.println("群[" + msg.getGroupId() + "]中的人包括：" + msg.getChannelUserList());
     }
 }

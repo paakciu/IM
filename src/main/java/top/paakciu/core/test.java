@@ -4,8 +4,11 @@ import io.netty.channel.Channel;
 import top.paakciu.client.listener.ClientEventListener;
 import top.paakciu.client.listener.ResponseListener;
 import top.paakciu.client.handler.LoginResponseHandler;
+import top.paakciu.protocal.packet.JoinGroupRequestPacket;
+import top.paakciu.protocal.packet.JoinGroupResponsePacket;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -142,4 +145,75 @@ public class test implements ClientEventListener {
     public void send(Long toid,String msg){
         Client.defaultClient.getNormalMessageManage().send(toid,msg);
     }
+
+    public void setCreateGroupListener(){
+        Client.defaultClient.getCreateGroupManage().setSuccessListener((createGroupResponsePacket)->{
+            System.out.println("群创建成功，群里面有："+createGroupResponsePacket.getUserNameList());
+        });
+    }
+    public void CreateGroupListener(List<Long> userList) {
+        Client.defaultClient.getCreateGroupManage().createGroup(userList);
+    }
+    public void setJoinGroupListener(){
+        Client.defaultClient.getJoinGroupManage()
+                .setSuccessListener((joinGroupResponsePacket)->{
+                    System.out.println("加入群[" + joinGroupResponsePacket.getGroupId() + "]成功!");
+                })
+                .setFailListener(JoinGroupResponsePacket->{
+                    System.err.println("加入群[" + JoinGroupResponsePacket.getGroupId() + "]失败，原因为：" + JoinGroupResponsePacket.getReason());
+                });
+    }
+    public void joinGroup(Long groupId){
+        Client.defaultClient.getJoinGroupManage().joinGroup(groupId);
+    }
+    public void setQuitGroup(){
+        Client.defaultClient.getQuitGroupManage()
+                .setSuccessListener((responsePacket)->{
+                    System.out.println("退出群聊[" + responsePacket.getGroupId() + "]成功！");
+                })
+                .setFailListener((responsePacket)->{
+                    System.out.println("退出群聊[" + responsePacket.getGroupId() + "]失败！");
+                });
+    }
+    public void quitGroup(Long groupid){
+        Client.defaultClient.getQuitGroupManage().quitGroup(groupid);
+    }
+
+    public void setErrorListener(){
+        Client.defaultClient.setErrorListener((errorMessagePacket)->{
+            System.out.println("收到出问题的消息"+errorMessagePacket.getReason()+errorMessagePacket.getErrorCode());
+        });
+    }
+
+    public void setGetGroupmemeberslistener(){
+        Client.defaultClient.getGetGroupMembersManage().setHandlerListener(getGroupMembersResponsePacket->{
+            System.out.println("群[" + getGroupMembersResponsePacket.getGroupId() + "]中的人包括：" + getGroupMembersResponsePacket.getChannelUserList());
+        });
+    }
+    public void getgroupmemebers(Long groupid){
+        Client.defaultClient.getGetGroupMembersManage().getGroupMembers(groupid);
+    }
 }
+
+
+//TEMPMANAGE
+//tEMPMANAGE
+//TRESPONHANDLER
+//    private volatile TEMPMANAGE tEMPMANAGE=null;
+//    public TEMPMANAGE getTEMPMANAGE(){
+//        //尝试获取这个对象并且返回;
+//        TRESPONHANDLER handler=nettyClient.channel.pipeline().get(TRESPONHANDLER.class);
+//        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+//            if(handler==null)
+//                handler=nettyClient.channel.pipeline().get(TRESPONHANDLER.class);
+//            //双重锁检测
+//            if (tEMPMANAGE == null) {
+//                synchronized (this) {
+//                    if (tEMPMANAGE == null) {
+//                        tEMPMANAGE = new TEMPMANAGE(nettyClient.channel,handler);
+//                    }
+//                }
+//            }
+//        }
+//        return tEMPMANAGE;
+//    }

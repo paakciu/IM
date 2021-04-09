@@ -8,11 +8,11 @@ import top.paakciu.utils.ChannelUser;
  * @ClassName: BaseManage
  * @date: 2021/4/4 19:59
  */
-public abstract class BaseManage<T,R> {
+public abstract class BaseManage<Packet,ReturnThis> {
 
-    public abstract R setSendSuccessListener(SendSuccessListener listener);
-    public abstract R setSendFailListener(SendFailListener listener);
-    public abstract R setHandlerListener(HandlerListener<T> listener);
-//    public abstract R setSuccessListener(SuccessListener<T> listener);
-//    public abstract R setFailListener(FailListener<T> listener);
+    public abstract ReturnThis setSendSuccessListener(SendSuccessListener listener);
+    public abstract ReturnThis setSendFailListener(SendFailListener listener);
+    public abstract ReturnThis setHandlerListener(HandlerListener<Packet> listener);
+//    public abstract ReturnThis setSuccessListener(SuccessListener<Packet> listener);
+//    public abstract ReturnThis setFailListener(FailListener<Packet> listener);
 }

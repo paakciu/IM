@@ -1,4 +1,4 @@
-package top.paakciu.client.handler;
+package top.paakciu.client.handler.deprecated;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

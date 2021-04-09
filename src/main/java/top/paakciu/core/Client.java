@@ -8,7 +8,8 @@ import top.paakciu.client.manage.NormalMessageManage;
 //import top.paakciu.client.listener.PaakciuFuture;
 
 public interface Client {
-    static Client defaultClient= DefaultClient.INSTANCE;
+    //TODO 这个后面的返回值要改成Client，做个泛化，现在就不用提前优化了就这样先，方便测试，就不用一直改这个接口
+    static DefaultClient defaultClient= DefaultClient.INSTANCE;
 
     //初始化
     Client initClienConnection();
