@@ -32,6 +32,9 @@ public final class PacketsCommandMapping {
     public final static Byte EXTRA_RESPONSE=19;
     public final static Byte EXTRA_GROUP_REQUEST=20;
     public final static Byte EXTRA_GROUP_RESPONSE=21;
+    public final static Byte PULL_MESSAGE_REQUEST=22;//PullMessageRequestPacket
+    public final static Byte OFF_LINE_MESSAGE_REQUEST=23;//OffLineMessageRequestPacket
+
 
 
     //双向映射表
@@ -61,7 +64,8 @@ public final class PacketsCommandMapping {
         list.add(ExtraResponsePacket.class);
         list.add(ExtraGroupRequestPacket.class);
         list.add(ExtraGroupResponsePacket.class);
-
+        list.add(PullMessageRequestPacket.class);
+        list.add(OffLineMessageRequestPacket.class);//OffLineMessageRequestPacket
 
         map.put(LoginRequestPacket.class,LOGIN_REQUEST);
         map.put(LoginResponsePacket.class,LOGIN_RESPONSE);
@@ -85,6 +89,8 @@ public final class PacketsCommandMapping {
         map.put(ExtraResponsePacket.class,EXTRA_RESPONSE);
         map.put(ExtraGroupRequestPacket.class,EXTRA_GROUP_REQUEST);
         map.put(ExtraGroupResponsePacket.class,EXTRA_GROUP_RESPONSE);
+        map.put(PullMessageRequestPacket.class,PULL_MESSAGE_REQUEST);
+        map.put(OffLineMessageRequestPacket.class,OFF_LINE_MESSAGE_REQUEST);//OffLineMessageRequestPacket
 
 //        for(Byte i=0;i<list.size();i++)
 //        {

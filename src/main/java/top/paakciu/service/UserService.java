@@ -41,14 +41,11 @@ public class UserService {
 
     public static User getUserById(long id) {
         return Sqlutils.startSqlSession(UserMapper.class,mapper -> {
-            UserExample userExample=new UserExample();
-            userExample.createCriteria().andIdEqualTo(id);
-            List<User> list=mapper.selectByExample(userExample);
+//            UserExample userExample=new UserExample();
+//            userExample.createCriteria().andIdEqualTo(id);
+            User user=mapper.selectByPrimaryKey(id);
 
-            if(list.size()==0)
-                return null;
-            else
-                return list.get(0);
+            return user;
         });
     }
 

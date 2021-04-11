@@ -6,6 +6,7 @@ import top.paakciu.client.listener.*;
 import top.paakciu.core.Client;
 import top.paakciu.protocal.packet.MessageRequestPacket;
 import top.paakciu.protocal.packet.MessageResponsePacket;
+import top.paakciu.utils.AttributesHelper;
 
 /**
  * @author paakciu
@@ -22,9 +23,17 @@ public class NormalMessageManage extends BaseManage<MessageResponsePacket,Normal
     }
 
     public NormalMessageManage send(Long toId, String msg) {
+        Long thisId=AttributesHelper.getChannelUser(channel).getUserId();
         MessageRequestPacket messageRequestPacket=new MessageRequestPacket();
         messageRequestPacket.setToUserId(toId);
+        messageRequestPacket.setFromUserId(thisId);
         messageRequestPacket.setMessage(msg);
+        if(toId==thisId){
+            SendFailListener listener=messageResponseHandler.getSendfailListener();
+            if(listener!=null)
+                listener.onSendFail();
+            return this;
+        }
         channel.writeAndFlush(messageRequestPacket).addListener((future -> {
             if(future.isSuccess()){
                 SendSuccessListener listener=messageResponseHandler.getSendsuccessListener();

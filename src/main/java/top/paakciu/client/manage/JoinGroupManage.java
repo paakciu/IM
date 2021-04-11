@@ -22,7 +22,8 @@ public class JoinGroupManage extends BaseManageWith4Function<JoinGroupResponsePa
     public JoinGroupManage joinGroup(Long groupId){
         JoinGroupRequestPacket joinGroupRequestPacket=new JoinGroupRequestPacket();
         joinGroupRequestPacket.setGroupId(groupId);
-
+//        joinGroupRequestPacket.set
+//TODO
         writeAndFlushAddListener(channel,joinGroupRequestPacket,listeners);
         return this;
     }

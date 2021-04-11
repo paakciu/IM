@@ -16,6 +16,9 @@ import top.paakciu.config.IMConfig;
 import top.paakciu.core.Client;
 import top.paakciu.protocal.packet.ErrorMessagePacket;
 import top.paakciu.protocal.packet.MessageRequestPacket;
+import top.paakciu.protocal.packet.OffLineMessageRequestPacket;
+import top.paakciu.utils.AttributesHelper;
+import top.paakciu.utils.ChannelUser;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -38,12 +41,18 @@ public class DefaultClient implements Client {
     private DefaultClient() {
     }
 
+    public ChannelUser getChannelUser(){
+        return AttributesHelper.getChannelUser(getChannel());
+    }
+    public Channel getChannel(){
+        return this.nettyClient.channel;
+    }
+
     @Override
     public Client initClienConnection() {
         nettyClient.startConnection(IMConfig.HOST,IMConfig.PORT);
         return this;
     }
-    
 
     @Override
     public RegisterResponseHandler register(String username, String passwrod) {
@@ -187,7 +196,13 @@ public class DefaultClient implements Client {
     //TODO GroupMessageManage
 
 
-
+    public void getOffLineMessage(){
+        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+            OffLineMessageRequestPacket offLineMessageRequestPacket = new OffLineMessageRequestPacket();
+            offLineMessageRequestPacket.setId(getChannelUser().getUserId());
+            nettyClient.channel.writeAndFlush(offLineMessageRequestPacket);
+        }
+    }
     public <handler extends ChannelHandler> handler getManage(Class<handler> handlerClazz, SendSuccessListener listener){
         handler handler=nettyClient.channel.pipeline().get(handlerClazz);
         if(nettyClient.channelisOK&&nettyClient.channel!=null) {

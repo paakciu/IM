@@ -8,6 +8,15 @@ package top.paakciu.protocal.packet;
 public class JoinGroupRequestPacket extends BasePacket{
 
     private Long groupId;
+    private Long userId;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Long getGroupId() {
         return groupId;

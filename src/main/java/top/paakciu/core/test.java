@@ -6,6 +6,9 @@ import top.paakciu.client.listener.ResponseListener;
 import top.paakciu.client.handler.LoginResponseHandler;
 import top.paakciu.protocal.packet.JoinGroupRequestPacket;
 import top.paakciu.protocal.packet.JoinGroupResponsePacket;
+import top.paakciu.protocal.packet.OffLineMessageRequestPacket;
+import top.paakciu.utils.AttributesHelper;
+import top.paakciu.utils.ChannelUser;
 
 import java.util.Date;
 import java.util.List;
@@ -19,6 +22,9 @@ import java.util.Scanner;
 public class test implements ClientEventListener {
 
     static final Client CLIENT=Client.defaultClient;
+//    static ChannelUser this_channeluser=null;
+    //static Channel this_channel=null;
+
     public static void main(String[] args) {
 
         new test().onCreate();
@@ -101,9 +107,13 @@ public class test implements ClientEventListener {
                     //TODO 服务器返回结果为成功,str为返回成功 channelUser对象，包括惟一标识号id，和账号名
                     System.out.println(channelUser);
                     System.out.println("id="+channelUser.getUserId());
+                    setSendListener();
 
                     new Thread(()->{
                         Scanner sc = new Scanner(System.in);
+
+                        Client.defaultClient.getOffLineMessage();
+
                         while (true) {
                             System.out.println("请输入toid msg：");
                             Long toid = sc.nextLong();
@@ -123,9 +133,21 @@ public class test implements ClientEventListener {
         Client.defaultClient.getNormalMessageManage()
                 //收到消息的处理器
                 .setHandlerListener(messageResponsePacket->{
+                    //TODO 消息处理
+                    ChannelUser thisChannelUser=Client.defaultClient.getChannelUser();
+                    if(thisChannelUser!=null)
+                        if(thisChannelUser.getUserId()==messageResponsePacket.getFromUserId()){
+                            //TODO 这里的处理是收到了自己发送的消息的处理，证明消息发送正确
+                            //建议是本地发送不要马上显示，而是收到服务器返回的自己发送的这条消息后，再进行显示，这个过程一般不会很慢
+                            //这样做的好处在于，后面离线消息的推送可以复用该消息处理通道
+                            System.out.println("收到自己发送的消息！");
+                        }
+
                     //TODO 这里写怎么处理这些数据的，下面是处理样例
                     System.out.println(messageResponsePacket.getDate()
-                            + ": 收到服务端的消息: "
+                            + ": 收到服务端的消息 ID:"
+                            + messageResponsePacket.getMessageId()
+                            + "消息："
                             + messageResponsePacket.getMessage());
                     Long fromUserId = messageResponsePacket.getFromUserId();
                     String fromUserName = messageResponsePacket.getFromUserName();
@@ -143,13 +165,27 @@ public class test implements ClientEventListener {
                 });
     }
     public void send(Long toid,String msg){
+        //todo 注意不能发送给自己，如果发送给自己会返回发送到服务器失败SendFailListener
         Client.defaultClient.getNormalMessageManage().send(toid,msg);
     }
 
     public void setCreateGroupListener(){
-        Client.defaultClient.getCreateGroupManage().setSuccessListener((createGroupResponsePacket)->{
-            System.out.println("群创建成功，群里面有："+createGroupResponsePacket.getUserNameList());
-        });
+        Client.defaultClient.getCreateGroupManage()
+                .setSuccessListener((createGroupResponsePacket)->{
+                    Long groupid=createGroupResponsePacket.getGroupId();
+                    System.out.println("群创建成功，群id:"+groupid+" 群里面有："+createGroupResponsePacket.getUserNameList());
+                })
+                .setFailListener((createGroupResponsePacket)->{
+                    System.out.println("群创建失败");
+                })
+                //发送到服务器成功
+                .setSendSuccessListener(()->{
+                    System.out.println("发送到服务器成功");
+                })
+                //发送到服务器失败
+                .setSendFailListener(()->{
+                    System.out.println("发送到服务器失败");
+                });
     }
     public void CreateGroupListener(List<Long> userList) {
         Client.defaultClient.getCreateGroupManage().createGroup(userList);

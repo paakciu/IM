@@ -34,6 +34,7 @@ public class PacketsHandlerMapping extends SimpleChannelInboundHandler<BasePacke
         handlerMap.put(PacketsCommandMapping.GET_GROUP_MEMBER_REQUEST, GetGroupMembersRequestHandler.INSTANCE);
         handlerMap.put(PacketsCommandMapping.GROUP_MESSAGE_REQUEST, GroupMessageRequestHandler.INSTANCE);
         handlerMap.put(PacketsCommandMapping.QUIT_GROUP_REQUEST, QuitGroupRequestHandler.INSTANCE);
+        handlerMap.put(PacketsCommandMapping.OFF_LINE_MESSAGE_REQUEST,OffLineMessageRequestHandler.INSTANCE);
     }
 
     @Override

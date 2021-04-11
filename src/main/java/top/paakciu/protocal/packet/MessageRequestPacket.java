@@ -4,6 +4,7 @@ package top.paakciu.protocal.packet;/**
  * @date: 2021/3/18 13:23
  */
 public class MessageRequestPacket extends BasePacket{
+    private Long fromUserId;
     private Long toUserId;
     private String message;
 
@@ -21,5 +22,11 @@ public class MessageRequestPacket extends BasePacket{
 
     public void setMessage(String message) {
         this.message = message;
+    }
+    public Long getFromUserId() {
+        return fromUserId;
+    }
+    public void setFromUserId(Long fromUserId) {
+        this.fromUserId = fromUserId;
     }
 }

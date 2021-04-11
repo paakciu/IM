@@ -6,10 +6,12 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import top.paakciu.config.IMConfig;
+import top.paakciu.protocal.packet.PullMessageRequestPacket;
 
 
 import java.io.IOException;
 
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -56,6 +58,28 @@ public class Sqlutils {
         }
         return ref;
     }
+    public interface SqlListener<R>{
+        R onSqlSessonOpen(SqlSession sqlSession);
+    }
+    public static <R> R startSqlSessionByListener(SqlListener<R> sqlListener){
+        R ref=null;
+        try (SqlSession sqlSession=Sqlutils.getInstance().openSession())
+        {
+            ref=sqlListener.onSqlSessonOpen(sqlSession);
+            //这里一定要提交
+            sqlSession.commit();
+        } catch (IOException e) {
+            System.out.println("服务器中配置数据库的configuration.xml路径错误");
+            //e.printStackTrace();
+        }catch (PersistenceException e) {
+            System.out.println("数据库执行"+sqlListener+"接口方法时失败");
+            //e.printStackTrace();
+        }finally {
+        }
+        return ref;
+    }
+
+
     public static <T,R> R startSqlSessionWithoutPersistenceExceptionCatch(Class<T> clazz, Function<T,R> function) throws PersistenceException {
         R ref=null;
         try (SqlSession sqlSession=Sqlutils.getInstance().openSession())

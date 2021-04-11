@@ -11,8 +11,10 @@ public class MessageResponsePacket extends BasePacket{
 //    private Boolean success;
     private Long fromUserId;
     private String fromUserName;
+    private Long toUserId;
     private String message;
-    private Date date=new Date();
+    private Date date;
+    private Long messageId;
 
     public Date getDate() {
         return date;
@@ -52,5 +54,21 @@ public class MessageResponsePacket extends BasePacket{
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Long getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(Long toUserId) {
+        this.toUserId = toUserId;
+    }
+
+    public Long getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(Long messageId) {
+        this.messageId = messageId;
     }
 }

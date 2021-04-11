@@ -34,7 +34,7 @@ public class IMConfig {
     //规定服务端处理事件的线程池大小
     public static final int SERVER_THREAD_POOL_NUM=4;
     //数据库分页每页请求的大小限制
-    public static final int SERVER_DB_PAGE_LIMIT=100;
+    public static final int SERVER_DB_PAGE_LIMIT=1000;
     //规定服务端最大连接数
     //服务端端连接空闲时间
     public static final int SERVER_IDLE_TIME=60;
