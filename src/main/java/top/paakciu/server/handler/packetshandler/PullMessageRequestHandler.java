@@ -81,13 +81,11 @@ public class PullMessageRequestHandler extends SimpleChannelInboundHandler<PullM
                     sendSingle(ctx.channel(),list);
 
                 }else if (msg.getMods()==2){
-                    //todo
                     //这是根据size 从最新的消息获取特定数量-setAsSingleBySize(int size)
                     List<NormalMsg> list=NormalMessageService.getMsgBySize(msg.getId1(),msg.getId2(),msg.getNums());
                     sendSingle(ctx.channel(),list);
 
                 }else if (msg.getMods()==3){
-                    //todo
                     //这是根据消息的id，向上或者向下获取 特定条数的消息
                     //setAsSingleByFromMessageIdAndSize(Long fromMessageId1,Long Id1,Long Id2,boolean Bigger,int Size)
                     List<NormalMsg> list=NormalMessageService.getMsgByFromMessageIdAndSize(
