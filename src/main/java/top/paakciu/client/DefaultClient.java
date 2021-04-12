@@ -17,6 +17,7 @@ import top.paakciu.core.Client;
 import top.paakciu.protocal.packet.ErrorMessagePacket;
 import top.paakciu.protocal.packet.MessageRequestPacket;
 import top.paakciu.protocal.packet.OffLineMessageRequestPacket;
+import top.paakciu.protocal.packet.PullMessageRequestPacket;
 import top.paakciu.utils.AttributesHelper;
 import top.paakciu.utils.ChannelUser;
 
@@ -192,17 +193,45 @@ public class DefaultClient implements Client {
         }
         return getGroupMembersManage;
     }
+    private volatile GetOffLineMessageManage getOffLineMessageManage=null;
+    public GetOffLineMessageManage getGetOffLineMessageManage(){
+        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+            //双重锁检测
+            if (getOffLineMessageManage == null) {
+                synchronized (this) {
+                    if (getOffLineMessageManage == null) {
+                        getOffLineMessageManage = new GetOffLineMessageManage(nettyClient.channel);
+                    }
+                }
+            }
+        }
+        return getOffLineMessageManage;
+    }
+    private volatile PullMessageManage pullMessageManage=null;
+    public PullMessageManage getPullMessageManage(){
+        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+            //双重锁检测
+            if (pullMessageManage == null) {
+                synchronized (this) {
+                    if (pullMessageManage == null) {
+                        pullMessageManage = new PullMessageManage(nettyClient.channel);
+                    }
+                }
+            }
+        }
+        return pullMessageManage;
+    }
+    public void pulltest(){
+//        PullMessageRequestPacket pullMessageRequestPacket=new PullMessageRequestPacket();
+//        pullMessageRequestPacket.setAsSingleByFromMessageId(msgid,id1,id2,isBigger);
+//        System.out.println("发送包的信息是："+pullMessageRequestPacket);
+////        writeAndFlushAddListener(pullMessageRequestPacket);
+//        channel.writeAndFlush(pullMessageRequestPacket);
+    }
 
     //TODO GroupMessageManage
 
 
-    public void getOffLineMessage(){
-        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
-            OffLineMessageRequestPacket offLineMessageRequestPacket = new OffLineMessageRequestPacket();
-            offLineMessageRequestPacket.setId(getChannelUser().getUserId());
-            nettyClient.channel.writeAndFlush(offLineMessageRequestPacket);
-        }
-    }
     public <handler extends ChannelHandler> handler getManage(Class<handler> handlerClazz, SendSuccessListener listener){
         handler handler=nettyClient.channel.pipeline().get(handlerClazz);
         if(nettyClient.channelisOK&&nettyClient.channel!=null) {

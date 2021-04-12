@@ -12,12 +12,24 @@ import top.paakciu.protocal.serializer.JSONSerializer;
 public class ExtraRequestPacket extends BasePacket {
     //发到谁-单聊
     private Long toUserId;
+    //从谁发出
+    private Long fromUserId;
     //扩展包的类型---需要自行映射
     private Integer type;
     //扩展包的字节流长度，使用int，带符号数上限只能2GB
     private Integer len;
     //扩展包的字节流内容
     private byte[] message;
+
+
+    //region Getter and Setter
+    public Long getFromUserId() {
+        return fromUserId;
+    }
+
+    public void setFromUserId(Long fromUserId) {
+        this.fromUserId = fromUserId;
+    }
 
     public Long getToUserId() {
         return toUserId;
@@ -50,4 +62,5 @@ public class ExtraRequestPacket extends BasePacket {
     public void setMessage(byte[] message) {
         this.message = message;
     }
+    //endregion
 }

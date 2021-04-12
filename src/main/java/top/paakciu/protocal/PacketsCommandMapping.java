@@ -34,6 +34,7 @@ public final class PacketsCommandMapping {
     public final static Byte EXTRA_GROUP_RESPONSE=21;
     public final static Byte PULL_MESSAGE_REQUEST=22;//PullMessageRequestPacket
     public final static Byte OFF_LINE_MESSAGE_REQUEST=23;//OffLineMessageRequestPacket
+//    public final static Byte PULL_MESSAGE_REQUEST2=24;//TEST PullMessageRequestPacket
 
 
 
@@ -42,30 +43,31 @@ public final class PacketsCommandMapping {
     private final static ArrayList<Class<? extends BasePacket>> list=new ArrayList<>();
 
     static {
-        list.add(LoginRequestPacket.class);
-        list.add(LoginResponsePacket.class);
-        list.add(MessageRequestPacket.class);
-        list.add(MessageResponsePacket.class);
-        list.add(RegisterRequestPacket.class);
-        list.add(RegisterResponsePacket.class);
-        list.add(ErrorMessagePacket.class);
-        list.add(HeartBeatPacket.class);
-        list.add(CreateGroupRequestPacket.class);
-        list.add(CreateGroupResponsePacket.class);
-        list.add(JoinGroupRequestPacket.class);
-        list.add(JoinGroupResponsePacket.class);
-        list.add(QuitGroupRequestPacket.class);
-        list.add(QuitGroupResponsePacket.class);
-        list.add(GetGroupMembersRequestPacket.class);
-        list.add(GetGroupMembersResponsePacket.class);
-        list.add(GroupMessageRequestPacket.class);
-        list.add(GroupMessageResponsePacket.class);
-        list.add(ExtraRequestPacket.class);
-        list.add(ExtraResponsePacket.class);
-        list.add(ExtraGroupRequestPacket.class);
-        list.add(ExtraGroupResponsePacket.class);
-        list.add(PullMessageRequestPacket.class);
-        list.add(OffLineMessageRequestPacket.class);//OffLineMessageRequestPacket
+        list.add(LoginRequestPacket.class);//0
+        list.add(LoginResponsePacket.class);//1
+        list.add(MessageRequestPacket.class);//2
+        list.add(MessageResponsePacket.class);//3
+        list.add(RegisterRequestPacket.class);//4
+        list.add(RegisterResponsePacket.class);//5
+        list.add(ErrorMessagePacket.class);//6
+        list.add(HeartBeatPacket.class);//7
+        list.add(CreateGroupRequestPacket.class);//8
+        list.add(CreateGroupResponsePacket.class);//9
+        list.add(JoinGroupRequestPacket.class);//10
+        list.add(JoinGroupResponsePacket.class);//11
+        list.add(QuitGroupRequestPacket.class);//12
+        list.add(QuitGroupResponsePacket.class);//13
+        list.add(GetGroupMembersRequestPacket.class);//14
+        list.add(GetGroupMembersResponsePacket.class);//15
+        list.add(GroupMessageRequestPacket.class);//16
+        list.add(GroupMessageResponsePacket.class);//17
+        list.add(ExtraRequestPacket.class);//18
+        list.add(ExtraResponsePacket.class);//19
+        list.add(ExtraGroupRequestPacket.class);//20
+        list.add(ExtraGroupResponsePacket.class);//21
+        list.add(PullMessageRequestPacket.class);//22
+        list.add(OffLineMessageRequestPacket.class);//OffLineMessageRequestPacket 23
+//        list.add(PullMessageRequestPacket2.class);//PullMessageRequestPacket2 24
 
         map.put(LoginRequestPacket.class,LOGIN_REQUEST);
         map.put(LoginResponsePacket.class,LOGIN_RESPONSE);
@@ -91,6 +93,7 @@ public final class PacketsCommandMapping {
         map.put(ExtraGroupResponsePacket.class,EXTRA_GROUP_RESPONSE);
         map.put(PullMessageRequestPacket.class,PULL_MESSAGE_REQUEST);
         map.put(OffLineMessageRequestPacket.class,OFF_LINE_MESSAGE_REQUEST);//OffLineMessageRequestPacket
+//        map.put(PullMessageRequestPacket2.class,PULL_MESSAGE_REQUEST2);//PullMessageRequestPacket2 24
 
 //        for(Byte i=0;i<list.size();i++)
 //        {

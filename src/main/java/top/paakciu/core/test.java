@@ -4,9 +4,7 @@ import io.netty.channel.Channel;
 import top.paakciu.client.listener.ClientEventListener;
 import top.paakciu.client.listener.ResponseListener;
 import top.paakciu.client.handler.LoginResponseHandler;
-import top.paakciu.protocal.packet.JoinGroupRequestPacket;
-import top.paakciu.protocal.packet.JoinGroupResponsePacket;
-import top.paakciu.protocal.packet.OffLineMessageRequestPacket;
+import top.paakciu.protocal.packet.*;
 import top.paakciu.utils.AttributesHelper;
 import top.paakciu.utils.ChannelUser;
 
@@ -24,7 +22,8 @@ public class test implements ClientEventListener {
     static final Client CLIENT=Client.defaultClient;
 //    static ChannelUser this_channeluser=null;
     //static Channel this_channel=null;
-
+    private void printFail(){System.out.println("发送到服务器失败");}
+    private void printSuccess(){System.out.println("发送到服务器成功");}
     public static void main(String[] args) {
 
         new test().onCreate();
@@ -112,8 +111,8 @@ public class test implements ClientEventListener {
                     new Thread(()->{
                         Scanner sc = new Scanner(System.in);
 
-                        Client.defaultClient.getOffLineMessage();
 
+                        //聊天模拟
                         while (true) {
                             System.out.println("请输入toid msg：");
                             Long toid = sc.nextLong();
@@ -168,7 +167,59 @@ public class test implements ClientEventListener {
         //todo 注意不能发送给自己，如果发送给自己会返回发送到服务器失败SendFailListener
         Client.defaultClient.getNormalMessageManage().send(toid,msg);
     }
-
+    public void pullMessageSingle(){
+        //获取历史消息
+        ChannelUser user=Client.defaultClient.getChannelUser();
+        /**
+         * 方式1
+         * 参数说明：
+         * msgid：从哪个消息开始获取
+         * id1 id2 ：顺序不重要，能识别是谁跟谁的聊天就行了
+         * isBigger：从msgid 往id号增大的方向获取，还是往减小的方向获取
+         */
+        Client.defaultClient.getPullMessageManage()
+                .pullMessageSingleByFromMessageId(20L
+                        , user.getUserId()
+                        , 25L
+                        , true)
+                .setSendSuccessListener(this::printSuccess)
+                .setSendFailListener(this::printFail);
+        /**
+         * 方式2
+         * 推荐使用：一开始使用这个，获取前size条消息，后面使用方式3逐渐往前获取
+         * 参数说明：
+         * id1/id2 ：顺序不重要，能识别是谁跟谁的聊天就行了
+         * size: 获取消息的数量
+         */
+        Client.defaultClient.getPullMessageManage()
+                .pullMessageSingleBySize(user.getUserId(),25L,10)
+                .setSendSuccessListener(this::printSuccess)
+                .setSendFailListener(this::printFail);
+        //方式3--推荐使用：先使用方式2，获取前size条，后根据获取的消息id逐渐往前获取
+        /**
+         * 方式3
+         * 推荐使用：先使用方式2，获取前size条，后根据获取的消息id逐渐往前获取
+         * 参数说明：
+         * msgid：从哪个消息开始获取
+         * id1/id2 ：顺序不重要，能识别是谁跟谁的聊天就行了
+         * size: 获取消息的数量
+         * isBigger：从msgid 往id号增大的方向获取，还是往减小的方向获取
+         */
+        Client.defaultClient.getPullMessageManage()
+                .pullMessageSingleByFromMessageIdAndSize(40L, user.getUserId(), 25L,false,10)
+                .setSendSuccessListener(this::printSuccess)
+                .setSendFailListener(this::printFail);
+    }
+    public void getOffLineMessage(){
+        //登陆后拉取离线消息
+        Client.defaultClient.getGetOffLineMessageManage()
+                //发送拉取离线消息请求
+                .getOffLineMessage()
+                //按需设置回调函数
+                .setSendFailListener(this::printFail)
+                .setSendSuccessListener(this::printSuccess)
+        ;
+    }
     public void setCreateGroupListener(){
         Client.defaultClient.getCreateGroupManage()
                 .setSuccessListener((createGroupResponsePacket)->{

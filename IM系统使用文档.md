@@ -162,10 +162,79 @@ public void send(Long toid,String msg){
 > 调用此方法后，离线消息就会被清除，如果出现意外状况仍需要获取信息，可以通过获取消息来得到
 
 ```java
-Client.defaultClient.getOffLineMessage();
+Client.defaultClient.getGetOffLineMessageManage()
+        //发送拉取离线消息请求
+        .getOffLineMessage()
+        //按需设置回调函数
+        .setSendFailListener(this::printFail)
+        .setSendSuccessListener(this::printSuccess)
+        ;
 ```
 
 
+
+### 6. 历史消息的获取
+
+```java
+//获取历史消息
+ChannelUser user=Client.defaultClient.getChannelUser();
+/**
+ * 方式1
+ * 参数说明：
+ * msgid：从哪个消息开始获取
+ * id1 id2 ：顺序不重要，能识别是谁跟谁的聊天就行了
+ * isBigger：从msgid 往id号增大的方向获取，还是往减小的方向获取
+ */
+Client.defaultClient.getPullMessageManage()
+        .pullMessageSingleByFromMessageId(20L
+                , user.getUserId()
+                , 25L
+                , true)
+        .setSendSuccessListener(this::printSuccess)
+        .setSendFailListener(this::printFail);
+//------------------------------------------------------------------------------------
+/**
+ * 方式2
+ * 推荐使用：一开始使用这个，获取前size条消息，后面使用方式3逐渐往前获取
+ * 参数说明：
+ * id1/id2 ：顺序不重要，能识别是谁跟谁的聊天就行了
+ * size: 获取消息的数量
+ */
+Client.defaultClient.getPullMessageManage()
+        .pullMessageSingleBySize(user.getUserId(),25L,10)
+        .setSendSuccessListener(this::printSuccess)
+        .setSendFailListener(this::printFail);
+//------------------------------------------------------------------------------------
+//方式3--推荐使用：先使用方式2，获取前size条，后根据获取的消息id逐渐往前获取
+/**
+ * 方式3
+ * 推荐使用：先使用方式2，获取前size条，后根据获取的消息id逐渐往前获取
+ * 参数说明：
+ * msgid：从哪个消息开始获取
+ * id1/id2 ：顺序不重要，能识别是谁跟谁的聊天就行了
+ * size: 获取消息的数量
+ * isBigger：从msgid 往id号增大的方向获取，还是往减小的方向获取
+ */
+Client.defaultClient.getPullMessageManage()
+        .pullMessageSingleByFromMessageIdAndSize(40L, user.getUserId(), 25L,false,10)
+        .setSendSuccessListener(this::printSuccess)
+        .setSendFailListener(this::printFail);
+
+```
+
+
+
+### 7. 登出
+
+> 因为本系统使用的全部都是异步方法，登出会直接执行，关闭通道
+>
+> 故要把握好关闭的时机，可以在需要等待回调listener的地方使用。
+>
+> 此方法没有监听listener方法
+
+```java
+Client.defaultClient.logout();
+```
 
 
 
@@ -176,14 +245,19 @@ Client.defaultClient.getOffLineMessage();
 > ```java
 > //发送到服务器成功
 > .setSendSuccessListener(()->{
->     System.out.println("发送到服务器成功");
+>  System.out.println("发送到服务器成功");
 > })
 > //发送到服务器失败
 > .setSendFailListener(()->{
->     System.out.println("发送到服务器失败");
+>  System.out.println("发送到服务器失败");
 > });
-> ```
 > 
-> 这种发送到服务器成功与失败的监听就省略不写在文档上了
+> 或者
+>  
+> .setSendFailListener(this::printFail)
+> .setSendSuccessListener(this::printSuccess)
+> ```
+>
+> 这种发送到服务器成功与失败的监听就不固定地写在文档上了
 
 ### 群组操作

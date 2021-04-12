@@ -37,17 +37,17 @@ public abstract class BaseManageWithHandlerFunction  <Packet,Handler extends Sim
     }
 
 
-    protected void writeAndFlushAddListener(Channel channel, BasePacket basePacket, ListenWithHandlerFunction listeners){
-        channel.writeAndFlush(basePacket).addListener(future -> {
-            if(future.isSuccess()){
-                if(listeners.sendsuccessListener!=null)
-                    listeners.sendsuccessListener.onSendSuccess();
-            }else{
-                if(listeners.sendfailListener!=null)
-                    listeners.sendfailListener.onSendFail();
-            }
-        });
-    }
+//    protected void writeAndFlushAddListener(Channel channel, BasePacket basePacket, ListenWithHandlerFunction listeners){
+//        channel.writeAndFlush(basePacket).addListener(future -> {
+//            if(future.isSuccess()){
+//                if(listeners.sendsuccessListener!=null)
+//                    listeners.sendsuccessListener.onSendSuccess();
+//            }else{
+//                if(listeners.sendfailListener!=null)
+//                    listeners.sendfailListener.onSendFail();
+//            }
+//        });
+//    }
     protected void writeAndFlushAddListener(BasePacket basePacket){
         channel.writeAndFlush(basePacket).addListener(future -> {
             if(future.isSuccess()){

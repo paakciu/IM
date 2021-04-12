@@ -17,11 +17,12 @@ public class GetGroupMembersManage extends BaseManageWithHandlerFunction<GetGrou
         setSon(this);
     }
 
-    public void getGroupMembers(Long groupid){
+    public GetGroupMembersManage getGroupMembers(Long groupid){
         GetGroupMembersRequestPacket getGroupMembersRequestPacket=new GetGroupMembersRequestPacket();
         getGroupMembersRequestPacket.setGroupId(groupid);
 
         writeAndFlushAddListener(getGroupMembersRequestPacket);
+        return this;
     }
 
 }
