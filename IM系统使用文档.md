@@ -98,7 +98,7 @@ Client.defaultClient.login("username","password")
 
 
 
-### 4. 发送普通文本消息
+### 4. 单聊发送普通文本消息（NormalMessageManage）
 
 #### 第一步，尽量先于发送 setListener
 
@@ -155,7 +155,7 @@ public void send(Long toid,String msg){
 
 
 
-### 5. 离线消息的获取
+### 5. 单聊离线消息的获取（GetOffLineMessageManage）
 
 > 直接调用这个方法，就会把离线消息推送到“4.普通文本消息”处，将作为普通消息处理
 >
@@ -173,7 +173,7 @@ Client.defaultClient.getGetOffLineMessageManage()
 
 
 
-### 6. 历史消息的获取
+### 6. 单聊历史消息的获取（PullMessageManage）
 
 ```java
 //获取历史消息
@@ -224,7 +224,86 @@ Client.defaultClient.getPullMessageManage()
 
 
 
-### 7. 登出
+### 7. 拓展消息体（ExtraManage）
+
+- （可作为控制消息体）
+
+> 该类型消息不会进行持久化，故无法获取离线消息，历史消息，如果有需求请开发者自行实现。
+>
+> 该拓展消息经过服务器后不会返回发送方（单聊普通文本消息会），原因是拓展消息体有可能负载大容量消息。
+>
+> 该类型消息需要拓展映射！
+
+#### 关键代码：
+
+```java
+Client.defaultClient.getExtraManage()
+        //消息处理--监听
+        .setHandlerListener((msg)->{})
+    	.setSendSuccessListener(this::printSuccess)
+        .setSendFailListener(this::printFail)
+    	//消息发送
+    	//传递好参数即可：接收方id，自定义消息体，消息类型type（int），消息类型（Class）
+        .sendExtraMessage(toId,MsgBox,type,Class);
+```
+
+
+
+#### 使用样例：
+
+##### 第一步、建立映射表，映射关系
+
+> 建立类型映射 int type----Class这样的映射即可，这是一个使用范例
+
+```java
+//映射表
+List<Class> list= new CopyOnWriteArrayList<Class>();
+
+public void ExtraListAdd(){
+    if(!list.contains(test1.class))
+        list.add(test1.class);
+}
+
+//调用该方法加入映射表
+ExtraListAdd();
+```
+
+##### 第二步、设置消息回调Listener
+
+```java
+Client.defaultClient.getExtraManage()
+        //消息处理
+        .setHandlerListener((msg)->{
+            //对应消息的处理，其中test1需要自己映射包！
+            if(list.get(msg.getType())==test1.class){
+                test1 test1= ExtraPacketHelper.getObject(test1.class,msg);
+                System.out.println(test1);
+            }
+        })
+        .setSendSuccessListener(this::printSuccess)
+        .setSendFailListener(this::printFail)
+        ;
+```
+
+##### 第三步、发送消息
+
+```java
+System.out.println("请输入toid msg：");
+Long toid = sc.nextLong();
+String msg = sc.next();
+test1 box=new test1();
+box.setStr(msg);
+box.setB(true);
+box.setX(100);
+
+Client.defaultClient.getExtraManage()
+        //传递好参数即可：接收方id，自定义消息体，消息类型type（int），消息类型（Class）
+        .sendExtraMessage(toid,box,list.indexOf(test1.class),test1.class);
+```
+
+
+
+### 8. 登出
 
 > 因为本系统使用的全部都是异步方法，登出会直接执行，关闭通道
 >
@@ -259,5 +338,9 @@ Client.defaultClient.logout();
 > ```
 >
 > 这种发送到服务器成功与失败的监听就不固定地写在文档上了
+
+
+
+
 
 ### 群组操作

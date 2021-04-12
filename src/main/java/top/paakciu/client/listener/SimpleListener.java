@@ -1,7 +1,5 @@
 package top.paakciu.client.listener;
 
-import java.util.ArrayList;
-
 /*
 ------------------------------------------------------------------------
 private SimpleListener xxxListener;

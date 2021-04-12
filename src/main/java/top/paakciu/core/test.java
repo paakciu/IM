@@ -4,13 +4,16 @@ import io.netty.channel.Channel;
 import top.paakciu.client.listener.ClientEventListener;
 import top.paakciu.client.listener.ResponseListener;
 import top.paakciu.client.handler.LoginResponseHandler;
+import top.paakciu.client.manage.test1;
 import top.paakciu.protocal.packet.*;
 import top.paakciu.utils.AttributesHelper;
 import top.paakciu.utils.ChannelUser;
+import top.paakciu.utils.ExtraPacketHelper;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author paakciu
@@ -111,13 +114,22 @@ public class test implements ClientEventListener {
                     new Thread(()->{
                         Scanner sc = new Scanner(System.in);
 
-
+                        ExtraListAdd();
+                        setExtraSingleListener();
                         //聊天模拟
                         while (true) {
                             System.out.println("请输入toid msg：");
                             Long toid = sc.nextLong();
                             String msg = sc.next();
-                            send(toid,msg);
+                            test1 box=new test1();
+                            box.setStr(msg);
+                            box.setB(true);
+                            box.setX(100);
+
+                            Client.defaultClient.getExtraManage()
+                                    //传递好参数即可：接收方id，自定义消息体，消息类型type（int），消息类型（Class）
+                                    .sendExtraMessage(toid,box,list.indexOf(test1.class),test1.class);
+                            //send(toid,msg);
                         }
                     }).start();
 
@@ -220,6 +232,31 @@ public class test implements ClientEventListener {
                 .setSendSuccessListener(this::printSuccess)
         ;
     }
+
+    List<Class> list= new CopyOnWriteArrayList<Class>();
+    public void ExtraListAdd(){
+        if(!list.contains(test1.class))
+            list.add(test1.class);
+    }
+    public void setExtraSingleListener(){
+        Client.defaultClient.getExtraManage()
+                //消息处理
+                .setHandlerListener((msg)->{
+                    //对应消息的处理，其中test1需要自己映射包！
+                    if(list.get(msg.getType())==test1.class){
+                        test1 test1= ExtraPacketHelper.getObject(test1.class,msg);
+                        System.out.println(test1);
+                    }
+                })
+                .setSendSuccessListener(this::printSuccess)
+                .setSendFailListener(this::printFail)
+                ;
+    }
+//    public void sendExtraSingle(Long toid,){
+//
+//    }
+
+
     public void setCreateGroupListener(){
         Client.defaultClient.getCreateGroupManage()
                 .setSuccessListener((createGroupResponsePacket)->{
@@ -293,15 +330,15 @@ public class test implements ClientEventListener {
 //TRESPONHANDLER
 //    private volatile TEMPMANAGE tEMPMANAGE=null;
 //    public TEMPMANAGE getTEMPMANAGE(){
-//        //尝试获取这个对象并且返回;
+//        //尝试获取这个对象-双校验;
 //        TRESPONHANDLER handler=nettyClient.channel.pipeline().get(TRESPONHANDLER.class);
 //        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
 //            if(handler==null)
 //                handler=nettyClient.channel.pipeline().get(TRESPONHANDLER.class);
 //            //双重锁检测
-//            if (tEMPMANAGE == null) {
+//            if (tEMPMANAGE == null&&handler!=null) {
 //                synchronized (this) {
-//                    if (tEMPMANAGE == null) {
+//                    if (tEMPMANAGE == null&&handler!=null) {
 //                        tEMPMANAGE = new TEMPMANAGE(nettyClient.channel,handler);
 //                    }
 //                }

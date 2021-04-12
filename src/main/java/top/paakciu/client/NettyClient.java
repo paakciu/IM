@@ -50,6 +50,8 @@ public class NettyClient {
                         .addLast(new MessageResponseHandler())
                         //错误处理
                         .addLast(new ErrorMessageHandler())
+                        //拓展单聊
+                        .addLast(new ExtraResponseHandler())
                         //群组操作
                         .addLast(new CreateGroupResponseHandler())
                         .addLast(new GetGroupMembersResponseHandler())

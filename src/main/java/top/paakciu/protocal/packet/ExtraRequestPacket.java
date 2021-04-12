@@ -4,6 +4,8 @@ import top.paakciu.protocal.SerializerAlgorithm;
 import top.paakciu.protocal.packet.BasePacket;
 import top.paakciu.protocal.serializer.JSONSerializer;
 
+import java.util.Arrays;
+
 /**
  * @author paakciu
  * @ClassName: ExtraRequestPacket
@@ -22,7 +24,7 @@ public class ExtraRequestPacket extends BasePacket {
     private byte[] message;
 
 
-    //region Getter and Setter
+    //region Getter and Setter and toString
     public Long getFromUserId() {
         return fromUserId;
     }
@@ -61,6 +63,17 @@ public class ExtraRequestPacket extends BasePacket {
 
     public void setMessage(byte[] message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "ExtraRequestPacket{" +
+                "toUserId=" + toUserId +
+                ", fromUserId=" + fromUserId +
+                ", type=" + type +
+                ", len=" + len +
+                ", message=" + Arrays.toString(message) +
+                '}';
     }
     //endregion
 }

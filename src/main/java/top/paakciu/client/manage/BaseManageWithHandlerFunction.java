@@ -14,8 +14,8 @@ public abstract class BaseManageWithHandlerFunction  <Packet,Handler extends Sim
     protected ListenWithHandlerFunction listeners;
 
     protected BaseManageWithHandlerFunction(Channel channel,ChannelHandler handler) {
-        this.handler=(Handler) handler;
         this.channel=channel;
+        this.handler=(Handler) handler;
         listeners=this.handler.getListeners();
     }
     protected ReturnThis setSon(ReturnThis self){

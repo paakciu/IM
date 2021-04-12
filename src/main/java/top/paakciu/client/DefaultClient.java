@@ -91,9 +91,9 @@ public class DefaultClient implements Client {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(MessageResponseHandler.class);
             //双重锁检测
-            if (normalMessageManage == null) {
+            if (normalMessageManage == null&&handler!=null) {
                 synchronized (this) {
-                    if (normalMessageManage == null) {
+                    if (normalMessageManage == null&&handler!=null) {
                         normalMessageManage = new NormalMessageManage(nettyClient.channel,handler);
                     }
                 }
@@ -109,9 +109,9 @@ public class DefaultClient implements Client {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(CreateGroupResponseHandler.class);
             //双重锁检测
-            if (createGroupManage == null) {
+            if (createGroupManage == null&&handler!=null) {
                 synchronized (this) {
-                    if (createGroupManage == null) {
+                    if (createGroupManage == null&&handler!=null) {
                         createGroupManage = new CreateGroupManage(nettyClient.channel,handler);
                     }
                 }
@@ -120,7 +120,7 @@ public class DefaultClient implements Client {
         return createGroupManage;
     }
 
-    
+
     //JoinGroupManage
     //joinGroupManage
     //JoinGroupManageResponseHandler
@@ -132,9 +132,9 @@ public class DefaultClient implements Client {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(JoinGroupResponseHandler.class);
             //双重锁检测
-            if (joinGroupManage == null) {
+            if (joinGroupManage == null&&handler!=null) {
                 synchronized (this) {
-                    if (joinGroupManage == null) {
+                    if (joinGroupManage == null&&handler!=null) {
                         joinGroupManage = new JoinGroupManage(nettyClient.channel,handler);
                     }
                 }
@@ -153,9 +153,9 @@ public class DefaultClient implements Client {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(QuitGroupResponseHandler.class);
             //双重锁检测
-            if (quitGroupManage == null) {
+            if (quitGroupManage == null&&handler!=null) {
                 synchronized (this) {
-                    if (quitGroupManage == null) {
+                    if (quitGroupManage == null&&handler!=null) {
                         quitGroupManage = new QuitGroupManage(nettyClient.channel,handler);
                     }
                 }
@@ -183,9 +183,9 @@ public class DefaultClient implements Client {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(GetGroupMembersResponseHandler.class);
             //双重锁检测
-            if (getGroupMembersManage == null) {
+            if (getGroupMembersManage == null&&handler!=null) {
                 synchronized (this) {
-                    if (getGroupMembersManage == null) {
+                    if (getGroupMembersManage == null&&handler!=null) {
                         getGroupMembersManage = new GetGroupMembersManage(nettyClient.channel,handler);
                     }
                 }
@@ -221,12 +221,27 @@ public class DefaultClient implements Client {
         }
         return pullMessageManage;
     }
-    public void pulltest(){
-//        PullMessageRequestPacket pullMessageRequestPacket=new PullMessageRequestPacket();
-//        pullMessageRequestPacket.setAsSingleByFromMessageId(msgid,id1,id2,isBigger);
-//        System.out.println("发送包的信息是："+pullMessageRequestPacket);
-////        writeAndFlushAddListener(pullMessageRequestPacket);
-//        channel.writeAndFlush(pullMessageRequestPacket);
+
+    //ExtraManage
+    //extraManage
+    //ExtraResponseHandler
+    private volatile ExtraManage extraManage=null;
+    public ExtraManage getExtraManage(){
+        //尝试获取这个对象-双校验;
+        ExtraResponseHandler handler=nettyClient.channel.pipeline().get(ExtraResponseHandler.class);
+        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+            if(handler==null)
+                handler=nettyClient.channel.pipeline().get(ExtraResponseHandler.class);
+            //双重锁检测
+            if (extraManage == null&&handler!=null) {
+                synchronized (this) {
+                    if (extraManage == null&&handler!=null) {
+                        extraManage = new ExtraManage(nettyClient.channel,handler);
+                    }
+                }
+            }
+        }
+        return extraManage;
     }
 
     //TODO GroupMessageManage
@@ -253,9 +268,9 @@ public class DefaultClient implements Client {
 //            if(handler==null)
 //                handler=nettyClient.channel.pipeline().get(handlerClass);
 //            //双重锁检测
-//            if (manageMap.get(manageClazz) == null) {
+//            if (manageMap.get(manageClazz) == null&&handler!=null) {
 //                synchronized (this) {
-//                    if (manageMap.get(manageClazz) == null) {
+//                    if (manageMap.get(manageClazz) == null&&handler!=null) {
 //                        manage temp=manageClazz.getConstructor(Channel.class,ChannelHandler.class).newInstance(nettyClient.channel,handler);
 //                        manageMap.put(manageClazz,temp);
 //                        //quitGroupManage = new QuitGroupManage(nettyClient.channel,handler);
