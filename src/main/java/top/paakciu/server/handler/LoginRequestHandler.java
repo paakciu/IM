@@ -10,6 +10,7 @@ import top.paakciu.server.NettyServer;
 import top.paakciu.service.UserService;
 import top.paakciu.utils.AttributesHelper;
 import top.paakciu.utils.ChannelUser;
+import top.paakciu.utils.GroupsHelper;
 
 
 import java.util.UUID;
@@ -46,8 +47,13 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
                 // 校验成功
                 System.out.println("登录成功！");
                 ChannelUser channelUser=new ChannelUser(user.getId(),user.getUsername());
+
+                //TODO 登录成功要解决-channel的映射，channelgroup的登录！
                 AttributesHelper.asLogin(ctx.channel());
                 AttributesHelper.setChannelUser(ctx.channel(),channelUser);
+
+                GroupsHelper.UserLoginAboutGroup(ctx,channelUser.getUserId());
+
 
                 response.setUserId(user.getId());
                 response.setSuccess(true);
@@ -67,12 +73,16 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         });
     }
 
+
     //用户断线
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         //取消绑定
         AttributesHelper.asLogout(ctx.channel());
         AttributesHelper.removeChannelUser(ctx.channel());
+
+        //TODO 离线要解决-channel的映射，channelgroup的离开！
+        GroupsHelper.UserLogoutAboutGroup(ctx.channel());
 
         //这个需要父类执行吗，我这里只是额外进行了一步，如果我不写上句，它默认就是会执行父类方法的，故此我判断需要保留父类
         super.channelInactive(ctx);

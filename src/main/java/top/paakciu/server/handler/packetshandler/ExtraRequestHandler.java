@@ -30,7 +30,7 @@ public class ExtraRequestHandler extends SimpleChannelInboundHandler<ExtraReques
             ChannelUser channelUser = AttributesHelper.getChannelUser(ctx.channel());
             //拿到消息接收方的 channel
             Channel toChannel = AttributesHelper.getChannel(msg.getToUserId());
-            //TODO 不能自己发给自己
+            // 不能自己发给自己
             if (toChannel == ctx.channel()) {
                 String str = "服务器拒绝！不能发送给自己！";
                 ErrorMessagePacket errorMessagePacket = new ErrorMessagePacket();

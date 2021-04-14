@@ -44,4 +44,5 @@ public class PacketsHandlerMapping extends SimpleChannelInboundHandler<BasePacke
     protected void channelRead0(ChannelHandlerContext ctx, BasePacket msg) throws Exception {
         handlerMap.get(msg.getCommand()).channelRead(ctx, msg);
     }
+
 }

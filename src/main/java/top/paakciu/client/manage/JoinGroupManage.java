@@ -19,11 +19,11 @@ public class JoinGroupManage extends BaseManageWith4Function<JoinGroupResponsePa
     }
 
     //加入群组的逻辑
-    public JoinGroupManage joinGroup(Long groupId){
+    public JoinGroupManage joinGroup(Long groupId,Long userId){
         JoinGroupRequestPacket joinGroupRequestPacket=new JoinGroupRequestPacket();
         joinGroupRequestPacket.setGroupId(groupId);
-//        joinGroupRequestPacket.set
-//TODO
+        joinGroupRequestPacket.setUserId(userId);
+        //
         writeAndFlushAddListener(channel,joinGroupRequestPacket,listeners);
         return this;
     }

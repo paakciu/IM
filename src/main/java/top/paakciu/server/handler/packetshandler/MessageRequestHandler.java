@@ -29,7 +29,6 @@ import java.util.concurrent.TimeUnit;
  * @ClassName: MessageRequestHandler
  * @date: 2021/3/3 18:09
  */
-//TODO 根据ipad图重做该处理
 @ChannelHandler.Sharable
 public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRequestPacket> {
     //单例
@@ -43,7 +42,7 @@ public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRe
             ChannelUser channelUser= AttributesHelper.getChannelUser(ctx.channel());
             //拿到消息接收方的 channel
             Channel toChannel = AttributesHelper.getChannel(messageRequestPacket.getToUserId());
-            //TODO 不能自己发给自己
+            // 不能自己发给自己
             if(toChannel==ctx.channel()){
                 String str="服务器拒绝！不能发送给自己！";
                 ErrorMessagePacket errorMessagePacket=new ErrorMessagePacket();
@@ -105,7 +104,7 @@ public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRe
                 delayPersistenceAndSend(executor, delay+1,fromChannel,toChannel, normalMsg,messageResponsePacket);
             }else{
                 //这里是持久化成功后，直接转发该通知
-                //TODO 返回持久化消息的id
+                // 返回持久化消息的id
                 messageResponsePacket.setMessageId(normalMsg.getId());
                 send(fromChannel,toChannel, normalMsg, messageResponsePacket);
             }

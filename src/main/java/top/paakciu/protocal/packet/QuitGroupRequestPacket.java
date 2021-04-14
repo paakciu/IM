@@ -7,6 +7,16 @@ package top.paakciu.protocal.packet;
  */
 public class QuitGroupRequestPacket extends BasePacket{
     private Long groupId;
+    private Long userId;
+    //TODO 可以添加是否被踢，踢人者是谁
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Long getGroupId() {
         return groupId;

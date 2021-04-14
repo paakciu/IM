@@ -10,7 +10,38 @@ import java.util.List;
 public class CreateGroupResponsePacket extends BasePacket{
     private boolean success;
     private long groupId;
-    private List<Long> userNameList;
+    private String groupName;
+
+    private Long createUserId;
+    private Long createUserName;
+
+    private List<String> userNameList;
+    private List<Long> userIdList;
+
+
+    public Long getCreateUserName() {
+        return createUserName;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public void setCreateUserName(Long createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public Long getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
+    }
 
     public boolean isSuccess() {
         return success;
@@ -28,12 +59,19 @@ public class CreateGroupResponsePacket extends BasePacket{
         this.groupId = groupId;
     }
 
-    public List<Long> getUserNameList() {
+    public List<String> getUserNameList() {
         return userNameList;
     }
 
-    public void setUserNameList(List<Long> userNameList) {
+    public void setUserNameList(List<String> userNameList) {
         this.userNameList = userNameList;
     }
 
+    public List<Long> getUserIdList() {
+        return userIdList;
+    }
+
+    public void setUserIdList(List<Long> userIdList) {
+        this.userIdList = userIdList;
+    }
 }

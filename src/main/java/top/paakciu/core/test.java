@@ -2,15 +2,10 @@ package top.paakciu.core;
 
 import io.netty.channel.Channel;
 import top.paakciu.client.listener.ClientEventListener;
-import top.paakciu.client.listener.ResponseListener;
-import top.paakciu.client.handler.LoginResponseHandler;
-import top.paakciu.client.manage.test1;
-import top.paakciu.protocal.packet.*;
-import top.paakciu.utils.AttributesHelper;
 import top.paakciu.utils.ChannelUser;
 import top.paakciu.utils.ExtraPacketHelper;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -110,25 +105,26 @@ public class test implements ClientEventListener {
                     System.out.println(channelUser);
                     System.out.println("id="+channelUser.getUserId());
                     setSendListener();
+                    setCreateGroupListener();
+                    setJoinGroupListener();
+                    setErrorListener();
+                    setQuitGroup();
+
 
                     new Thread(()->{
                         Scanner sc = new Scanner(System.in);
 
-                        ExtraListAdd();
-                        setExtraSingleListener();
                         //聊天模拟
                         while (true) {
-                            System.out.println("请输入toid msg：");
-                            Long toid = sc.nextLong();
-                            String msg = sc.next();
-                            test1 box=new test1();
-                            box.setStr(msg);
-                            box.setB(true);
-                            box.setX(100);
+//                            System.out.println("请输入toid msg：");
+//                            Long toid = sc.nextLong();
+//                            String msg = sc.next();
 
-                            Client.defaultClient.getExtraManage()
-                                    //传递好参数即可：接收方id，自定义消息体，消息类型type（int），消息类型（Class）
-                                    .sendExtraMessage(toid,box,list.indexOf(test1.class),test1.class);
+                            System.out.println("请输入任意字符串，退群测试");
+                            sc.nextLine();
+
+                            quitGroup(2L,channelUser.getUserId());
+
                             //send(toid,msg);
                         }
                     }).start();
@@ -252,55 +248,14 @@ public class test implements ClientEventListener {
                 .setSendFailListener(this::printFail)
                 ;
     }
-//    public void sendExtraSingle(Long toid,){
-//
-//    }
-
-
-    public void setCreateGroupListener(){
-        Client.defaultClient.getCreateGroupManage()
-                .setSuccessListener((createGroupResponsePacket)->{
-                    Long groupid=createGroupResponsePacket.getGroupId();
-                    System.out.println("群创建成功，群id:"+groupid+" 群里面有："+createGroupResponsePacket.getUserNameList());
-                })
-                .setFailListener((createGroupResponsePacket)->{
-                    System.out.println("群创建失败");
-                })
-                //发送到服务器成功
-                .setSendSuccessListener(()->{
-                    System.out.println("发送到服务器成功");
-                })
-                //发送到服务器失败
-                .setSendFailListener(()->{
-                    System.out.println("发送到服务器失败");
-                });
-    }
-    public void CreateGroupListener(List<Long> userList) {
-        Client.defaultClient.getCreateGroupManage().createGroup(userList);
-    }
-    public void setJoinGroupListener(){
-        Client.defaultClient.getJoinGroupManage()
-                .setSuccessListener((joinGroupResponsePacket)->{
-                    System.out.println("加入群[" + joinGroupResponsePacket.getGroupId() + "]成功!");
-                })
-                .setFailListener(JoinGroupResponsePacket->{
-                    System.err.println("加入群[" + JoinGroupResponsePacket.getGroupId() + "]失败，原因为：" + JoinGroupResponsePacket.getReason());
-                });
-    }
-    public void joinGroup(Long groupId){
-        Client.defaultClient.getJoinGroupManage().joinGroup(groupId);
-    }
-    public void setQuitGroup(){
-        Client.defaultClient.getQuitGroupManage()
-                .setSuccessListener((responsePacket)->{
-                    System.out.println("退出群聊[" + responsePacket.getGroupId() + "]成功！");
-                })
-                .setFailListener((responsePacket)->{
-                    System.out.println("退出群聊[" + responsePacket.getGroupId() + "]失败！");
-                });
-    }
-    public void quitGroup(Long groupid){
-        Client.defaultClient.getQuitGroupManage().quitGroup(groupid);
+    public void sendExtraSingle(){
+        test1 box=new test1();
+        box.setStr("nihao");
+        box.setB(true);
+        box.setX(100);
+        Client.defaultClient.getExtraManage()
+                //传递好参数即可：接收方id，自定义消息体，消息类型type（int），消息类型（Class）
+                .sendExtraMessage(25L,box,list.indexOf(test1.class),test1.class);
     }
 
     public void setErrorListener(){
@@ -308,6 +263,61 @@ public class test implements ClientEventListener {
             System.out.println("收到出问题的消息"+errorMessagePacket.getReason()+errorMessagePacket.getErrorCode());
         });
     }
+
+    public void setCreateGroupListener(){
+        Client.defaultClient.getCreateGroupManage()
+                .setSuccessListener((createGroupResponsePacket)->{
+                    Long groupid=createGroupResponsePacket.getGroupId();
+                    System.out.println("群创建成功，群id:"+groupid+" 群名:"+createGroupResponsePacket.getGroupName()+" 群里面有："+createGroupResponsePacket.getUserNameList());
+                    System.out.println("IDlist:"+createGroupResponsePacket.getUserIdList());
+                })
+                .setFailListener((createGroupResponsePacket)->{
+                    System.out.println("群创建失败");
+                })
+                //发送到服务器成功
+                .setSendSuccessListener(this::printSuccess)
+                //发送到服务器失败
+                .setSendFailListener(this::printFail);
+    }
+    public void CreateGroup(List<Long> userList,String groupName) {
+        Client.defaultClient.getCreateGroupManage().createGroup(userList,groupName);
+    }
+
+    public void setJoinGroupListener(){
+        Client.defaultClient.getJoinGroupManage()
+                .setSuccessListener((joinGroupResponsePacket)->{
+                    if (joinGroupResponsePacket.isNewJoin()&&joinGroupResponsePacket.isOnLine()) {
+                        System.out.println(joinGroupResponsePacket.getUserName()+"[在线]新加入群[" + joinGroupResponsePacket.getGroupId() + "]成功!");
+                    }
+                    else if (joinGroupResponsePacket.isNewJoin()&&!joinGroupResponsePacket.isOnLine()) {
+                        System.out.println(joinGroupResponsePacket.getUserName()+"[离线]新加入群[" + joinGroupResponsePacket.getGroupId() + "]成功!");
+                    }
+                    else if(!joinGroupResponsePacket.isNewJoin()&& joinGroupResponsePacket.isOnLine()){
+                        System.out.println(joinGroupResponsePacket.getUserName()+"登录群[" + joinGroupResponsePacket.getGroupId() + "]成功!");
+                    }
+                })
+                .setFailListener(JoinGroupResponsePacket->{
+                    System.err.println("加入群[" + JoinGroupResponsePacket.getGroupId() + "]失败，原因为：" + JoinGroupResponsePacket.getReason());
+                });
+    }
+    public void joinGroup(Long groupId,Long userId){
+        Client.defaultClient.getJoinGroupManage().joinGroup(groupId,userId);
+    }
+
+    public void setQuitGroup(){
+        Client.defaultClient.getQuitGroupManage()
+                .setSuccessListener((responsePacket)->{
+                    System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]成功！");
+                })
+                .setFailListener((responsePacket)->{
+                    System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]失败！");
+                });
+    }
+    public void quitGroup(Long groupid,Long userId){
+        Client.defaultClient.getQuitGroupManage().quitGroup(groupid,userId);
+    }
+
+
 
     public void setGetGroupmemeberslistener(){
         Client.defaultClient.getGetGroupMembersManage().setHandlerListener(getGroupMembersResponsePacket->{

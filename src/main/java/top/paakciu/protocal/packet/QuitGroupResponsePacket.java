@@ -8,7 +8,17 @@ package top.paakciu.protocal.packet;
 public class QuitGroupResponsePacket extends BasePacket{
     private boolean success;
     private Long groupId;
+    private Long userId;
     private String reason;
+
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getReason() {
         return reason;

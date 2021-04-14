@@ -5,8 +5,8 @@ package top.paakciu.protocal.packet;
  * @ClassName: OffLineMessageRequest
  * @date: 2021/4/11 18:02
  */
-//TODO
 public class OffLineMessageRequestPacket extends BasePacket{
+    //Userid
     private Long id;
 
     public Long getId() {

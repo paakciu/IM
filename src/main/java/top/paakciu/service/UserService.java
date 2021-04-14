@@ -38,7 +38,13 @@ public class UserService {
             return mapper.selectByExample(new UserExample());
         });
     }
-
+    public static List<User> getUserListByIdList(List<Long> UserIdList){
+        return Sqlutils.startSqlSession(UserMapper.class,mapper -> {
+           UserExample example=new UserExample();
+           example.createCriteria().andIdIn(UserIdList);
+           return mapper.selectByExample(example);
+        });
+    }
     public static User getUserById(long id) {
         return Sqlutils.startSqlSession(UserMapper.class,mapper -> {
 //            UserExample userExample=new UserExample();

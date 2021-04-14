@@ -10,6 +10,7 @@ import top.paakciu.client.listener.SendSuccessListener;
 import top.paakciu.client.listener.SuccessListener;
 import top.paakciu.protocal.packet.CreateGroupRequestPacket;
 import top.paakciu.protocal.packet.CreateGroupResponsePacket;
+import top.paakciu.utils.AttributesHelper;
 
 import java.util.List;
 
@@ -21,9 +22,14 @@ public class CreateGroupManage extends BaseManageWith4Function<CreateGroupRespon
         setSon(this);
     }
 
-    public CreateGroupManage createGroup(List<Long> userList){
+    public CreateGroupManage createGroup(List<Long> userList,String groupName){
         CreateGroupRequestPacket createGroupRequestPacket=new CreateGroupRequestPacket();
         createGroupRequestPacket.setUserIdList(userList);
+        Long thisId= AttributesHelper.getChannelUser(channel).getUserId();
+        createGroupRequestPacket.setCreateUserid(thisId);
+        createGroupRequestPacket.setGroupName(groupName);
+
+
         channel.writeAndFlush(createGroupRequestPacket).addListener(future -> {
             if(future.isSuccess()){
                 if(listeners.sendsuccessListener!=null)

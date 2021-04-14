@@ -6,7 +6,6 @@ package top.paakciu.protocal.packet;
  * @date: 2021/4/11 18:27
  */
 @Deprecated
-//TODO
 public class OffLineMessageResponse extends BasePacket{
 
 }

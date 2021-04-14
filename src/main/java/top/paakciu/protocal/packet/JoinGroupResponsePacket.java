@@ -7,9 +7,28 @@ package top.paakciu.protocal.packet;
  */
 public class JoinGroupResponsePacket extends BasePacket{
     private boolean success;
+    private boolean onLine;
+    private boolean newJoin;
     private Long groupId;
-    private String reason;
     private Long userId;
+    private String userName;
+    private String reason;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public boolean isNewJoin() {
+        return newJoin;
+    }
+
+    public void setNewJoin(boolean newJoin) {
+        this.newJoin = newJoin;
+    }
 
     public Long getUserId() {
         return userId;
@@ -17,6 +36,14 @@ public class JoinGroupResponsePacket extends BasePacket{
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public boolean isOnLine() {
+        return onLine;
+    }
+
+    public void setOnLine(boolean onLine) {
+        this.onLine = onLine;
     }
 
     public String getReason() {

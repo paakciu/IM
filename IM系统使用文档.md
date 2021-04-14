@@ -242,12 +242,33 @@ Client.defaultClient.getExtraManage()
         .setHandlerListener((msg)->{})
     	.setSendSuccessListener(this::printSuccess)
         .setSendFailListener(this::printFail)
+    
     	//消息发送
     	//传递好参数即可：接收方id，自定义消息体，消息类型type（int），消息类型（Class）
         .sendExtraMessage(toId,MsgBox,type,Class);
 ```
 
+#### msg的数据结构包含：
 
+> 拓展包的发送和获取下面有使用样例可以参考
+>
+> fromUserId、fromUserName、toUserId、date字段可以使用
+>
+> type、len、message字段已经有封装好的函数使用，例：sendExtraMessage
+
+```java
+private Long fromUserId;
+private String fromUserName;
+private Long toUserId;
+//扩展包的类型---需要自行映射
+private Integer type;
+//扩展包的字节流长度，使用int，带符号数上限只能2GB
+private Integer len;
+//扩展包的字节流内容
+private byte[] message;
+//时间
+private Date date;
+```
 
 #### 使用样例：
 
@@ -266,6 +287,19 @@ public void ExtraListAdd(){
 
 //调用该方法加入映射表
 ExtraListAdd();
+```
+
+自定义消息体test1：
+```java
+public class test1 {
+    //自定义属性
+    String str;
+    boolean b;
+    int x;
+    //TODO 自定义的消息体，一定要注意GETTER跟SETTER的完备
+    //下面的getter跟setter一定要对应所有属性，这是因为本IM通信协议默认使用阿里的fastJSON进行序列化
+    //如果getter跟setter缺失的话会导致数据传输字段的丢失！此坑浪费了我一下午
+}
 ```
 
 ##### 第二步、设置消息回调Listener
@@ -341,6 +375,101 @@ Client.defaultClient.logout();
 
 
 
+### 9.错误监听
+
+> 其中，getErrorCode是对应着错误包的byte号
+>
+> reason是错误的原因
+
+```java
+Client.defaultClient.setErrorListener((errorMessagePacket)->{
+    System.out.println("收到出问题的消息"+errorMessagePacket.getReason()+errorMessagePacket.getErrorCode());
+        });
+```
+
+##### Errorcode对应表：
+
+> 客户端收到的错误只有xxx_response系列的错误。
+
+```java
+//有可能未来得及更新
+
+```
+
 
 
 ### 群组操作
+
+### 1.建群(CreateGroupManage)
+
+```java
+
+Client.defaultClient.getCreateGroupManage()
+    
+        .setSuccessListener((createGroupResponsePacket)->{
+            Long groupid=createGroupResponsePacket.getGroupId();
+            System.out.println("群创建成功，群id:"+groupid+" 群名:"+createGroupResponsePacket.getGroupName()+" 群里面有："+createGroupResponsePacket.getUserNameList());
+            System.out.println("IDlist:"+createGroupResponsePacket.getUserIdList());
+        })
+    
+        .setFailListener((createGroupResponsePacket)->{
+            System.out.println("群创建失败");
+        })
+        //发送到服务器成功
+        .setSendSuccessListener(this::printSuccess)
+        //发送到服务器失败
+        .setSendFailListener(this::printFail);
+//-------------------------------------------------------
+		//建群请求
+		.createGroup(userIdList,groupName);
+```
+
+
+
+### 2. 加入群(getJoinGroupManage)
+
+> 添加监听使用样例：
+
+```java
+Client.defaultClient.getJoinGroupManage()
+        .setSuccessListener((joinGroupResponsePacket)->{
+            if (joinGroupResponsePacket.isNewJoin()
+                &&joinGroupResponsePacket.isOnLine()) {
+                System.out.println(joinGroupResponsePacket.getUserName()
+                                   +"[在线]新加入群[" 
+                                   + joinGroupResponsePacket.getGroupId() 
+                                   + "]成功!");
+            }
+            else if (joinGroupResponsePacket.isNewJoin()
+                     &&!joinGroupResponsePacket.isOnLine()) {
+                System.out.println(joinGroupResponsePacket.getUserName()
+                                   +"[离线]新加入群[" 
+                                   + joinGroupResponsePacket.getGroupId() 
+                                   + "]成功!");
+            }
+            else if(!joinGroupResponsePacket.isNewJoin()
+                    && joinGroupResponsePacket.isOnLine()){
+                System.out.println(joinGroupResponsePacket.getUserName()
+                                   +"登录群[" 
+                                   + joinGroupResponsePacket.getGroupId() 
+                                   + "]成功!");
+            }
+        })
+        .setFailListener(JoinGroupResponsePacket->{
+            System.err.println("加入群[" 
+                               + JoinGroupResponsePacket.getGroupId() 
+                               + "]失败，原因为：" 
+                               + JoinGroupResponsePacket.getReason());
+        });
+```
+
+> 加群请求：
+
+```java
+Client.defaultClient.getJoinGroupManage().joinGroup(groupId,userId);
+```
+
+
+
+### 3. 退群
+

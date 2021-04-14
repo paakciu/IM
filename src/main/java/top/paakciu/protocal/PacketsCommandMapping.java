@@ -34,7 +34,7 @@ public final class PacketsCommandMapping {
     public final static Byte EXTRA_GROUP_RESPONSE=21;
     public final static Byte PULL_MESSAGE_REQUEST=22;//PullMessageRequestPacket
     public final static Byte OFF_LINE_MESSAGE_REQUEST=23;//OffLineMessageRequestPacket
-//    public final static Byte PULL_MESSAGE_REQUEST2=24;//TEST PullMessageRequestPacket
+    public final static Byte OFF_LINE_GROUP_MESSAGE_REQUEST=24;//OffLineGroupMessageRequestPacket
 
 
 
@@ -67,7 +67,7 @@ public final class PacketsCommandMapping {
         list.add(ExtraGroupResponsePacket.class);//21
         list.add(PullMessageRequestPacket.class);//22
         list.add(OffLineMessageRequestPacket.class);//OffLineMessageRequestPacket 23
-//        list.add(PullMessageRequestPacket2.class);//PullMessageRequestPacket2 24
+        list.add(OffLineGroupMessageRequestPacket.class);////OffLineGroupMessageRequestPacket
 
         map.put(LoginRequestPacket.class,LOGIN_REQUEST);
         map.put(LoginResponsePacket.class,LOGIN_RESPONSE);
@@ -93,7 +93,7 @@ public final class PacketsCommandMapping {
         map.put(ExtraGroupResponsePacket.class,EXTRA_GROUP_RESPONSE);
         map.put(PullMessageRequestPacket.class,PULL_MESSAGE_REQUEST);
         map.put(OffLineMessageRequestPacket.class,OFF_LINE_MESSAGE_REQUEST);//OffLineMessageRequestPacket
-//        map.put(PullMessageRequestPacket2.class,PULL_MESSAGE_REQUEST2);//PullMessageRequestPacket2 24
+        map.put(OffLineGroupMessageRequestPacket.class,OFF_LINE_GROUP_MESSAGE_REQUEST);
 
 //        for(Byte i=0;i<list.size();i++)
 //        {

@@ -52,7 +52,7 @@ public class MessageResponseHandler extends SimpleChannelInboundHandler<MessageR
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageResponsePacket messageResponsePacket) throws Exception {
 //        messageResponsePacket.get
-        //todo 会包含自己的返回消息
+        //会包含自己的返回消息
         if(handlerListener!=null)
             handlerListener.onHandle(messageResponsePacket);
     }

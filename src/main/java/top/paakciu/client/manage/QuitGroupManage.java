@@ -15,10 +15,11 @@ public class QuitGroupManage extends BaseManageWith4Function<QuitGroupResponsePa
         setSon(this);
     }
 
-    public QuitGroupManage quitGroup(Long groupId){
+    public QuitGroupManage quitGroup(Long groupId,Long userId){
         QuitGroupRequestPacket quitGroupRequestPacket=new QuitGroupRequestPacket();
         quitGroupRequestPacket.setGroupId(groupId);
-        writeAndFlushAddListener(channel,quitGroupRequestPacket,listeners);
+        quitGroupRequestPacket.setUserId(userId);
+        writeAndFlushAddListener(quitGroupRequestPacket);
         return this;
     }
 }

@@ -1,6 +1,7 @@
 package top.paakciu.utils;
 
 import io.netty.channel.Channel;
+import io.netty.channel.group.ChannelGroup;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 
@@ -13,9 +14,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date: 2021/3/5 12:24
  */
 public class AttributesHelper {
+
     public static AttributeKey<Integer> LOGIN=AttributeKey.newInstance("login");
+    //channel->id
     public static AttributeKey<ChannelUser> ChannelUser=AttributeKey.newInstance("ChannelUser");
-    //Session映射表
+    //channel->Group ----map:groupid->group
+    public static AttributeKey<Map<Long, ChannelGroup>> channelGroup=AttributeKey.newInstance("ChannelGroup");
+    //Channel映射表 id->channel
     private static final Map<Long, Channel> userIdChannelMap = new ConcurrentHashMap<>();
 
     //public static AttributeKey<Session> SESSION=AttributeKey.newInstance("session");
@@ -31,6 +36,7 @@ public class AttributesHelper {
         ch.attr(LOGIN).set(0);
         //System.out.println("设置登录");
     }
+
     public static boolean hasLogin(Channel channel) {
         Attribute<Integer> loginAttr = channel.attr(LOGIN);
         //System.out.println("判断登录="+loginAttr.get() != null&&loginAttr.get()==true);
@@ -48,10 +54,32 @@ public class AttributesHelper {
 
 
 
+    public static void setChannelGroup(Channel ch,Map<Long,ChannelGroup> groupMap){
+        ch.attr(channelGroup).set(groupMap);
+    }
+    public static Map<Long,ChannelGroup> getChannelGroup(Channel ch){
+        return ch.attr(channelGroup).get();
+    }
+    public static void removeChannelGroup(Channel ch){
+        ch.attr(channelGroup).set(null);
+    }
+
 
     public static void setChannelUser(Channel channel,ChannelUser channelUser) {
         userIdChannelMap.put(channelUser.getUserId(), channel);
         channel.attr(ChannelUser).set(channelUser);
+    }
+    public static void addChannelGroup(Channel ch,Long groupId,ChannelGroup group){
+        Map<Long,ChannelGroup> map=ch.attr(channelGroup).get();
+        if(!map.containsKey(groupId))
+            map.put(groupId,group);
+    }
+    public static void removeChannelGroup(Channel ch,Long groupId,ChannelGroup group){
+        Map<Long,ChannelGroup> map=ch.attr(channelGroup).get();
+        if(map.containsKey(groupId)){
+            map.remove(groupId,group);
+        }
+
     }
 
     public static void removeChannelUser(Channel channel) {
@@ -67,6 +95,8 @@ public class AttributesHelper {
     public static Channel getChannel(Long userId) {
         return userIdChannelMap.get(userId);
     }
+
+
 
 
 }
