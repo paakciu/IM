@@ -15,7 +15,7 @@ import top.paakciu.server.NettyServer;
 import top.paakciu.service.NormalMessageOfflineService;
 import top.paakciu.service.NormalMessageService;
 import top.paakciu.utils.AttributesHelper;
-import top.paakciu.utils.ChannelUser;
+import top.paakciu.utils.info.ChannelUser;
 
 
 import java.util.Date;

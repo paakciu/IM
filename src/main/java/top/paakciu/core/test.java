@@ -2,11 +2,13 @@ package top.paakciu.core;
 
 import io.netty.channel.Channel;
 import top.paakciu.client.listener.ClientEventListener;
-import top.paakciu.utils.ChannelUser;
+import top.paakciu.mbg.model.GroupInfo;
+import top.paakciu.mbg.model.GroupMsgOffline;
+import top.paakciu.utils.info.ChannelUser;
 import top.paakciu.utils.ExtraPacketHelper;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -104,12 +106,19 @@ public class test implements ClientEventListener {
                     //TODO 服务器返回结果为成功,str为返回成功 channelUser对象，包括惟一标识号id，和账号名
                     System.out.println(channelUser);
                     System.out.println("id="+channelUser.getUserId());
+
+                    //监听器
                     setSendListener();
                     setCreateGroupListener();
                     setJoinGroupListener();
                     setErrorListener();
                     setQuitGroup();
-
+                    setGetGroupmemeberslistener();
+                    setGetGroupListListener();
+                    setGroupMessageListener();
+                    setGroupOfflineMessageListener();
+                    ExtraListAdd();
+                    setExtraGroupMessageListener();
 
                     new Thread(()->{
                         Scanner sc = new Scanner(System.in);
@@ -120,10 +129,18 @@ public class test implements ClientEventListener {
 //                            Long toid = sc.nextLong();
 //                            String msg = sc.next();
 
-                            System.out.println("请输入任意字符串，退群测试");
-                            sc.nextLine();
+//                            System.out.println("请输入togroupid msg：");
+//                            Long togroupid = sc.nextLong();
+//                            String msg = sc.next();
+//                            sendGroupMessage(togroupid,msg);
 
-                            quitGroup(2L,channelUser.getUserId());
+                            System.out.println("请输入任意字符串，测试");
+                            sc.nextLine();
+                            sendExtraGroupMessage();
+//                            getGroupOfflineMessage();
+//                            getGroupList(channelUser.getUserId());
+                            //getGroupmemebers(2L);
+                            //quitGroup(2L,channelUser.getUserId());
 
                             //send(toid,msg);
                         }
@@ -175,7 +192,7 @@ public class test implements ClientEventListener {
         //todo 注意不能发送给自己，如果发送给自己会返回发送到服务器失败SendFailListener
         Client.defaultClient.getNormalMessageManage().send(toid,msg);
     }
-    public void pullMessageSingle(){
+    public void pullSingleMessage(){
         //获取历史消息
         ChannelUser user=Client.defaultClient.getChannelUser();
         /**
@@ -218,6 +235,47 @@ public class test implements ClientEventListener {
                 .setSendSuccessListener(this::printSuccess)
                 .setSendFailListener(this::printFail);
     }
+
+    public void pullGroupMessage(){
+        /**
+         * 方式1
+         * 推荐使用：这个可以用于群组离线消息的拉取，因为群组的离线消息的处理跟普通消息不一样
+         * 这是因为群组消息有可能非常庞大，按需获取即可！
+         * 参数说明：
+         * long fromMessageId：从哪个消息开始获取
+         * long groupid:群的id
+         * bool isBigger：从msgid 往id号增大的方向获取，还是往减小的方向获取
+         */
+        Client.defaultClient.getPullMessageManage()
+                .pullMessageGroupByFromMessageId(0L,2L,true)
+                .setSendSuccessListener(this::printSuccess)
+                .setSendFailListener(this::printFail);
+
+        /**
+         * 方式2
+         * 推荐使用：一开始使用这个，获取前size条消息，后面使用方式3逐渐往前获取
+         * 参数说明：
+         * long groupid:群的id
+         * int size: 获取消息的数量
+         */
+        Client.defaultClient.getPullMessageManage()
+                .pullMessageGroupBySize(2L,10)
+                .setSendSuccessListener(this::printSuccess)
+                .setSendFailListener(this::printFail);
+        /**
+         * 方式3
+         * 推荐使用：先使用方式2，获取前size条，后根据获取的消息id逐渐往前获取
+         * 参数说明：
+         * long fromMessageId：从哪个消息开始获取
+         * long groupid:群的id
+         * int size: 获取消息的数量
+         * bool isBigger：从msgid 往id号增大的方向获取，还是往减小的方向获取
+         */
+        Client.defaultClient.getPullMessageManage()
+                .pullMessageGroupByFromMessageIdAndSize(0L,2L,true,2)
+                .setSendSuccessListener(this::printSuccess)
+                .setSendFailListener(this::printFail);
+    }
     public void getOffLineMessage(){
         //登陆后拉取离线消息
         Client.defaultClient.getGetOffLineMessageManage()
@@ -254,8 +312,8 @@ public class test implements ClientEventListener {
         box.setB(true);
         box.setX(100);
         Client.defaultClient.getExtraManage()
-                //传递好参数即可：接收方id，自定义消息体，消息类型type（int），消息类型（Class）
-                .sendExtraMessage(25L,box,list.indexOf(test1.class),test1.class);
+                //传递好参数即可：接收方id，自定义消息体，消息类型type（int）
+                .sendExtraMessage(25L,box,list.indexOf(test1.class));
     }
 
     public void setErrorListener(){
@@ -305,13 +363,15 @@ public class test implements ClientEventListener {
     }
 
     public void setQuitGroup(){
-        Client.defaultClient.getQuitGroupManage()
-                .setSuccessListener((responsePacket)->{
-                    System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]成功！");
-                })
-                .setFailListener((responsePacket)->{
-                    System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]失败！");
-                });
+
+Client.defaultClient.getQuitGroupManage()
+        //监听
+        .setSuccessListener((responsePacket)->{
+            System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]成功！");
+        })
+        .setFailListener((responsePacket)->{
+            System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]失败！");
+        });
     }
     public void quitGroup(Long groupid,Long userId){
         Client.defaultClient.getQuitGroupManage().quitGroup(groupid,userId);
@@ -320,18 +380,127 @@ public class test implements ClientEventListener {
 
 
     public void setGetGroupmemeberslistener(){
-        Client.defaultClient.getGetGroupMembersManage().setHandlerListener(getGroupMembersResponsePacket->{
-            System.out.println("群[" + getGroupMembersResponsePacket.getGroupId() + "]中的人包括：" + getGroupMembersResponsePacket.getChannelUserList());
-        });
+        Client.defaultClient.getGetGroupMembersManage()
+                .setSuccessListener(getGroupMembersResponsePacket->{
+                    System.out.println("群+"+getGroupMembersResponsePacket.getGroupInfo().getGroupName()+"[" + getGroupMembersResponsePacket.getGroupId() + "]中的人包括：" + getGroupMembersResponsePacket.getAllUserList());
+                    for (ChannelUser channelUser : getGroupMembersResponsePacket.getAllUserList()) {
+                        System.out.print(channelUser.getUserId()+" ");
+                    }
+                    System.out.println("\n在线成员是："+getGroupMembersResponsePacket.getOnlineUserList());
+                    for (ChannelUser channelUser : getGroupMembersResponsePacket.getOnlineUserList()) {
+                        System.out.print(channelUser.getUserId()+" ");
+                    }
+                    System.out.println("");
+                })
+                .setFailListener(getGroupMembersResponsePacket->{
+                    System.out.println("群[" + getGroupMembersResponsePacket.getGroupId() + "]信息获取失败,原因是"+getGroupMembersResponsePacket.getReason() );
+                })
+                //发送到服务器成功
+                .setSendSuccessListener(this::printSuccess)
+                //发送到服务器失败
+                .setSendFailListener(this::printFail);
     }
-    public void getgroupmemebers(Long groupid){
+
+    public void getGroupmemebers(Long groupid){
         Client.defaultClient.getGetGroupMembersManage().getGroupMembers(groupid);
     }
-    public void sendgroup(){
-//        Client.defaultClient
-
-               //TODO System.out.println("收到群"+msg.getToGroupId()+" "+msg.getFromUserId()+"发出的消息："+msg.getMessage());
+    public void setGetGroupListListener(){
+        Client.defaultClient.getGetGroupListResponseManage()
+                .setSuccessListener((responsePacket)->{
+                    System.out.println("获取到用户"+responsePacket.getUserId()+"的群列表为：");
+                    for (GroupInfo groupInfo : responsePacket.getGroupInfoList()) {
+                        System.out.println("群："+groupInfo.toString());
+                    }
+                })
+                .setFailListener((responsePacket)->{
+                    System.out.println("获取群列表失败,原因是"+responsePacket.getReason());
+                })
+                //发送到服务器成功
+                .setSendSuccessListener(this::printSuccess)
+                //发送到服务器失败
+                .setSendFailListener(this::printFail);
     }
+    public void getGroupList(Long userid){
+        Client.defaultClient.getGetGroupListResponseManage().getGroupList(userid);
+    }
+
+    public void setGroupMessageListener(){
+        Client.defaultClient.getGroupMessageManage()
+                .setHandlerListener((messageResponsePacket)->{
+                    System.out.println(messageResponsePacket.getDate()+"收到群"+messageResponsePacket.getToGroupId()
+                            +" "+messageResponsePacket.getFromUserId()
+                            +messageResponsePacket.getFromUserName()
+                            +"发出的消息["+messageResponsePacket.getMessageId()+"]："+messageResponsePacket.getMessage());
+                })
+                //发送到服务器成功
+                .setSendSuccessListener(this::printSuccess)
+                //发送到服务器失败
+                .setSendFailListener(this::printFail);
+    }
+    public void sendGroupMessage(Long groupId,String msg){
+        Client.defaultClient.getGroupMessageManage().sendGroupMessage(groupId,msg);
+    }
+
+    public void setGroupOfflineMessageListener(){
+        Client.defaultClient.getOffLineGroupMessageManage()
+                .setSuccessListener((msg)->{
+                    System.out.println("收到离线群消息");
+                    for (GroupMsgOffline groupMsgOffline : msg.getGroupMsgOfflineList()) {
+                        //TODO 循环的每一次，就是一个群有需要拉取群消息
+                        //下面是使用样例
+                        System.out.println(groupMsgOffline.getGroupid()+"群收到消息："+groupMsgOffline);
+                        Map<Long, GroupInfo> groupInfoMap = msg.getGroupInfoMap();
+                        GroupInfo groupInfo=null;
+                        if(groupInfoMap!=null)
+                            groupInfo= groupInfoMap.get(groupMsgOffline.getGroupid());
+                        System.out.println("群的信息是："+groupInfo);
+                        System.out.println("------------------------------");
+                        //收到离线群消息之后，可以按照需求请求服务器推送群历史消息！
+                        Client.defaultClient.getPullMessageManage()
+                                .pullMessageGroupByFromMessageId(
+                                        groupMsgOffline.getFirstgroupmsgid()
+                                        ,groupMsgOffline.getGroupid()
+                                        ,true);
+
+                    }
+                })
+                .setFailListener((msg)->{
+                    System.out.println("请求离线群消息失败，原因是："+msg.getReason());
+                })
+                //发送到服务器成功
+                .setSendSuccessListener(this::printSuccess)
+                //发送到服务器失败
+                .setSendFailListener(this::printFail);
+    }
+    public void getGroupOfflineMessage(){
+        Client.defaultClient.getOffLineGroupMessageManage()
+                .getOffLineGroupMessage();
+    }
+
+    public void setExtraGroupMessageListener(){
+        Client.defaultClient.getExtraGroupManage()
+                .setHandlerListener((msg)->{
+                    //对应消息的处理，其中test1需要自己映射包！
+                    if(list.get(msg.getType())==test1.class){
+                        test1 test1= ExtraPacketHelper.getObject(test1.class,msg);
+                        System.out.println(test1);
+                    }
+                })
+                .setSendSuccessListener(this::printSuccess)
+                .setSendFailListener(this::printFail)
+                ;
+
+    }
+    public void sendExtraGroupMessage(){
+        test1 box=new test1();
+        box.setStr("nihao");
+        box.setB(true);
+        box.setX(100);
+        Client.defaultClient.getExtraGroupManage()
+                .sendExtraGroup(2L,box,list.indexOf(test1.class));
+    }
+
+
 }
 
 
@@ -345,6 +514,8 @@ public class test implements ClientEventListener {
 //        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
 //            if(handler==null)
 //                handler=nettyClient.channel.pipeline().get(TRESPONHANDLER.class);
+//            if(handler==null)
+//                    System.err.println("请检查NettyClient是否添加该handler");
 //            //双重锁检测
 //            if (tEMPMANAGE == null&&handler!=null) {
 //                synchronized (this) {

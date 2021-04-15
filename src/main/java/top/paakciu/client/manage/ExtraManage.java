@@ -23,9 +23,9 @@ public class ExtraManage extends BaseManageWithHandlerFunction<ExtraResponsePack
         setSon(this);
     }
 
-    public <T> ExtraManage sendExtraMessage(Long toid,T msg,Integer type,Class<T> clazz){
+    public <T> ExtraManage sendExtraMessage(Long toid,T msg,Integer type){
         ExtraRequestPacket extraRequestPacket=new ExtraRequestPacket();
-        ExtraPacketHelper.toByte(clazz,type,msg,extraRequestPacket);
+        ExtraPacketHelper.toByte(type,msg,extraRequestPacket);
         extraRequestPacket.setToUserId(toid);
         extraRequestPacket.setFromUserId(AttributesHelper.getChannelUser(channel).getUserId());
         writeAndFlushAddListener(extraRequestPacket);

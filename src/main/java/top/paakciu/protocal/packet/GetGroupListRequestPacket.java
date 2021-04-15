@@ -2,12 +2,12 @@ package top.paakciu.protocal.packet;
 
 /**
  * @author paakciu
- * @ClassName: OffLineMessageRequest
- * @date: 2021/4/11 18:02
+ * @ClassName: GetGroupListRequestPacket
+ * @date: 2021/4/15 12:22
  */
-public class OffLineMessageRequestPacket extends BasePacket{
-    //Userid
+public class GetGroupListRequestPacket extends BasePacket{
     private Long userId;
+
 
     public Long getUserId() {
         return userId;

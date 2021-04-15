@@ -35,7 +35,13 @@ public final class PacketsCommandMapping {
     public final static Byte PULL_MESSAGE_REQUEST=22;//PullMessageRequestPacket
     public final static Byte OFF_LINE_MESSAGE_REQUEST=23;//OffLineMessageRequestPacket
     public final static Byte OFF_LINE_GROUP_MESSAGE_REQUEST=24;//OffLineGroupMessageRequestPacket
-
+    //GetGroupList
+    public final static Byte GET_GROUP_LIST_REQUEST=25;
+    public final static Byte GET_GROUP_LIST_RESPONSE=26;
+    //OffLineGroupMessageResponsePacket
+    public static final Byte OFF_LINE_GROUP_MESSAGE_RESPONSE=27;
+    public static final Byte GET_INFO_REQUEST=28;
+    public static final Byte GET_INFO_RESPONSE=29;
 
 
     //双向映射表
@@ -67,7 +73,14 @@ public final class PacketsCommandMapping {
         list.add(ExtraGroupResponsePacket.class);//21
         list.add(PullMessageRequestPacket.class);//22
         list.add(OffLineMessageRequestPacket.class);//OffLineMessageRequestPacket 23
-        list.add(OffLineGroupMessageRequestPacket.class);////OffLineGroupMessageRequestPacket
+        list.add(OffLineGroupMessageRequestPacket.class);//24 OffLineGroupMessageRequestPacket
+        list.add(GetGroupListRequestPacket.class);
+        list.add(GetGroupListResponsePacket.class);
+        list.add(OffLineGroupMessageResponsePacket.class);
+        list.add(GetInfoRequestPacket.class);
+        list.add(GetInfoResponsePacket.class);
+        //   public static final Byte GET_INFO_REQUEST=28;
+        //    public static final Byte GET_INFO_RESPONSE=29;
 
         map.put(LoginRequestPacket.class,LOGIN_REQUEST);
         map.put(LoginResponsePacket.class,LOGIN_RESPONSE);
@@ -94,6 +107,13 @@ public final class PacketsCommandMapping {
         map.put(PullMessageRequestPacket.class,PULL_MESSAGE_REQUEST);
         map.put(OffLineMessageRequestPacket.class,OFF_LINE_MESSAGE_REQUEST);//OffLineMessageRequestPacket
         map.put(OffLineGroupMessageRequestPacket.class,OFF_LINE_GROUP_MESSAGE_REQUEST);
+        //GetGroupList
+        map.put(GetGroupListRequestPacket.class,GET_GROUP_LIST_REQUEST);
+        map.put(GetGroupListResponsePacket.class,GET_GROUP_LIST_RESPONSE);
+        map.put(OffLineGroupMessageResponsePacket.class,OFF_LINE_GROUP_MESSAGE_RESPONSE);
+        map.put(GetInfoRequestPacket.class,GET_INFO_REQUEST);
+        map.put(GetInfoResponsePacket.class,GET_INFO_RESPONSE);
+
 
 //        for(Byte i=0;i<list.size();i++)
 //        {

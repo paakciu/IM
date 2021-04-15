@@ -15,6 +15,15 @@ public class GroupMessageManage extends BaseManageWithHandlerFunction<GroupMessa
     public GroupMessageManage sendGroupMessage(Long toGroupId,String msg){
         GroupMessageRequestPacket groupMessageRequestPacket=new GroupMessageRequestPacket();
         groupMessageRequestPacket.setToGroupId(toGroupId);
+        //groupMessageRequestPacket.setFromUserId(fromId);
+        groupMessageRequestPacket.setMessage(msg);
+        writeAndFlushAddListener(groupMessageRequestPacket);
+        return this;
+    }
+    private GroupMessageManage sendGroupMessage(Long toGroupId,Long fromId,String msg){
+        GroupMessageRequestPacket groupMessageRequestPacket=new GroupMessageRequestPacket();
+        groupMessageRequestPacket.setToGroupId(toGroupId);
+        //groupMessageRequestPacket.setFromUserId(fromId);
         groupMessageRequestPacket.setMessage(msg);
         writeAndFlushAddListener(groupMessageRequestPacket);
         return this;

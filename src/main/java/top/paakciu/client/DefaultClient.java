@@ -2,28 +2,16 @@ package top.paakciu.client;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import top.paakciu.client.handler.*;
 import top.paakciu.client.listener.ClientEventListener;
 import top.paakciu.client.listener.ErrorListener;
 import top.paakciu.client.listener.SendSuccessListener;
-import top.paakciu.client.listener.SimpleListener;
 import top.paakciu.client.manage.*;
 import top.paakciu.config.IMConfig;
 import top.paakciu.core.Client;
 import top.paakciu.protocal.packet.ErrorMessagePacket;
-import top.paakciu.protocal.packet.MessageRequestPacket;
-import top.paakciu.protocal.packet.OffLineMessageRequestPacket;
-import top.paakciu.protocal.packet.PullMessageRequestPacket;
 import top.paakciu.utils.AttributesHelper;
-import top.paakciu.utils.ChannelUser;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
+import top.paakciu.utils.info.ChannelUser;
 
 /**
  * @author paakciu
@@ -64,6 +52,8 @@ public class DefaultClient implements Client {
             //修复运行时获取
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(RegisterResponseHandler.class);
+            if(handler==null)
+                System.err.println("请检查NettyClient是否添加该handler");
             handler.regiter(this,nettyClient.channel,username,passwrod);
         }
         return handler;
@@ -78,6 +68,8 @@ public class DefaultClient implements Client {
             //修复运行时获取
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(LoginResponseHandler.class);
+            if(handler==null)
+                System.err.println("请检查NettyClient是否添加该handler");
             handler.login(this,nettyClient.channel,username,passwrod);
         }
         return handler;
@@ -90,6 +82,8 @@ public class DefaultClient implements Client {
         if(nettyClient.channelisOK&&nettyClient.channel!=null) {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(MessageResponseHandler.class);
+            if(handler==null)
+                System.err.println("请检查NettyClient是否添加该handler");
             //双重锁检测
             if (normalMessageManage == null&&handler!=null) {
                 synchronized (this) {
@@ -108,6 +102,8 @@ public class DefaultClient implements Client {
         if(nettyClient.channelisOK&&nettyClient.channel!=null) {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(CreateGroupResponseHandler.class);
+            if(handler==null)
+                System.err.println("请检查NettyClient是否添加该handler");
             //双重锁检测
             if (createGroupManage == null&&handler!=null) {
                 synchronized (this) {
@@ -131,6 +127,8 @@ public class DefaultClient implements Client {
         if(nettyClient.channelisOK&&nettyClient.channel!=null) {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(JoinGroupResponseHandler.class);
+            if(handler==null)
+                System.err.println("请检查NettyClient是否添加该handler");
             //双重锁检测
             if (joinGroupManage == null&&handler!=null) {
                 synchronized (this) {
@@ -152,6 +150,8 @@ public class DefaultClient implements Client {
         if(nettyClient.channelisOK&&nettyClient.channel!=null) {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(QuitGroupResponseHandler.class);
+            if(handler==null)
+                System.err.println("请检查NettyClient是否添加该handler");
             //双重锁检测
             if (quitGroupManage == null&&handler!=null) {
                 synchronized (this) {
@@ -168,6 +168,8 @@ public class DefaultClient implements Client {
         if(nettyClient.channelisOK&&nettyClient.channel!=null) {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(ErrorMessageHandler.class);
+            if(handler==null)
+                System.err.println("请检查NettyClient是否添加该handler");
             handler.setListener(listener);
         }
         return handler;
@@ -182,6 +184,8 @@ public class DefaultClient implements Client {
         if(nettyClient.channelisOK&&nettyClient.channel!=null) {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(GetGroupMembersResponseHandler.class);
+            if(handler==null)
+                System.err.println("请检查NettyClient是否添加该handler");
             //双重锁检测
             if (getGroupMembersManage == null&&handler!=null) {
                 synchronized (this) {
@@ -232,6 +236,8 @@ public class DefaultClient implements Client {
         if(nettyClient.channelisOK&&nettyClient.channel!=null) {
             if(handler==null)
                 handler=nettyClient.channel.pipeline().get(ExtraResponseHandler.class);
+            if(handler==null)
+                System.err.println("请检查NettyClient是否添加该handler");
             //双重锁检测
             if (extraManage == null&&handler!=null) {
                 synchronized (this) {
@@ -243,9 +249,102 @@ public class DefaultClient implements Client {
         }
         return extraManage;
     }
+    //GetGroupListManage
+    //getGroupListResponseManage
+    //GetGroupListResponseHandler
+    private volatile GetGroupListManage getGroupListResponseManage=null;
+    public GetGroupListManage getGetGroupListResponseManage(){
+        //尝试获取这个对象-双校验;
+        GetGroupListResponseHandler handler=nettyClient.channel.pipeline().get(GetGroupListResponseHandler.class);
+        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+            if(handler==null)
+                handler=nettyClient.channel.pipeline().get(GetGroupListResponseHandler.class);
+            if(handler==null)
+                System.err.println("请检查NettyClient是否添加该handler");
+            //双重锁检测
+            if (getGroupListResponseManage == null&&handler!=null) {
+                synchronized (this) {
+                    if (getGroupListResponseManage == null&&handler!=null) {
+                        getGroupListResponseManage = new GetGroupListManage(nettyClient.channel,handler);
+                    }
+                }
+            }
+        }
+        return getGroupListResponseManage;
+    }
+    
+    //GroupMessageManage
+    //groupMessageManage
+    //GroupMessageResponseHandler
+    private volatile GroupMessageManage groupMessageManage=null;
+    public GroupMessageManage getGroupMessageManage(){
+        //尝试获取这个对象-双校验;
+        GroupMessageResponseHandler handler=nettyClient.channel.pipeline().get(GroupMessageResponseHandler.class);
+        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+            if(handler==null)
+                handler=nettyClient.channel.pipeline().get(GroupMessageResponseHandler.class);
+            if(handler==null)
+                    System.err.println("请检查NettyClient是否添加该handler");
+            //双重锁检测
+            if (groupMessageManage == null&&handler!=null) {
+                synchronized (this) {
+                    if (groupMessageManage == null&&handler!=null) {
+                        groupMessageManage = new GroupMessageManage(nettyClient.channel,handler);
+                    }
+                }
+            }
+        }
+        return groupMessageManage;
+    }
+    //OffLineGroupMessageManage
+    //offLineGroupMessageManage
+    //OffLineGroupMessageResponseHandler
+    private volatile OffLineGroupMessageManage offLineGroupMessageManage=null;
+    public OffLineGroupMessageManage getOffLineGroupMessageManage(){
+        //尝试获取这个对象-双校验;
+        OffLineGroupMessageResponseHandler handler=nettyClient.channel.pipeline().get(OffLineGroupMessageResponseHandler.class);
+        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+            if(handler==null)
+                handler=nettyClient.channel.pipeline().get(OffLineGroupMessageResponseHandler.class);
+            if(handler==null)
+                    System.err.println("请检查NettyClient是否添加该handler");
+            //双重锁检测
+            if (offLineGroupMessageManage == null&&handler!=null) {
+                synchronized (this) {
+                    if (offLineGroupMessageManage == null&&handler!=null) {
+                        offLineGroupMessageManage = new OffLineGroupMessageManage(nettyClient.channel,handler);
+                    }
+                }
+            }
+        }
+        return offLineGroupMessageManage;
+    }
 
-    //TODO GroupMessageManage
 
+    //ExtraGroupManage
+    //extraGroupManage
+    //ExtraGroupResponseHandler
+    private volatile ExtraGroupManage extraGroupManage=null;
+    public ExtraGroupManage getExtraGroupManage(){
+        //尝试获取这个对象-双校验;
+        ExtraGroupResponseHandler handler=nettyClient.channel.pipeline().get(ExtraGroupResponseHandler.class);
+        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+            if(handler==null)
+                handler=nettyClient.channel.pipeline().get(ExtraGroupResponseHandler.class);
+            if(handler==null)
+                    System.err.println("请检查NettyClient是否添加该handler");
+            //双重锁检测
+            if (extraGroupManage == null&&handler!=null) {
+                synchronized (this) {
+                    if (extraGroupManage == null&&handler!=null) {
+                        extraGroupManage = new ExtraGroupManage(nettyClient.channel,handler);
+                    }
+                }
+            }
+        }
+        return extraGroupManage;
+    }
+    
 
     public <handler extends ChannelHandler> handler getManage(Class<handler> handlerClazz, SendSuccessListener listener){
         handler handler=nettyClient.channel.pipeline().get(handlerClazz);
@@ -259,6 +358,7 @@ public class DefaultClient implements Client {
         return handler;
     }
 
+    
     
 //    private ConcurrentHashMap<Class,Object> manageMap=new ConcurrentHashMap<Class,Object>();
 //    public <manage, hand> manage getManage(Class<manage> manageClazz, Class<? extends ChannelHandler> handlerClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {

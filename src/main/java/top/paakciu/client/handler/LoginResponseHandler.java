@@ -11,10 +11,7 @@ import top.paakciu.core.Client;
 import top.paakciu.protocal.packet.LoginRequestPacket;
 import top.paakciu.protocal.packet.LoginResponsePacket;
 import top.paakciu.utils.AttributesHelper;
-import top.paakciu.utils.ChannelUser;
-
-import java.util.function.Consumer;
-import java.util.function.Function;
+import top.paakciu.utils.info.ChannelUser;
 
 /**
  * @author paakciu

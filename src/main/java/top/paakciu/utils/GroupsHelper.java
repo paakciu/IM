@@ -42,7 +42,7 @@ public class GroupsHelper {
                 ChannelGroup channelGroup=getChannelGroup(groupId);
                 channelGroup.add(ctx.channel());
                 groupMap.put(groupId,channelGroup);
-                System.out.println("已经有这个群啦，加入在线人就行了"+channelGroup);
+                //System.out.println("已经有这个群啦，加入在线人就行了"+channelGroup);
             }else{
                 //如果表中没有这个群组，则要在数据库中查找并且建立该表缓存
                 //如果群组为空，检查数据库是否有需要从数据库中添加缓存
@@ -52,7 +52,7 @@ public class GroupsHelper {
                     List<GroupMembers> list = GroupMembersService.getGroupMembersByGroupId(groupId);
                     ChannelGroup group = new DefaultChannelGroup(ctx.executor());
                     for (GroupMembers members : list) {
-                        Long tempuserId = members.getId();
+                        Long tempuserId = members.getGroupUserid();
                         Channel channel = AttributesHelper.getChannel(tempuserId);
                         if (channel != null)
                             group.add(channel);
@@ -62,7 +62,7 @@ public class GroupsHelper {
                     ChannelGroup channelGroup=getChannelGroup(groupId);
                     channelGroup.add(ctx.channel());//重复他会自动冲突
                     groupMap.put(groupId,channelGroup);
-                    System.out.println("已经添加到群组中"+GroupsHelper.getChannelGroup(groupId));
+                    //System.out.println("已经添加到群组中"+GroupsHelper.getChannelGroup(groupId));
                 } else{
                     //todo 如果数据库中都没有该群组，但是members却有，证明出现了问题.
 

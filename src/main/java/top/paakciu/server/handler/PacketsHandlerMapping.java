@@ -37,12 +37,21 @@ public class PacketsHandlerMapping extends SimpleChannelInboundHandler<BasePacke
         handlerMap.put(PacketsCommandMapping.OFF_LINE_MESSAGE_REQUEST,OffLineMessageRequestHandler.INSTANCE);
         handlerMap.put(PacketsCommandMapping.PULL_MESSAGE_REQUEST,PullMessageRequestHandler.INSTANCE);
         handlerMap.put(PacketsCommandMapping.EXTRA_REQUEST,ExtraRequestHandler.INSTANCE);
+        handlerMap.put(PacketsCommandMapping.GET_GROUP_LIST_REQUEST,GetGroupListRequestHandler.INSTANCE);
+        handlerMap.put(PacketsCommandMapping.OFF_LINE_GROUP_MESSAGE_REQUEST,OffLineGroupMessageRequestHandler.INSTANCE);
+        handlerMap.put(PacketsCommandMapping.EXTRA_GROUP_REQUEST,ExtraGroupRequestHandler.INSTANCE);
+        handlerMap.put(PacketsCommandMapping.GET_INFO_REQUEST,GetInfoRequestHandler.INSTANCE);
 //        handlerMap.put(PacketsCommandMapping.PULL_MESSAGE_REQUEST2,PullMessageRequestHandler2.INSTANCE);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, BasePacket msg) throws Exception {
-        handlerMap.get(msg.getCommand()).channelRead(ctx, msg);
+        SimpleChannelInboundHandler<? extends BasePacket> handler=handlerMap.get(msg.getCommand());
+        if(handler!=null)
+            handler.channelRead(ctx, msg);
+        else
+            System.err.println("这个类型没有映射上，检查是客户端出问题还是服务器出问题"+msg);
+
     }
 
 }

@@ -16,7 +16,6 @@ public class PullMessageManage extends BaseManageWith2Function<PullMessageManage
 //    @Deprecated
 //    public PullMessageManage pullMessageManage(){
 //        PullMessageRequestPacket pullMessageRequestPacket=new PullMessageRequestPacket();
-//        //TODO 参数
 //        //pullMessageRequestPacket;
 //        writeAndFlushAddListener(pullMessageRequestPacket);
 //        return this;
@@ -45,4 +44,25 @@ public class PullMessageManage extends BaseManageWith2Function<PullMessageManage
         return this;
     }
 
+    //setAsGroupByFromMessageId(Long fromMessageId1,boolean Bigger)
+    public PullMessageManage pullMessageGroupByFromMessageId(Long fromMessageId1,Long groupId,boolean Bigger){
+        PullMessageRequestPacket pullMessageRequestPacket=new PullMessageRequestPacket();
+        pullMessageRequestPacket.setAsGroupByFromMessageId(fromMessageId1,groupId,Bigger);
+        writeAndFlushAddListener(pullMessageRequestPacket);
+        return this;
+    }
+    //setAsGroupBySize(long groupid,int size)
+    public PullMessageManage pullMessageGroupBySize(long groupid,int size){
+        PullMessageRequestPacket pullMessageRequestPacket=new PullMessageRequestPacket();
+        pullMessageRequestPacket.setAsGroupBySize(groupid, size);
+        writeAndFlushAddListener(pullMessageRequestPacket);
+        return this;
+    }
+    //setAsGroupByFromMessageIdAndSize(Long fromMessageId1,Long groupId,boolean Bigger,int Size)
+    public PullMessageManage pullMessageGroupByFromMessageIdAndSize(Long fromMessageId1,Long groupId,boolean Bigger,int Size){
+        PullMessageRequestPacket pullMessageRequestPacket=new PullMessageRequestPacket();
+        pullMessageRequestPacket.setAsGroupByFromMessageIdAndSize(fromMessageId1, groupId,Bigger, Size);
+        writeAndFlushAddListener(pullMessageRequestPacket);
+        return this;
+    }
 }

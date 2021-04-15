@@ -11,7 +11,6 @@ import top.paakciu.protocal.packet.OffLineMessageRequestPacket;
 import top.paakciu.server.NettyServer;
 import top.paakciu.service.NormalMessageOfflineService;
 import top.paakciu.service.UserService;
-import top.paakciu.utils.Sqlutils;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class OffLineMessageRequestHandler extends SimpleChannelInboundHandler<Of
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, OffLineMessageRequestPacket msg) throws Exception {
         NettyServer.executor.submit(()->{
-            List<NormalMsg> list=NormalMessageOfflineService.getNormalMsgOfflineByid(msg.getId());
+            List<NormalMsg> list=NormalMessageOfflineService.getNormalMsgOfflineByid(msg.getUserId());
             for (NormalMsg normalMsg : list) {
                 MessageResponsePacket messageResponsePacket=new MessageResponsePacket();
                 messageResponsePacket.setMessageId(normalMsg.getId());

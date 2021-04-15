@@ -18,7 +18,6 @@ import top.paakciu.service.GroupInfoService;
 import top.paakciu.service.GroupMembersService;
 import top.paakciu.service.UserService;
 import top.paakciu.utils.AttributesHelper;
-import top.paakciu.utils.ChannelUser;
 import top.paakciu.utils.GroupsHelper;
 
 import java.util.List;
@@ -58,7 +57,7 @@ public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGro
                     List<GroupMembers> list= GroupMembersService.getGroupMembersByGroupId(groupId);
                     group=new DefaultChannelGroup(ctx.executor());
                     for (GroupMembers members : list) {
-                        Long tempuserId=members.getId();
+                        Long tempuserId=members.getGroupUserid();
                         Channel channel= AttributesHelper.getChannel(tempuserId);
                         if(channel!=null)
                             group.add(channel);
@@ -67,6 +66,7 @@ public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGro
                     GroupsHelper.addGroup(groupId,group);
                 }else{
                     handleError(ctx.channel(),"没有该群");
+                    //return ;
                 }
             }
             //endregion

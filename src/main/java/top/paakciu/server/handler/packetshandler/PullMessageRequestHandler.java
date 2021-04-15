@@ -4,13 +4,18 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import top.paakciu.mbg.model.GroupInfo;
+import top.paakciu.mbg.model.GroupMsg;
 import top.paakciu.mbg.model.NormalMsg;
 import top.paakciu.mbg.model.User;
 import top.paakciu.protocal.PacketsCommandMapping;
 import top.paakciu.protocal.packet.ErrorMessagePacket;
+import top.paakciu.protocal.packet.GroupMessageResponsePacket;
 import top.paakciu.protocal.packet.MessageResponsePacket;
 import top.paakciu.protocal.packet.PullMessageRequestPacket;
 import top.paakciu.server.NettyServer;
+import top.paakciu.service.GroupInfoService;
+import top.paakciu.service.GroupMessageService;
 import top.paakciu.service.NormalMessageService;
 import top.paakciu.service.UserService;
 
@@ -51,18 +56,28 @@ public class PullMessageRequestHandler extends SimpleChannelInboundHandler<PullM
             System.out.println("收到拉取历史消息请求"+msg);
             if(msg.isGroup()){
                 //群聊的处理
+                GroupInfo groupInfo=GroupInfoService.getGroupInfoById(msg.getGroupid());
+                if(groupInfo==null){
+                    handleError(ctx.channel(),"该群组不存在，拉取历史记录操作错误");
+                    return;
+                }
                 if(msg.getMods()==1){
-                    //todo
                     //这是根据消息的id，向上或者向下获取所有消息-setAsGroupByFromMessageId(Long fromMessageId1,boolean Bigger)
+                    List<GroupMsg> list= GroupMessageService.getGroupMsgByFromMessageId(msg.getFromMessageId(),msg.getGroupid(),msg.isGetBigger());
+                    System.out.println("数据库操作完毕:"+list);
+                    sendGroup(ctx.channel(),list);
 
                 }else if (msg.getMods()==2){
-                    //todo
                     //这是根据size 从最新的消息获取特定数量-setAsGroupBySize(int size)
+                    List<GroupMsg> list = GroupMessageService.getGroupMsgBySize(msg.getGroupid(), msg.getNums());
+                    System.out.println("数据库操作完毕:"+list);
+                    sendGroup(ctx.channel(),list);
 
                 }else if (msg.getMods()==3){
-                    //todo
-                    //这是根据消息的id，向上或者向下获取 特定条数的消息-setAsGroupByFromMessageIdAndSize(Long fromMessageId1,boolean Bigger,int Size)
-
+                    //这是根据消息的id，向上或者向下获取 特定条数的消息-setAsGroupByFromMessageIdAndSize(Long fromMessageId1,Long groupid,boolean Bigger,int Size)
+                    List<GroupMsg> list =GroupMessageService.getGroupMsgByFromMessageIdAndSize(msg.getFromMessageId(),msg.getGroupid(), msg.isGetBigger(), msg.getNums());
+                    System.out.println("数据库操作完毕:"+list);
+                    sendGroup(ctx.channel(),list);
                 }else{
                     // error
                     ErrorMessagePacket errorMessagePacket=new ErrorMessagePacket();
@@ -73,10 +88,8 @@ public class PullMessageRequestHandler extends SimpleChannelInboundHandler<PullM
                 }
             }else {
                 //单聊的处理
-                System.out.println("拉取单聊消息，mods="+msg.getMods());
                 if(msg.getMods()==1){
                     //这是根据消息的id，向上或者向下获取所有消息-setAsSingleByFromMessageId(Long id,Long Id1,Long Id2,boolean Bigger)
-                    System.out.println("处理方法setAsSingleByFromMessageId");
                     List<NormalMsg> list=NormalMessageService.getMsgByFromMessageId(msg.getFromMessageId(),msg.getId1(), msg.getId2(), msg.isGetBigger());
                     sendSingle(ctx.channel(),list);
 
@@ -119,5 +132,32 @@ public class PullMessageRequestHandler extends SimpleChannelInboundHandler<PullM
 
             channel.writeAndFlush(messageResponsePacket);
         }
+    }
+
+    public void sendGroup(Channel channel,List<GroupMsg> list)
+    {
+        for (GroupMsg groupMsg : list) {
+            GroupMessageResponsePacket responsePacket=new GroupMessageResponsePacket();
+            responsePacket.setDate(groupMsg.getTime());
+            responsePacket.setFromUserId(groupMsg.getFromid());
+            System.out.println("这个获取用户名经常失败");
+            User user=UserService.getUserById(groupMsg.getFromid());
+            System.out.println("获取用户名成功");
+            if(user!=null)
+                responsePacket.setFromUserName(user.getUsername());
+            responsePacket.setToGroupId(groupMsg.getGroupid());
+            responsePacket.setMessage(groupMsg.getMsg());
+            responsePacket.setMessageId(groupMsg.getId());
+            System.out.println("发送消息："+responsePacket.getMessage());
+            channel.writeAndFlush(responsePacket);
+        }
+    }
+
+    public void handleError(Channel channel,String reason){
+        ErrorMessagePacket errorMessagePacket=new ErrorMessagePacket();
+        errorMessagePacket.setSuccess(false);
+        errorMessagePacket.setErrorCode(PacketsCommandMapping.PULL_MESSAGE_REQUEST);
+        errorMessagePacket.setReason(reason);
+        channel.writeAndFlush(errorMessagePacket);
     }
 }

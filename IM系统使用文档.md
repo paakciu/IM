@@ -159,7 +159,9 @@ public void send(Long toid,String msg){
 
 > 直接调用这个方法，就会把离线消息推送到“4.普通文本消息”处，将作为普通消息处理
 >
-> 调用此方法后，离线消息就会被清除，如果出现意外状况仍需要获取信息，可以通过获取消息来得到
+> 调用此方法后，离线消息就会被清除
+>
+> 如果出现意外状况仍需要获取信息，可以通过获取历史消息来得到！
 
 ```java
 Client.defaultClient.getGetOffLineMessageManage()
@@ -174,6 +176,8 @@ Client.defaultClient.getGetOffLineMessageManage()
 
 
 ### 6. 单聊历史消息的获取（PullMessageManage）
+
+> 此请求会直接调用普通消息的回调--普通消息的回调会包括自己发送的东西，所以不用写回调监听
 
 ```java
 //获取历史消息
@@ -244,8 +248,8 @@ Client.defaultClient.getExtraManage()
         .setSendFailListener(this::printFail)
     
     	//消息发送
-    	//传递好参数即可：接收方id，自定义消息体，消息类型type（int），消息类型（Class）
-        .sendExtraMessage(toId,MsgBox,type,Class);
+    	//传递好参数即可：接收方id，自定义消息体，消息类型type（int）
+        .sendExtraMessage(25L,box,list.indexOf(test1.class));
 ```
 
 #### msg的数据结构包含：
@@ -331,8 +335,8 @@ box.setB(true);
 box.setX(100);
 
 Client.defaultClient.getExtraManage()
-        //传递好参数即可：接收方id，自定义消息体，消息类型type（int），消息类型（Class）
-        .sendExtraMessage(toid,box,list.indexOf(test1.class),test1.class);
+        //传递好参数即可：接收方id，自定义消息体，消息类型type（int）
+        .sendExtraMessage(25L,box,list.indexOf(test1.class));
 ```
 
 
@@ -471,5 +475,256 @@ Client.defaultClient.getJoinGroupManage().joinGroup(groupId,userId);
 
 
 
-### 3. 退群
+### 3. 退群(QuitGroupManage)
+
+监听：
+
+```java
+Client.defaultClient.getQuitGroupManage()
+        //监听
+        .setSuccessListener((responsePacket)->{
+            System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]成功！");
+        })
+        .setFailListener((responsePacket)->{
+            System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]失败！");
+        });
+```
+
+调用：
+
+```java
+public void quitGroup(Long groupid,Long userId){
+	Client.defaultClient.getQuitGroupManage().quitGroup(groupid,userId);
+}
+```
+
+
+
+
+
+### 4. 获取群信息(GetGroupMembersManage)
+
+> 获取的信息包括
+>
+> 群信息（id、groupinfo）
+>
+> 群全部成员列表
+>
+> 群在线成员列表
+>
+> --失败后
+>
+> 失败原因
+
+监听回调：
+
+```java
+Client.defaultClient.getGetGroupMembersManage()
+        .setSuccessListener(getGroupMembersResponsePacket->{
+            System.out.println("群+"+getGroupMembersResponsePacket.getGroupInfo().getGroupName()+"[" + getGroupMembersResponsePacket.getGroupId() + "]中的人包括：" + getGroupMembersResponsePacket.getAllUserList());
+            for (ChannelUser channelUser : getGroupMembersResponsePacket.getAllUserList()) {
+                System.out.print(channelUser.getUserId()+" ");
+            }
+            System.out.println("\n在线成员是："+getGroupMembersResponsePacket.getOnlineUserList());
+            for (ChannelUser channelUser : getGroupMembersResponsePacket.getOnlineUserList()) {
+                System.out.print(channelUser.getUserId()+" ");
+            }
+            System.out.println("");
+        })
+        .setFailListener(getGroupMembersResponsePacket->{
+            System.out.println("群[" + getGroupMembersResponsePacket.getGroupId() + "]信息获取失败,原因是"+getGroupMembersResponsePacket.getReason() );
+        })
+        //发送到服务器成功
+        .setSendSuccessListener(this::printSuccess)
+        //发送到服务器失败
+        .setSendFailListener(this::printFail);
+```
+
+调用
+
+```java
+public void getGroupmemebers(Long groupid){
+    Client.defaultClient.getGetGroupMembersManage().getGroupMembers(groupid);
+}
+```
+
+
+
+### 5. 群消息(GroupMessageManage)
+
+
+
+```java
+Client.defaultClient.getGroupMessageManage()
+        .setHandlerListener((messageResponsePacket)->{
+            System.out.println(messageResponsePacket.getDate()+"收到群"+messageResponsePacket.getToGroupId()
+                    +" "+messageResponsePacket.getFromUserId()
+                    +messageResponsePacket.getFromUserName()
+                    +"发出的消息："+messageResponsePacket.getMessage());
+        })
+        //发送到服务器成功
+        .setSendSuccessListener(this::printSuccess)
+        //发送到服务器失败
+        .setSendFailListener(this::printFail);
+```
+
+发送：
+
+```java
+public void sendGroupMessage(Long groupId,String msg){
+    Client.defaultClient.getGroupMessageManage().sendGroupMessage(groupId,msg);
+}
+```
+
+
+
+### 6. 群组历史消息的获取（PullMessageManage）
+
+> 此请求跟单聊请求共享同一个manage
+>
+> 此请求会直接调用普通群组消息的回调，所以不用写回调监听
+>
+> 使用样例：
+
+```java
+/**
+ * 方式1
+ * 参数说明：
+ * 推荐使用：这个可以用于群组离线消息的拉取，因为群组的离线消息的处理跟普通消息不一样
+ * 这是因为群组消息有可能非常庞大，按需获取即可！
+ * long fromMessageId：从哪个消息开始获取
+ * long groupid:群的id
+ * bool isBigger：从msgid 往id号增大的方向获取，还是往减小的方向获取
+ */
+Client.defaultClient.getPullMessageManage()
+        .pullMessageGroupByFromMessageId(0L,2L,true)
+        .setSendSuccessListener(this::printSuccess)
+        .setSendFailListener(this::printFail);
+
+/**
+ * 方式2
+ * 推荐使用：一开始使用这个，获取前size条消息，后面使用方式3逐渐往前获取
+ * 参数说明：
+ * long groupid:群的id
+ * int size: 获取消息的数量
+ */
+Client.defaultClient.getPullMessageManage()
+        .pullMessageGroupBySize(2L,10)
+        .setSendSuccessListener(this::printSuccess)
+        .setSendFailListener(this::printFail);
+/**
+ * 方式3
+ * 推荐使用：先使用方式2，获取前size条，后根据获取的消息id逐渐往前获取
+ * 参数说明：
+ * long fromMessageId：从哪个消息开始获取
+ * long groupid:群的id
+ * int size: 获取消息的数量
+ * bool isBigger：从msgid 往id号增大的方向获取，还是往减小的方向获取
+ */
+Client.defaultClient.getPullMessageManage()
+        .pullMessageGroupByFromMessageIdAndSize(0L,2L,true,2)
+        .setSendSuccessListener(this::printSuccess)
+        .setSendFailListener(this::printFail);
+```
+
+
+
+### 7. 获取哪个群有离线消息（OffLineGroupMessageManage）
+
+**注意！并非是直接获取离线消息，而是获得哪个群id有离线消息，以及对应的最开始的离线消息id.**
+
+> 群组的离线消息的处理跟普通消息不一样,这是因为群组消息有可能非常庞大，按需获取即可！
+
+```java
+Client.defaultClient.getOffLineGroupMessageManage()
+        .setSuccessListener((msg)->{
+            System.out.println("收到离线群消息");
+            for (GroupMsgOffline groupMsgOffline : msg.getGroupMsgOfflineList()) {
+                //TODO 循环的每一次，就是一个群有需要拉取群消息
+                //下面是使用样例
+                System.out.println(groupMsgOffline.getGroupid()
+                                   +"群收到消息："+groupMsgOffline);
+                Map<Long, GroupInfo> groupInfoMap = msg.getGroupInfoMap();
+                GroupInfo groupInfo=null;
+                if(groupInfoMap!=null)
+                    groupInfo= groupInfoMap.get(groupMsgOffline.getGroupid());
+                System.out.println("群的信息是："+groupInfo);
+                System.out.println("------------------------------");
+                //收到离线群消息之后，可以按照需求请求服务器推送群历史消息！
+                Client.defaultClient.getPullMessageManage()
+                        .pullMessageGroupByFromMessageId(
+                                groupMsgOffline.getFirstgroupmsgid()
+                                ,groupMsgOffline.getGroupid()
+                                ,true);
+
+            }
+        })
+        .setFailListener((msg)->{
+            System.out.println("请求离线群消息失败，原因是："+msg.getReason());
+        })
+        //发送到服务器成功
+        .setSendSuccessListener(this::printSuccess)
+        //发送到服务器失败
+        .setSendFailListener(this::printFail);
+```
+
+调用请求：
+
+> 直接调用这个方法，就会把离线消息推送到“5.群消息”处，将作为普通群消息处理
+>
+> 调用此方法后，离线消息就会被清除
+>
+> 如果出现意外状况仍需要获取信息，可以通过获取历史消息来得到！
+
+```java
+public void getGroupOfflineMessage(){
+    Client.defaultClient.getOffLineGroupMessageManage()
+        .getOffLineGroupMessage();
+}
+```
+
+
+
+
+
+### 8. 群拓展消息体
+
+> 具体可以参照单聊”7.拓展消息体“，原理一样
+>
+> 而且只要int type<--->Class clazz的映射关系能对应上
+>
+> 单聊拓展消息体跟群拓展消息体可以独立使用2套映射系统
+>
+> 这里演示只使用共享的映射
+
+
+
+回调监听：
+
+```java
+Client.defaultClient.getExtraGroupManage()
+        .setHandlerListener((msg)->{
+            //对应消息的处理，其中test1需要自己映射包！
+            if(list.get(msg.getType())==test1.class){
+                test1 test1= ExtraPacketHelper.getObject(test1.class,msg);
+                System.out.println(test1);
+            }
+        })
+        .setSendSuccessListener(this::printSuccess)
+        .setSendFailListener(this::printFail)
+        ;
+```
+
+调用：
+
+```java
+public void sendExtraGroupMessage(){
+    test1 box=new test1();
+    box.setStr("nihao");
+    box.setB(true);
+    box.setX(100);
+    Client.defaultClient.getExtraGroupManage()
+        .sendExtraGroup(2L,box,list.indexOf(test1.class));
+}
+```
 

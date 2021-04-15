@@ -31,9 +31,10 @@ public class PullMessageRequestPacket extends BasePacket{
         this.isGroup=false;
     }
 
-    public void setAsGroupByFromMessageId(Long fromMessageId1,boolean Bigger){
+    public void setAsGroupByFromMessageId(Long fromMessageId1,Long groupId,boolean Bigger){
         openGroup();
         fromMessageId=fromMessageId1;
+        this.groupid=groupId;
         getBigger=Bigger;
         mods=1;
     }
@@ -47,7 +48,7 @@ public class PullMessageRequestPacket extends BasePacket{
     }
     public void setAsGroupBySize(long groupid,int size){
         openGroup();
-        this.
+        this.groupid=groupid;
         nums=size;
         mods=2;
     }
@@ -59,9 +60,10 @@ public class PullMessageRequestPacket extends BasePacket{
         mods=2;
     }
 
-    public void setAsGroupByFromMessageIdAndSize(Long fromMessageId1,boolean Bigger,int Size){
+    public void setAsGroupByFromMessageIdAndSize(Long fromMessageId1,Long groupId,boolean Bigger,int Size){
         openGroup();
         fromMessageId=fromMessageId1;
+        this.groupid=groupId;
         getBigger=Bigger;
         nums=Size;
         mods=3;

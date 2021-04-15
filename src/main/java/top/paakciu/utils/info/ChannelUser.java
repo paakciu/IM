@@ -1,4 +1,4 @@
-package top.paakciu.utils;
+package top.paakciu.utils.info;
 
 /**
  * 这个是自己设计的Session，比较简单

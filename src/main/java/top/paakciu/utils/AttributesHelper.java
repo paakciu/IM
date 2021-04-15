@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
+import top.paakciu.utils.info.ChannelUser;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,7 +18,7 @@ public class AttributesHelper {
 
     public static AttributeKey<Integer> LOGIN=AttributeKey.newInstance("login");
     //channel->id
-    public static AttributeKey<ChannelUser> ChannelUser=AttributeKey.newInstance("ChannelUser");
+    public static AttributeKey<top.paakciu.utils.info.ChannelUser> ChannelUser=AttributeKey.newInstance("ChannelUser");
     //channel->Group ----map:groupid->group
     public static AttributeKey<Map<Long, ChannelGroup>> channelGroup=AttributeKey.newInstance("ChannelGroup");
     //Channel映射表 id->channel

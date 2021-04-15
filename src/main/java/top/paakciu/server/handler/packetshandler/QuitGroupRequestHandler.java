@@ -33,6 +33,7 @@ public class QuitGroupRequestHandler extends SimpleChannelInboundHandler<QuitGro
             //持久化删除是不管他是否在在线群组里的
             int ref=GroupMembersService.deleteGroupMembersByGroupIdAndUserId(groupId,userId);
             if (ref==0){
+                //一般是因为根本没有这个人
                 handleError(ctx.channel(),"删除群组成员失败");
                 return;
             }

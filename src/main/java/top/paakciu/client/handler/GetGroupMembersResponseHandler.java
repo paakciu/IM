@@ -11,13 +11,18 @@ import top.paakciu.protocal.packet.GetGroupMembersResponsePacket;
  * @date: 2021/4/3 16:05
  */
 
-public class GetGroupMembersResponseHandler extends SimpleChannelInboundHandlerWithHandlerFunction<GetGroupMembersResponsePacket> {
+public class GetGroupMembersResponseHandler extends SimpleChannelInboundHandlerWith4Function<GetGroupMembersResponsePacket> {
     public final static GetGroupMembersResponseHandler INSTANCE=new GetGroupMembersResponseHandler();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GetGroupMembersResponsePacket msg) throws Exception {
-        if(listeners.handlerListener!=null)
-            listeners.handlerListener.onHandle(msg);
+        if (msg.isSuccess()) {
+            if(listeners.successListener!=null)
+                listeners.successListener.onSuccess(msg);
+        } else {
+            if(listeners.failListener!=null)
+                listeners.failListener.onFail(msg);
+        }
 
     }
 }

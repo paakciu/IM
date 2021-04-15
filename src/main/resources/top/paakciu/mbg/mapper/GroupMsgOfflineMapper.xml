@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.paakciu.mbg.mapper.GroupMsgOfflineMapper">
+  <resultMap id="BaseResultMap" type="top.paakciu.mbg.model.GroupMsgOffline">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="groupid" jdbcType="BIGINT" property="groupid" />
+    <result column="toid" jdbcType="BIGINT" property="toid" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="firstgroupmsgid" jdbcType="BIGINT" property="firstgroupmsgid" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, groupid, toid, type, firstgroupmsgid
+  </sql>
+  <select id="selectByExample" parameterType="top.paakciu.mbg.model.GroupMsgOfflineExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from group_msg_offline
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from group_msg_offline
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from group_msg_offline
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="top.paakciu.mbg.model.GroupMsgOfflineExample">
+    delete from group_msg_offline
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="top.paakciu.mbg.model.GroupMsgOffline">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into group_msg_offline (groupid, toid, type, 
+      firstgroupmsgid)
+    values (#{groupid,jdbcType=BIGINT}, #{toid,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
+      #{firstgroupmsgid,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="top.paakciu.mbg.model.GroupMsgOffline">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into group_msg_offline
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupid != null">
+        groupid,
+      </if>
+      <if test="toid != null">
+        toid,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="firstgroupmsgid != null">
+        firstgroupmsgid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupid != null">
+        #{groupid,jdbcType=BIGINT},
+      </if>
+      <if test="toid != null">
+        #{toid,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="firstgroupmsgid != null">
+        #{firstgroupmsgid,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="top.paakciu.mbg.model.GroupMsgOfflineExample" resultType="java.lang.Long">
+    select count(*) from group_msg_offline
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update group_msg_offline
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.groupid != null">
+        groupid = #{record.groupid,jdbcType=BIGINT},
+      </if>
+      <if test="record.toid != null">
+        toid = #{record.toid,jdbcType=BIGINT},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.firstgroupmsgid != null">
+        firstgroupmsgid = #{record.firstgroupmsgid,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update group_msg_offline
+    set id = #{record.id,jdbcType=BIGINT},
+      groupid = #{record.groupid,jdbcType=BIGINT},
+      toid = #{record.toid,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=INTEGER},
+      firstgroupmsgid = #{record.firstgroupmsgid,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="top.paakciu.mbg.model.GroupMsgOffline">
+    update group_msg_offline
+    <set>
+      <if test="groupid != null">
+        groupid = #{groupid,jdbcType=BIGINT},
+      </if>
+      <if test="toid != null">
+        toid = #{toid,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="firstgroupmsgid != null">
+        firstgroupmsgid = #{firstgroupmsgid,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="top.paakciu.mbg.model.GroupMsgOffline">
+    update group_msg_offline
+    set groupid = #{groupid,jdbcType=BIGINT},
+      toid = #{toid,jdbcType=BIGINT},
+      type = #{type,jdbcType=INTEGER},
+      firstgroupmsgid = #{firstgroupmsgid,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="top.paakciu.mbg.model.GroupMsgOfflineExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from group_msg_offline
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

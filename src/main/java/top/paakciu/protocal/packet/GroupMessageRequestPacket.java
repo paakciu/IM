@@ -7,8 +7,16 @@ package top.paakciu.protocal.packet;
  */
 public class GroupMessageRequestPacket extends BasePacket{
     private Long toGroupId;
-//    private Long fromId;
+    //private Long fromUserId;
     private String message;
+
+//    public Long getFromUserId() {
+//        return fromUserId;
+//    }
+//
+//    public void setFromUserId(Long fromUserId) {
+//        this.fromUserId = fromUserId;
+//    }
 
     public Long getToGroupId() {
         return toGroupId;

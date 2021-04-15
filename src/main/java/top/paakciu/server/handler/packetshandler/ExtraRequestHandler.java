@@ -10,7 +10,7 @@ import top.paakciu.protocal.packet.ExtraRequestPacket;
 import top.paakciu.protocal.packet.ExtraResponsePacket;
 import top.paakciu.server.NettyServer;
 import top.paakciu.utils.AttributesHelper;
-import top.paakciu.utils.ChannelUser;
+import top.paakciu.utils.info.ChannelUser;
 
 import java.util.Date;
 

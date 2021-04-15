@@ -1,7 +1,6 @@
 package top.paakciu.client.manage;
 
 import io.netty.channel.Channel;
-import top.paakciu.client.handler.GetGroupMembersResponseHandler;
 import top.paakciu.protocal.packet.OffLineMessageRequestPacket;
 import top.paakciu.utils.AttributesHelper;
 
@@ -19,7 +18,7 @@ public class GetOffLineMessageManage extends BaseManageWith2Function<GetOffLineM
 
     public GetOffLineMessageManage getOffLineMessage(){
         OffLineMessageRequestPacket offLineMessageRequestPacket = new OffLineMessageRequestPacket();
-        offLineMessageRequestPacket.setId(AttributesHelper.getChannelUser(channel).getUserId());
+        offLineMessageRequestPacket.setUserId(AttributesHelper.getChannelUser(channel).getUserId());
 
         writeAndFlushAddListener(offLineMessageRequestPacket);
         return this;

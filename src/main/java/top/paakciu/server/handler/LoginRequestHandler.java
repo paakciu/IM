@@ -9,11 +9,8 @@ import top.paakciu.protocal.packet.LoginResponsePacket;
 import top.paakciu.server.NettyServer;
 import top.paakciu.service.UserService;
 import top.paakciu.utils.AttributesHelper;
-import top.paakciu.utils.ChannelUser;
+import top.paakciu.utils.info.ChannelUser;
 import top.paakciu.utils.GroupsHelper;
-
-
-import java.util.UUID;
 
 /**
  * @author paakciu

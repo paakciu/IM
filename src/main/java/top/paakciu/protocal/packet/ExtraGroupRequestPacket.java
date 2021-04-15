@@ -8,12 +8,22 @@ package top.paakciu.protocal.packet;
 public class ExtraGroupRequestPacket extends BasePacket{
     //发到谁-群聊
     private Long groupId;
+    //从谁发出
+    private Long fromUserId;
     //扩展包的类型---需要自行映射
     private Integer type;
     //扩展包的字节流长度，使用int，带符号数上限只能2GB
     private Integer len;
     //扩展包的字节流内容
     private byte[] message;
+
+    public Long getFromUserId() {
+        return fromUserId;
+    }
+
+    public void setFromUserId(Long fromUserId) {
+        this.fromUserId = fromUserId;
+    }
 
     public Long getGroupId() {
         return groupId;

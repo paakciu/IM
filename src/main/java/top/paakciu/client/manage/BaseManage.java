@@ -1,7 +1,6 @@
 package top.paakciu.client.manage;
 
 import top.paakciu.client.listener.*;
-import top.paakciu.utils.ChannelUser;
 
 /**
  * @author paakciu

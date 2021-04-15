@@ -9,7 +9,7 @@ import top.paakciu.client.listener.SendSuccessListener;
 import top.paakciu.protocal.packet.GetGroupMembersRequestPacket;
 import top.paakciu.protocal.packet.GetGroupMembersResponsePacket;
 
-public class GetGroupMembersManage extends BaseManageWithHandlerFunction<GetGroupMembersResponsePacket, GetGroupMembersResponseHandler,GetGroupMembersManage>{
+public class GetGroupMembersManage extends BaseManageWith4Function<GetGroupMembersResponsePacket, GetGroupMembersResponseHandler,GetGroupMembersManage>{
 
     public GetGroupMembersManage(Channel channel,ChannelHandler handler) {
         super(channel,handler);
