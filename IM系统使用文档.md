@@ -402,6 +402,87 @@ Client.defaultClient.setErrorListener((errorMessagePacket)->{
 
 
 
+
+
+### 10. 好友操作组(GetInfoAndFriendsManage)
+
+#### 监听:
+
+```java
+Client.defaultClient.getGetInfoAndFriendsManage()
+    .setGetUserInfoListener(channeluser->{
+        System.out.println("获取到消息为"+channeluser);
+    })
+    .setAddFriendslistener((channelUserList)->{
+        //添加好友的两个人的信息
+        System.out.println("添加好友"+channelUserList);
+    })
+    .setDeleteFriendslistener(channelUserList->{
+        //删除好友的两个人的信息
+        System.out.println("删除好友"+channelUserList);
+    })
+    .setAllFriendslistener(channelUserList->{
+        //所有好友
+        System.out.println("所有好友"+channelUserList);
+    })
+    .setOnLineFriendslistener(channelUserList->{
+        //所有在线好友
+        System.out.println("在线好友"+channelUserList);
+    })
+    ;
+```
+
+#### 1.获取消息
+
+```java
+//根据id 获取相关信息（只有username）
+public GetInfoAndFriendsManage getUserInfo(Long userId);
+//根据id添加好友，id先后顺序不重要
+public GetInfoAndFriendsManage addFriends(Long userId,Long userId2);
+//根据id删除好友，id先后顺序不重要
+public GetInfoAndFriendsManage deleteFriends(Long userId,Long userId2);
+//获取好友列表
+public GetInfoAndFriendsManage getAllFriends(Long userId);
+//获取在线好友列表
+public GetInfoAndFriendsManage getOnLineFriends(Long userId);
+```
+
+```java
+//获取某个用户的信息
+public void getUserInfo(Long userId){
+    Client.defaultClient.getGetInfoAndFriendsManage()
+        .getUserInfo(userId);//1
+}
+//添加好友（可以别人对别人，这个更多是需要服务器确认添加的好友）
+public void addFriends(Long userId,Long userId2){
+    Client.defaultClient.getGetInfoAndFriendsManage()
+        .addFriends(userId, userId2);//2
+}
+//删除好友（可以别人对别人，这个更多是需要服务器确认删除的好友）
+public void deleteFriends(Long userId,Long userId2){
+    Client.defaultClient.getGetInfoAndFriendsManage()
+        .deleteFriends(userId, userId2);//3
+}
+//获取所有好友
+public void getAllFriends(Long userId){
+    Client.defaultClient.getGetInfoAndFriendsManage()
+        .getAllFriends(userId);//4
+}
+//获取在线好友
+public void getOnLineFriends(Long userId){
+    Client.defaultClient.getGetInfoAndFriendsManage()
+        .getOnLineFriends(userId);//5
+}
+```
+
+
+
+
+
+
+
+
+
 ### 群组操作
 
 ### 1.建群(CreateGroupManage)
@@ -727,4 +808,10 @@ public void sendExtraGroupMessage(){
         .sendExtraGroup(2L,box,list.indexOf(test1.class));
 }
 ```
+
+
+
+
+
+
 

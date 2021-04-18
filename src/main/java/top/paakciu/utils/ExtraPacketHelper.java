@@ -32,6 +32,9 @@ public class ExtraPacketHelper {
     public static <T> T StringToObject(Class<T> clazz, String str){
         return JSON.parseObject(str,clazz);
     }
+    public static <T> List<T> StringToArray(Class<T> clazz, String str){
+        return JSON.parseArray(str,clazz);
+    }
     public static String ObjectToString(Object obj){
         return JSON.toJSONString(obj);
     }

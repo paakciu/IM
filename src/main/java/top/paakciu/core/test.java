@@ -119,12 +119,13 @@ public class test implements ClientEventListener {
                     setGroupOfflineMessageListener();
                     ExtraListAdd();
                     setExtraGroupMessageListener();
+                    setGetInfoAndFriendsListener();
 
                     new Thread(()->{
                         Scanner sc = new Scanner(System.in);
 
                         //聊天模拟
-                        while (true) {
+                        //while (true) {
 //                            System.out.println("请输入toid msg：");
 //                            Long toid = sc.nextLong();
 //                            String msg = sc.next();
@@ -134,16 +135,24 @@ public class test implements ClientEventListener {
 //                            String msg = sc.next();
 //                            sendGroupMessage(togroupid,msg);
 
-                            System.out.println("请输入任意字符串，测试");
+                            System.out.println("请输入任意字符串，测试添加好友");
+                            Long id1=sc.nextLong();
+                            Long id2=sc.nextLong();
+                            deleteFriends(id1,id2);
+                            System.out.println("请输入任意字符串，测试获取好友列表");
                             sc.nextLine();
-                            sendExtraGroupMessage();
+                            getAllFriends(channelUser.getUserId());
+                            System.out.println("请输入任意字符串，测试获取在线好友列表");
+                            sc.nextLine();
+                            getOnLineFriends(channelUser.getUserId());
+                            //sendExtraGroupMessage();
 //                            getGroupOfflineMessage();
 //                            getGroupList(channelUser.getUserId());
                             //getGroupmemebers(2L);
                             //quitGroup(2L,channelUser.getUserId());
 
                             //send(toid,msg);
-                        }
+                       // }
                     }).start();
 
                 })
@@ -363,16 +372,15 @@ public class test implements ClientEventListener {
     }
 
     public void setQuitGroup(){
-
-Client.defaultClient.getQuitGroupManage()
-        //监听
-        .setSuccessListener((responsePacket)->{
-            System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]成功！");
-        })
-        .setFailListener((responsePacket)->{
-            System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]失败！");
-        });
-    }
+        Client.defaultClient.getQuitGroupManage()
+                //监听
+                .setSuccessListener((responsePacket)->{
+                    System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]成功！");
+                })
+                .setFailListener((responsePacket)->{
+                    System.out.println(responsePacket.getUserId()+"退出群聊[" + responsePacket.getGroupId() + "]失败！");
+                });
+            }
     public void quitGroup(Long groupid,Long userId){
         Client.defaultClient.getQuitGroupManage().quitGroup(groupid,userId);
     }
@@ -499,7 +507,66 @@ Client.defaultClient.getQuitGroupManage()
         Client.defaultClient.getExtraGroupManage()
                 .sendExtraGroup(2L,box,list.indexOf(test1.class));
     }
-
+    public void setGetInfoAndFriendsListener(){
+        Client.defaultClient.getGetInfoAndFriendsManage()
+                .setGetUserInfoListener(channeluser->{
+                    System.out.println("获取到消息为"+channeluser+channeluser.getUserName()+"id="+channeluser.getUserId());
+                })
+                .setAddFriendslistener((channelUserList)->{
+                    //添加好友的两个人的信息
+                    System.out.println("添加好友"+channelUserList);
+                    for (ChannelUser channelUser : channelUserList) {
+                        System.out.println("id="+channelUser.getUserId()+"name="+channelUser.getUserName());
+                    }
+                })
+                .setDeleteFriendslistener(channelUserList->{
+                    //删除好友的两个人的信息
+                    System.out.println("删除好友"+channelUserList);
+                    for (ChannelUser channelUser : channelUserList) {
+                        System.out.println("id="+channelUser.getUserId()+"name="+channelUser.getUserName());
+                    }
+                })
+                .setAllFriendslistener(channelUserList->{
+                    //所有好友
+                    System.out.println("所有好友"+channelUserList);
+                    for (ChannelUser channelUser : channelUserList) {
+                        System.out.println("id="+channelUser.getUserId()+"name="+channelUser.getUserName());
+                    }
+                })
+                .setOnLineFriendslistener(channelUserList->{
+                    //所有在线好友
+                    System.out.println("在线好友"+channelUserList);
+                    for (ChannelUser channelUser : channelUserList) {
+                        System.out.println("id="+channelUser.getUserId()+"name="+channelUser.getUserName());
+                    }
+                })
+                ;
+    }
+    //获取某个用户的信息
+    public void getUserInfo(Long userId){
+        Client.defaultClient.getGetInfoAndFriendsManage()
+                .getUserInfo(userId);//1
+    }
+    //添加好友（可以别人对别人，这个更多是需要服务器确认添加的好友）
+    public void addFriends(Long userId,Long userId2){
+        Client.defaultClient.getGetInfoAndFriendsManage()
+                .addFriends(userId, userId2);//2
+    }
+    //删除好友（可以别人对别人，这个更多是需要服务器确认删除的好友）
+    public void deleteFriends(Long userId,Long userId2){
+        Client.defaultClient.getGetInfoAndFriendsManage()
+                .deleteFriends(userId, userId2);//3
+    }
+    //获取所有好友
+    public void getAllFriends(Long userId){
+        Client.defaultClient.getGetInfoAndFriendsManage()
+                .getAllFriends(userId);//4
+    }
+    //获取在线好友
+    public void getOnLineFriends(Long userId){
+        Client.defaultClient.getGetInfoAndFriendsManage()
+                .getOnLineFriends(userId);//5
+    }
 
 }
 

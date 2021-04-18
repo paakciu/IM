@@ -40,7 +40,7 @@ public class PacketsHandlerMapping extends SimpleChannelInboundHandler<BasePacke
         handlerMap.put(PacketsCommandMapping.GET_GROUP_LIST_REQUEST,GetGroupListRequestHandler.INSTANCE);
         handlerMap.put(PacketsCommandMapping.OFF_LINE_GROUP_MESSAGE_REQUEST,OffLineGroupMessageRequestHandler.INSTANCE);
         handlerMap.put(PacketsCommandMapping.EXTRA_GROUP_REQUEST,ExtraGroupRequestHandler.INSTANCE);
-        handlerMap.put(PacketsCommandMapping.GET_INFO_REQUEST,GetInfoRequestHandler.INSTANCE);
+        handlerMap.put(PacketsCommandMapping.GET_INFO_REQUEST,GetInfoAndFriendRequestHandler.INSTANCE);
 //        handlerMap.put(PacketsCommandMapping.PULL_MESSAGE_REQUEST2,PullMessageRequestHandler2.INSTANCE);
     }
 

@@ -61,7 +61,7 @@ public class NettyClient {
                         .addLast(new GetGroupListResponseHandler())
                         .addLast(new OffLineGroupMessageResponseHandler())
                         .addLast(new ExtraGroupResponseHandler())
-                        .addLast(new GetInfoResponseHandler())
+                        .addLast(new GetInfoAndFriendResponseHandler())
                         //心跳包的定期发送
                         .addLast(new HeartBeatTimerHandler())
                 ;

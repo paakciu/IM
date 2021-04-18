@@ -25,7 +25,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) throws Exception {
         NettyServer.executor.submit(()-> {
-            System.out.println("收到登录请求");
+            System.out.println("收到登录请求"+loginRequestPacket.getUsername()+loginRequestPacket.getPassword());
             //准备响应
             LoginResponsePacket response= new LoginResponsePacket();
 

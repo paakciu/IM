@@ -344,6 +344,31 @@ public class DefaultClient implements Client {
         }
         return extraGroupManage;
     }
+
+    //GetInfoAndFriendsManage
+    //GetInfoAndFriendsManage
+    //getInfoAndFriendsManage
+    //GetInfoAndFriendResponseHandler
+    private volatile GetInfoAndFriendsManage getInfoAndFriendsManage=null;
+    public GetInfoAndFriendsManage getGetInfoAndFriendsManage(){
+        //尝试获取这个对象-双校验;
+        GetInfoAndFriendResponseHandler handler=nettyClient.channel.pipeline().get(GetInfoAndFriendResponseHandler.class);
+        if(nettyClient.channelisOK&&nettyClient.channel!=null) {
+            if(handler==null)
+                handler=nettyClient.channel.pipeline().get(GetInfoAndFriendResponseHandler.class);
+            if(handler==null)
+                    System.err.println("请检查NettyClient是否添加该handler");
+            //双重锁检测
+            if (getInfoAndFriendsManage == null&&handler!=null) {
+                synchronized (this) {
+                    if (getInfoAndFriendsManage == null&&handler!=null) {
+                        getInfoAndFriendsManage = new GetInfoAndFriendsManage(nettyClient.channel,handler);
+                    }
+                }
+            }
+        }
+        return getInfoAndFriendsManage;
+    }
     
 
     public <handler extends ChannelHandler> handler getManage(Class<handler> handlerClazz, SendSuccessListener listener){
