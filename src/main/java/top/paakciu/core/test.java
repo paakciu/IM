@@ -2,6 +2,7 @@ package top.paakciu.core;
 
 import io.netty.channel.Channel;
 import top.paakciu.client.listener.ClientEventListener;
+import top.paakciu.config.IMConfig;
 import top.paakciu.mbg.model.GroupInfo;
 import top.paakciu.mbg.model.GroupMsgOffline;
 import top.paakciu.utils.info.ChannelUser;
@@ -35,7 +36,7 @@ public class test implements ClientEventListener {
          * 线程池参数可调节IMconfig文件中的CLIENT_THREAD_POOL_NUM参数
          * {@link top.paakciu.config.IMConfig}
          */
-        Client.defaultClient.initClienConnection().setEventListener(new ClientEventListener() {
+        Client.defaultClient.initClienConnection(IMConfig.HOST,IMConfig.PORT).setEventListener(new ClientEventListener() {
             @Override
             public void onInitChannel() {
                 //TODO 初始化连接的时候要处理的事情

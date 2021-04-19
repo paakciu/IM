@@ -38,8 +38,8 @@ public class DefaultClient implements Client {
     }
 
     @Override
-    public Client initClienConnection() {
-        nettyClient.startConnection(IMConfig.HOST,IMConfig.PORT);
+    public Client initClienConnection(String host,int port) {
+        nettyClient.startConnection(host,port);
         return this;
     }
 

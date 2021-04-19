@@ -12,7 +12,7 @@ public interface Client {
     static DefaultClient defaultClient= DefaultClient.INSTANCE;
 
     //初始化
-    Client initClienConnection();
+    Client initClienConnection(String host,int port);
     //void startConnection(String host,int port);
     //注册
     RegisterResponseHandler register(String username, String passwrod);

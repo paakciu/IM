@@ -18,7 +18,7 @@
 * 线程池参数可调节IMconfig文件中的CLIENT_THREAD_POOL_NUM参数
 * {@link top.paakciu.config.IMConfig}
 */
-Client.defaultClient.initClienConnection().setEventListener(new ClientEventListener() {
+Client.defaultClient.initClienConnection(IP,port).setEventListener(new ClientEventListener() {
     @Override
     public void onInitChannel() {
         //TODO 初始化连接的时候要处理的事情
