@@ -48,10 +48,13 @@ public class Sqlutils {
 
             //这里一定要提交
             sqlSession.commit();
+            sqlSession.close();
         } catch (IOException e) {
             System.out.println("服务器中配置数据库的configuration.xml路径错误");
             //e.printStackTrace();
+
         }catch (PersistenceException e) {
+            e.printStackTrace();
             System.out.println(clazz+"数据库执行"+function+"方法时失败");
             //e.printStackTrace();
         }finally {
@@ -68,10 +71,12 @@ public class Sqlutils {
             ref=sqlListener.onSqlSessonOpen(sqlSession);
             //这里一定要提交
             sqlSession.commit();
+            sqlSession.close();
         } catch (IOException e) {
             System.out.println("服务器中配置数据库的configuration.xml路径错误");
             //e.printStackTrace();
         }catch (PersistenceException e) {
+            e.printStackTrace();
             System.out.println("数据库执行"+sqlListener+"接口方法时失败");
             //e.printStackTrace();
         }finally {
@@ -88,6 +93,7 @@ public class Sqlutils {
             ref=function.apply(Mapper);
             //这里一定要提交
             sqlSession.commit();
+            sqlSession.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

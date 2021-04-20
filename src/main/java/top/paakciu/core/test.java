@@ -126,34 +126,34 @@ public class test implements ClientEventListener {
                         Scanner sc = new Scanner(System.in);
 
                         //聊天模拟
-                        //while (true) {
-//                            System.out.println("请输入toid msg：");
-//                            Long toid = sc.nextLong();
-//                            String msg = sc.next();
+                        while (true) {
+                            System.out.println("请输入toid msg：");
+                            Long toid = sc.nextLong();
+                            String msg = sc.next();
+                            send(toid,msg);
 
 //                            System.out.println("请输入togroupid msg：");
 //                            Long togroupid = sc.nextLong();
 //                            String msg = sc.next();
 //                            sendGroupMessage(togroupid,msg);
-
-                            System.out.println("请输入任意字符串，测试添加好友");
-                            Long id1=sc.nextLong();
-                            Long id2=sc.nextLong();
-                            deleteFriends(id1,id2);
-                            System.out.println("请输入任意字符串，测试获取好友列表");
-                            sc.nextLine();
-                            getAllFriends(channelUser.getUserId());
-                            System.out.println("请输入任意字符串，测试获取在线好友列表");
-                            sc.nextLine();
-                            getOnLineFriends(channelUser.getUserId());
+//                            System.out.println("请输入任意字符串，测试添加好友");
+//                            Long id1=sc.nextLong();
+//                            Long id2=sc.nextLong();
+//                            deleteFriends(id1,id2);
+//                            System.out.println("请输入任意字符串，测试获取好友列表");
+//                            sc.nextLine();
+//                            getAllFriends(channelUser.getUserId());
+//                            System.out.println("请输入任意字符串，测试获取在线好友列表");
+//                            sc.nextLine();
+//                            getOnLineFriends(channelUser.getUserId());
                             //sendExtraGroupMessage();
 //                            getGroupOfflineMessage();
 //                            getGroupList(channelUser.getUserId());
                             //getGroupmemebers(2L);
                             //quitGroup(2L,channelUser.getUserId());
 
-                            //send(toid,msg);
-                       // }
+
+                        }
                     }).start();
 
                 })

@@ -11,6 +11,9 @@ public class ChannelUser {
     private Long userId;
     private String userName;
 
+    public ChannelUser(){
+
+    }
     public ChannelUser(Long userId, String userName) {
         this.userId = userId;
         this.userName = userName;

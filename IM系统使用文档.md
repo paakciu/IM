@@ -246,7 +246,7 @@ Client.defaultClient.getExtraManage()
         .setHandlerListener((msg)->{})
     	.setSendSuccessListener(this::printSuccess)
         .setSendFailListener(this::printFail)
-    
+
     	//消息发送
     	//传递好参数即可：接收方id，自定义消息体，消息类型type（int）
         .sendExtraMessage(25L,box,list.indexOf(test1.class));
@@ -814,4 +814,29 @@ public void sendExtraGroupMessage(){
 
 
 
+
+### 9. 群列表
+
+```java
+public void setGetGroupListListener(){
+        Client.defaultClient.getGetGroupListResponseManage()
+                .setSuccessListener((responsePacket)->{
+                    System.out.println("获取到用户"+responsePacket.getUserId()+"的群列表为：");
+                    for (GroupInfo groupInfo : responsePacket.getGroupInfoList()) {
+                        System.out.println("群："+groupInfo.toString());
+                    }
+                })
+                .setFailListener((responsePacket)->{
+                    System.out.println("获取群列表失败,原因是"+responsePacket.getReason());
+                })
+                //发送到服务器成功
+                .setSendSuccessListener(this::printSuccess)
+                //发送到服务器失败
+                .setSendFailListener(this::printFail);
+    }
+```
+
+```java
+Client.defaultClient.getGetGroupListResponseManage().getGroupList(userid);
+```
 
