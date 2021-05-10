@@ -413,6 +413,20 @@ public class DefaultClient implements Client {
     }
     @Override
     public Client logout(){
+        groupMessageManage=null;
+        getGroupListResponseManage=null;
+        extraManage=null;
+        getOffLineMessageManage=null;
+        pullMessageManage=null;
+        getGroupMembersManage=null;
+        quitGroupManage=null;
+        joinGroupManage=null;
+        createGroupManage=null;
+        normalMessageManage=null;
+        offLineGroupMessageManage=null;
+        extraGroupManage=null;
+        getInfoAndFriendsManage=null;
+
         nettyClient.channel.close();
         return this;
     }

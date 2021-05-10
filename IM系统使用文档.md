@@ -22,19 +22,16 @@ Client.defaultClient.initClienConnection(IP,port).setEventListener(new ClientEve
     @Override
     public void onInitChannel() {
         //TODO 初始化连接的时候要处理的事情
-
     }
 
     @Override
     public void onConnectSuccess(Channel channel) {
         //TODO 连接成功后要做的事情
-
     }
 
     @Override
     public void onConnectFail(int retry) {
         //TODO 连接失败后要做的事情
-
     }
 });
 ```
@@ -112,26 +109,6 @@ Client.defaultClient.login("username","password")
                 //收到消息的处理器
                 .setHandlerListener(messageResponsePacket->{
                     //TODO 消息处理
-//                    ChannelUser thisChannelUser=Client.defaultClient.getChannelUser();
-//                    if(thisChannelUser!=null)
-//                        if(thisChannelUser.getUserId()==messageResponsePacket.getFromUserId()){
-//                            //TODO 这里的处理是收到了自己发送的消息的处理，证明消息发送正确
-//                            //建议是本地发送不要马上显示，而是收到服务器返回的自己发送的这条消息后，再进行显示，这个过程一般不会很慢
-//                            //这样做的好处在于，后面离线消息的推送可以复用该消息处理通道
-//                            System.out.println("收到自己发送的消息！");
-//                        }
-//
-//                    //TODO 这里写怎么处理这些数据的，下面是处理样例
-//                    System.out.println(messageResponsePacket.getDate()
-//                            + ": 收到服务端的消息 ID:"
-//                            + messageResponsePacket.getMessageId()
-//                            + "消息："
-//                            + messageResponsePacket.getMessage());
-//                    Long fromUserId = messageResponsePacket.getFromUserId();
-//                    String fromUserName = messageResponsePacket.getFromUserName();
-//                    System.out.println(fromUserId + ":"
-//                            + fromUserName + " -> "
-//                            + messageResponsePacket .getMessage());
                 })
                 //发送到服务器成功
                 .setSendSuccessListener(()->{
@@ -432,7 +409,7 @@ Client.defaultClient.getGetInfoAndFriendsManage()
     ;
 ```
 
-#### 1.获取消息
+#### 获取消息
 
 ```java
 //根据id 获取相关信息（只有username）
@@ -581,9 +558,34 @@ public void quitGroup(Long groupid,Long userId){
 
 
 
+### 4. 群列表
+
+```java
+public void setGetGroupListListener(){
+        Client.defaultClient.getGetGroupListResponseManage()
+                .setSuccessListener((responsePacket)->{
+                    System.out.println("获取到用户"+responsePacket.getUserId()+"的群列表为：");
+                    for (GroupInfo groupInfo : responsePacket.getGroupInfoList()) {
+                        System.out.println("群："+groupInfo.toString());
+                    }
+                })
+                .setFailListener((responsePacket)->{
+                    System.out.println("获取群列表失败,原因是"+responsePacket.getReason());
+                })
+                //发送到服务器成功
+                .setSendSuccessListener(this::printSuccess)
+                //发送到服务器失败
+                .setSendFailListener(this::printFail);
+    }
+```
+
+```java
+Client.defaultClient.getGetGroupListResponseManage().getGroupList(userid);
+```
 
 
-### 4. 获取群信息(GetGroupMembersManage)
+
+### 5. 获取群信息(GetGroupMembersManage)
 
 > 获取的信息包括
 >
@@ -631,7 +633,7 @@ public void getGroupmemebers(Long groupid){
 
 
 
-### 5. 群消息(GroupMessageManage)
+### 6. 群消息(GroupMessageManage)
 
 
 
@@ -659,7 +661,7 @@ public void sendGroupMessage(Long groupId,String msg){
 
 
 
-### 6. 群组历史消息的获取（PullMessageManage）
+### 7. 群组历史消息的获取（PullMessageManage）
 
 > 此请求跟单聊请求共享同一个manage
 >
@@ -710,7 +712,7 @@ Client.defaultClient.getPullMessageManage()
 
 
 
-### 7. 获取哪个群有离线消息（OffLineGroupMessageManage）
+### 8. 获取哪个群有离线消息（OffLineGroupMessageManage）
 
 **注意！并非是直接获取离线消息，而是获得哪个群id有离线消息，以及对应的最开始的离线消息id.**
 
@@ -768,7 +770,7 @@ public void getGroupOfflineMessage(){
 
 
 
-### 8. 群拓展消息体
+### 9. 群拓展消息体
 
 > 具体可以参照单聊”7.拓展消息体“，原理一样
 >
@@ -815,28 +817,30 @@ public void sendExtraGroupMessage(){
 
 
 
-### 9. 群列表
 
-```java
-public void setGetGroupListListener(){
-        Client.defaultClient.getGetGroupListResponseManage()
-                .setSuccessListener((responsePacket)->{
-                    System.out.println("获取到用户"+responsePacket.getUserId()+"的群列表为：");
-                    for (GroupInfo groupInfo : responsePacket.getGroupInfoList()) {
-                        System.out.println("群："+groupInfo.toString());
-                    }
-                })
-                .setFailListener((responsePacket)->{
-                    System.out.println("获取群列表失败,原因是"+responsePacket.getReason());
-                })
-                //发送到服务器成功
-                .setSendSuccessListener(this::printSuccess)
-                //发送到服务器失败
-                .setSendFailListener(this::printFail);
-    }
-```
 
-```java
-Client.defaultClient.getGetGroupListResponseManage().getGroupList(userid);
-```
 
+
+
+
+
+
+***\*5.4.3 使用文档的设计\****
+
+***\*使用文档将跟随本系统的代码文件，此处仅展示设计风格\****
+
+（1）初始化：
+
+表5-
+
+Client.defaultClient.initClienConnection(IP,port).setEventListener(new ClientEventListener() {  public void onInitChannel() {    //TODO 初始化连接的时候要处理的事情  }  public void onConnectSuccess(Channel channel) {    //TODO 连接成功后要做的事情  }  public void onConnectFail(int retry) {    //TODO 连接失败后要做的事情  }});
+
+（1）登录：
+
+表5-
+
+Client.defaultClient.login("username","password")  .setSendFailListener(()-> {    //TODO 发送服务器失败要做的事  })  .setSendSuccessListener(()->{    //TODO 发送服务器成功要做的事  })  .setFailListener(str -> {    //TODO 服务器返回结果为失败,str为返回失败的原因-如“账号密码校验失败”  })  .setSuccessListener(channelUser -> {    //TODO 服务器返回结果为成功,str为返回成功 channelUser对象，包括惟一标识号id，和账号名  }) ;
+
+（2）单聊发送普通消息
+
+//监听消息Client.defaultClient.getNormalMessageManage()      //收到消息的处理器      .setHandlerListener(messageResponsePacket->{        //TODO 消息处理      })      //发送到服务器成功      .setSendSuccessListener(()->{        System.out.println("发送到服务器成功");      })      //发送到服务器失败      .setSendFailListener(()->{        System.out.println("发送到服务器失败");      });//发送消息Client.defaultClient.getNormalMessageManage().send(toid,msg);

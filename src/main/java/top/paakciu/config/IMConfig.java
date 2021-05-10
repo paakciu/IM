@@ -46,6 +46,7 @@ public class IMConfig {
      */
     //服务器的地址和端口
     public static final String HOST="localhost";
+//    public static final String HOST="paakciu.top";
     public static final int PORT=4396;
     //魔数的字节流
     public static final byte[] MAGIC=new byte[]{'P','a','a','k'};

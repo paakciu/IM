@@ -69,10 +69,8 @@ public class PacketCodec {
         byte command = byteBuf.readByte();
         // 数据包长度
         int length = byteBuf.readInt();
-
         byte[] bytes = new byte[length];
         byteBuf.readBytes(bytes);
-
         /**
          * 使用{@link PacketsCommandMapping}获取类型
          */
@@ -88,6 +86,5 @@ public class PacketCodec {
         //如果出了问题
         return null;
     }
-
 
 }

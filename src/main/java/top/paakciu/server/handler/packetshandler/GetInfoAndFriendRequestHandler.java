@@ -34,6 +34,7 @@ public class GetInfoAndFriendRequestHandler extends SimpleChannelInboundHandler<
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GetInfoAndFriendRequestPacket msg) throws Exception {
         NettyServer.executor.submit(()->{
+            System.out.println("收到GetInfoAndFriendRequestPacket"+msg.toString());
             switch (msg.getType()){
                 case 1:{
                     //根据id获取信息-例如名字

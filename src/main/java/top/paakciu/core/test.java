@@ -8,6 +8,7 @@ import top.paakciu.mbg.model.GroupMsgOffline;
 import top.paakciu.utils.info.ChannelUser;
 import top.paakciu.utils.ExtraPacketHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -121,16 +122,44 @@ public class test implements ClientEventListener {
                     ExtraListAdd();
                     setExtraGroupMessageListener();
                     setGetInfoAndFriendsListener();
+                    setExtraSingleListener();
 
                     new Thread(()->{
                         Scanner sc = new Scanner(System.in);
 
                         //聊天模拟
                         while (true) {
-                            System.out.println("请输入toid msg：");
-                            Long toid = sc.nextLong();
-                            String msg = sc.next();
-                            send(toid,msg);
+                            System.out.println("1单聊测试，2群聊测试,3加群测试，4退群测试，5建群测试");
+                            int x=sc.nextInt();
+                            if(x==1){
+                                System.out.println("请输入toid msg：");
+                                Long toid = sc.nextLong();
+                                String msg = sc.next();
+                                send(toid,msg);
+                            }
+                            if(x==2){
+                                System.out.println("请输入toid msg：");
+                                Long toid = sc.nextLong();
+                                String msg = sc.next();
+                                sendGroupMessage(toid,msg);
+                            }
+                            if(x==3){
+                                System.out.println("请输入groupid：");
+                                Long groupid = sc.nextLong();
+                                joinGroup(groupid, channelUser.getUserId());
+                            }
+                            if(x==4){
+                                System.out.println("请输入groupid：");
+                                Long groupid = sc.nextLong();
+                                quitGroup(groupid, channelUser.getUserId());
+                            }
+                            if(x==5){
+                                System.out.println("请输入群聊名称：");
+                                String GroupName = sc.next();
+                                List<Long> list=new ArrayList<>();
+                                list.add(channelUser.getUserId());
+                                CreateGroup(list,GroupName);
+                            }
 
 //                            System.out.println("请输入togroupid msg：");
 //                            Long togroupid = sc.nextLong();

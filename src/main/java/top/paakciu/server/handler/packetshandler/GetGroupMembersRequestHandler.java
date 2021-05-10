@@ -34,13 +34,15 @@ public class GetGroupMembersRequestHandler extends SimpleChannelInboundHandler<G
     protected void channelRead0(ChannelHandlerContext ctx, GetGroupMembersRequestPacket msg) throws Exception {
         NettyServer.executor.submit(()->{
             Long groupId= msg.getGroupId();
-
+            System.out.println("接收到群成员请求的id是"+groupId);
             ChannelGroup channelGroup = GroupsHelper.getChannelGroup(groupId);
             List<ChannelUser> list=new ArrayList<>();
-            for (Channel channel : channelGroup) {
-                ChannelUser user= AttributesHelper.getChannelUser(channel);
-                if(user!=null)
-                    list.add(user);
+            if(channelGroup!=null){
+                for (Channel channel : channelGroup) {
+                    ChannelUser user= AttributesHelper.getChannelUser(channel);
+                    if(user!=null)
+                        list.add(user);
+                }
             }
             System.out.println("GetGroupMembersRequestHandler");
             //数据库内容

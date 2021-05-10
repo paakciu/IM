@@ -47,8 +47,12 @@ public class QuitGroupRequestHandler extends SimpleChannelInboundHandler<QuitGro
                 //通知所有人
                 channelGroup.writeAndFlush(responsePacket);
 
-                AttributesHelper.removeChannelGroup(ctx.channel(),groupId,channelGroup);
-                channelGroup.remove(groupId);
+                //该成员的频道
+                Channel UserChannel=AttributesHelper.getChannel(userId);
+                if(UserChannel!=null){
+                    AttributesHelper.removeChannelGroup(UserChannel,groupId,channelGroup);
+                    channelGroup.remove(UserChannel);
+                }
                 if(channelGroup.size()==0){
                     //已经为空了，就不要维护这个东西了
                     GroupsHelper.removeGroup(groupId,channelGroup);

@@ -3,7 +3,30 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+
     <properties resource="generator.properties"/>
+
+
+    <!-- Settings 必须放到最上面 -->
+    <settings>
+        <!-- 该配置影响的所有映射器中配置的缓存的全局开关。默认true -->
+        <setting name="cacheEnabled" value="false" />
+        <!-- MyBatis 利用本地缓存机制（Local Cache）防止循环引用（circular references）和加速重复嵌套查询。
+            默认值为 SESSION，这种情况下会缓存一个会话中执行的所有查询。 若设置值为 STATEMENT，本地会话仅用在语句执行上，对相同 SqlSession
+            的不同调用将不会共享数据。 -->
+        <setting name="localCacheScope" value="STATEMENT" />
+        <!-- 当没有为参数提供特定的 JDBC 类型时，为空值指定 JDBC 类型。 某些驱动需要指定列的 JDBC 类型，多数情况直接用一般类型即可，比如
+            NULL、VARCHAR 或 OTHER。 -->
+        <setting name="jdbcTypeForNull" value="NULL" />
+        <!-- MyBatis内置的日志工厂提供日志功能，具体的日志实现有以下几种工具 SLF4J Apache Commons Logging Log4j
+            2 Log4j JDK logging 在诸如 WebSphere的环境中——WebSphere提供了Commons Logging的私有实现，你的Log4J配置将被忽略。
+            因Commons Logging已经存 在了，按照优先级顺序，Log4J自然就被忽略了 如果你的应用部署在一个包含Commons Logging的环境，
+            而你又想用其他的日志框架， 你可以通过在MyBatis的配置文件MyBatis-config.xml里面添加一项setting（配置）来选择一个不同的日志实现。
+            可选值：SLF4J、LOG4J、LOG4J2、JDK_LOGGING、COMMONS_LOGGING、STDOUT_LOGGING、NO_LOGGING -->
+<!--        <setting name="logImpl" value="LOG4J2" />-->
+    </settings>
+
+
     <!-- 对事务的管理和连接池的配置 -->
     <environments default="development">
         <environment id="development">
@@ -13,8 +36,24 @@
                 <property name="url" value="${jdbc.connectionURL}" />
                 <property name="username" value="${jdbc.userId}" />
                 <property name="password" value="${jdbc.password}" />
+
+                <!-- 数据库连接池配置 -->
                 <property name="poolPingQuery" value="SELECT NOW()" />
+                <!-- 是否启用侦测查询。若开启，也必须使用一个可执行的 SQL 语句设置 poolPingQuery 属性（最好是一个非常快的 SQL），默认值：false。 -->
                 <property name="poolPingEnabled" value="true" />
+                <!-- 在任意时间可以存在的活动（也就是正在使用）连接数量，默认值：10 -->
+                <property name="poolMaximumActiveConnections" value="300" />
+                <!-- 任意时间可能存在的空闲连接数 默认是5,最好设置为0,否则可能会崩溃掉 -->
+                <property name="poolMaximumIdleConnections" value="0" />
+                <!-- 在被强制返回之前，池中连接被检出（checked out）时间，默认值：20000 毫秒（即 20 秒） -->
+                <property name="poolMaximumCheckoutTime" value="20000" />
+                <!-- 这是一个底层设置，如果获取连接花费的相当长的时间，它会给连接池打印状态日志并重新尝试获取一个连接（避免在误配置的情况下一直安静的失败），默认值：20000
+                    毫秒（即 20 秒）。 -->
+                <property name="poolTimeToWait" value="20000" />
+                <!-- 配置 poolPingQuery 的使用频度。这可以被设置成匹配具体的数据库连接超时时间，来避免不必要的侦测，默认值：0（即所有连接每一时刻都被侦测
+                    — 当然仅当 poolPingEnabled 为 true 时适用） -->
+                <property name="poolPingConnectionsNotUsedFor" value="3600000" />
+
             </dataSource>
         </environment>
     </environments>
