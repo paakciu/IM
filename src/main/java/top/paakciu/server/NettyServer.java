@@ -15,6 +15,7 @@ import top.paakciu.protocal.codec.handler.PreFrameDecoder;
 import top.paakciu.server.handler.*;
 import top.paakciu.server.handler.packetshandler.MessageRequestHandler;
 
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -58,8 +59,10 @@ public class NettyServer implements Server {
 
     public static void main(String[] args)
     {
-        INSTANCE.startListening(IMConfig.PORT);
-
+        System.out.println("请输入你要监听的端口：(4000-4500)");
+        Scanner sc=new Scanner(System.in);
+        int port=sc.nextInt();
+        INSTANCE.startListening(port);
     }
     //单例模式
     public static final NettyServer INSTANCE =new NettyServer();

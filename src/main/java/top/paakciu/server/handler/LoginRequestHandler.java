@@ -1,5 +1,6 @@
 package top.paakciu.server.handler;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -41,23 +42,32 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             User user=getUser(loginRequestPacket);
             // 登录校验
             if (valid(user)) {
-                // 校验成功
-                System.out.println("登录成功！");
-                ChannelUser channelUser=new ChannelUser(user.getId(),user.getUsername());
+                Channel channel = AttributesHelper.getChannel(user.getId());
+                if(channel!=null){
+                    //相当于已经登陆了，拒绝登陆
+                    // 校验失败
+                    System.out.println("重复登陆！");
+                    response.setSuccess(false);
+                    response.setReason("已经登陆了，不能重复登陆！");
+                }else{
+                    // 校验成功
+                    System.out.println("登录成功！");
+                    ChannelUser channelUser=new ChannelUser(user.getId(),user.getUsername());
 
-                //TODO 登录成功要解决-channel的映射，channelgroup的登录！
-                AttributesHelper.asLogin(ctx.channel());
-                AttributesHelper.setChannelUser(ctx.channel(),channelUser);
+                    //TODO 登录成功要解决-channel的映射，channelgroup的登录！
+                    AttributesHelper.asLogin(ctx.channel());
+                    AttributesHelper.setChannelUser(ctx.channel(),channelUser);
 
-                GroupsHelper.UserLoginAboutGroup(ctx,channelUser.getUserId());
+                    GroupsHelper.UserLoginAboutGroup(ctx,channelUser.getUserId());
 
 
-                response.setUserId(user.getId());
-                response.setSuccess(true);
-                response.setUserName(user.getUsername());
-
+                    response.setUserId(user.getId());
+                    response.setSuccess(true);
+                    response.setUserName(user.getUsername());
+                }
             } else {
                 // 校验失败
+                System.out.println("账号密码校验失败！");
                 response.setSuccess(false);
                 response.setReason("账号密码校验失败");
             }
@@ -75,8 +85,9 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         //取消绑定
-        AttributesHelper.asLogout(ctx.channel());
         AttributesHelper.removeChannelUser(ctx.channel());
+        AttributesHelper.asLogout(ctx.channel());
+
 
         //TODO 离线要解决-channel的映射，channelgroup的离开！
         GroupsHelper.UserLogoutAboutGroup(ctx.channel());

@@ -129,7 +129,7 @@ public class test implements ClientEventListener {
 
                         //聊天模拟
                         while (true) {
-                            System.out.println("1单聊测试，2群聊测试,3加群测试，4退群测试，5建群测试");
+                            System.out.println("1单聊测试，2群聊测试,3加群测试，4退群测试，5建群测试,6登出");
                             int x=sc.nextInt();
                             if(x==1){
                                 System.out.println("请输入toid msg：");
@@ -159,6 +159,9 @@ public class test implements ClientEventListener {
                                 List<Long> list=new ArrayList<>();
                                 list.add(channelUser.getUserId());
                                 CreateGroup(list,GroupName);
+                            }
+                            if(x==6){
+                                logout();
                             }
 
 //                            System.out.println("请输入togroupid msg：");

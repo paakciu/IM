@@ -20,7 +20,7 @@ public class IMConfig {
     //客户端连接空闲时间,一般定为服务器的3分之一
     public static final int CLIENT_IDLE_TIME=20;
     //客户端心跳包的发送间隔
-    public static final int CLIENT_HEARTBEAT_INTERVAL=9;
+    public static final int CLIENT_HEARTBEAT_INTERVAL=3;
     //时间单位
     public static final TimeUnit CLIENT_TIME_UNIT=TimeUnit.SECONDS;
 
@@ -48,6 +48,7 @@ public class IMConfig {
     public static final String HOST="localhost";
 //    public static final String HOST="paakciu.top";
     public static final int PORT=4396;
+//    public static final int PORT=4355;
     //魔数的字节流
     public static final byte[] MAGIC=new byte[]{'P','a','a','k'};
     //如果是为了读4个字节方便，可以使用魔数对应的int来比较结果，但是跟上者一定是要一一对应的。

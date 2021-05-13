@@ -49,8 +49,9 @@ public class AttributesHelper {
      * @param ch
      */
     public static void logout(Channel ch){
-        asLogout(ch);
         removeChannelUser(ch);
+        asLogout(ch);
+
     }
 
 

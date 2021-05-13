@@ -76,12 +76,13 @@ public class GroupsHelper {
     public static void UserLogoutAboutGroup(Channel channel){
         System.out.println("退出登录UserLogoutAboutGroup");
         //清除所有在线群组关于userid的消息
+        //Long userid=AttributesHelper.getChannelUser(channel).getUserId();
         Map<Long, ChannelGroup> channelGroupMap = AttributesHelper.getChannelGroup(channel);
         if(channelGroupMap==null)return;
         for (Long groupid : channelGroupMap.keySet()) {
             ChannelGroup group= channelGroupMap.get(groupid);
-            Long userid=AttributesHelper.getChannelUser(channel).getUserId();
-            group.remove(userid);
+            //todo 检查是否是channel，还是id
+            group.remove(channel);
         }
         AttributesHelper.removeChannelGroup(channel);
     }

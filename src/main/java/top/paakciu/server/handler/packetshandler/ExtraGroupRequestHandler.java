@@ -32,6 +32,9 @@ public class ExtraGroupRequestHandler extends SimpleChannelInboundHandler<ExtraG
             ChannelUser channelUser = AttributesHelper.getChannelUser(ctx.channel());
             //拿到在线群
             ChannelGroup channelGroup= GroupsHelper.getChannelGroup(msg.getGroupId());
+            //假如群组不在
+            if(channelGroup==null)return ;
+
             System.out.println("收到拓展消息！");
             if(channelGroup==null){
                 System.out.println("拓展消息错误！");
