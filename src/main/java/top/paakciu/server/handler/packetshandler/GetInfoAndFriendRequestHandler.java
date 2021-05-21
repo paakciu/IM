@@ -77,6 +77,16 @@ public class GetInfoAndFriendRequestHandler extends SimpleChannelInboundHandler<
                             if(channelUser1!=null)list.add(channelUser1);
                             if(channelUser2!=null)list.add(channelUser2);
                             responsePacket.setObj(ExtraPacketHelper.ObjectToString(list));
+
+                            //要是同时在线的话
+                            Channel channel1=AttributesHelper.getChannel(userId1);
+                            Channel channel2=AttributesHelper.getChannel(userId2);
+                            if(channel1!=null&&channel2!=null){
+                                channel1.writeAndFlush(responsePacket);
+                                channel2.writeAndFlush(responsePacket);
+                            }else{
+                                ctx.writeAndFlush(responsePacket);
+                            }
                             ctx.writeAndFlush(responsePacket);
                         }
                     }
@@ -110,7 +120,16 @@ public class GetInfoAndFriendRequestHandler extends SimpleChannelInboundHandler<
                     if(channelUser2!=null)list.add(channelUser2);
                     responsePacket.setObj(ExtraPacketHelper.ObjectToString(list));
 
-                    ctx.writeAndFlush(responsePacket);
+                    //要是同时在线的话
+                    Channel channel1=AttributesHelper.getChannel(userId1);
+                    Channel channel2=AttributesHelper.getChannel(userId2);
+                    if(channel1!=null&&channel2!=null){
+                        channel1.writeAndFlush(responsePacket);
+                        channel2.writeAndFlush(responsePacket);
+                    }else{
+                        ctx.writeAndFlush(responsePacket);
+                    }
+
                     return;
                 }
                 case 4:{
